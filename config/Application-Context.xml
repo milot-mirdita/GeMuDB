@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context.xsd
+		">
+
+	<context:annotation-config />
+
+	
+	
+	<bean id="serviceFacade" class="org.de.lmu.propra.facade.ServiceFacadeImpl" ></bean>
+
+
+	
+	<bean id="homstradDao" class="org.de.lmu.propra.dao.HomstradDaoImpl">
+		<property name="jdbcTemplate" ref="jdbcTemplate"/>
+	</bean>
+	
+	<bean id="loggingInterceptor" class="org.de.lmu.propra.util.LoggingInterceptor" />
+	<!-- Proxy Factory for logging -->
+	<bean name="proxyCreator"
+		class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+		<property name="beanNames">
+			<list>
+				<value>org.de.lmu.*</value>
+			</list>
+		</property>
+		<property name="interceptorNames">
+			<list>
+				<value>logger</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="logger"
+		class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">
+		<property name="advice">
+			<ref local="loggingInterceptor" />
+		</property>
+		<property name="patterns">
+			<value>.*</value>
+		</property>
+	</bean>
+
+	<!-- exprot of the facade -->
+	<bean name="serviceFacadeExporter"
+		class="org.springframework.remoting.jaxws.SimpleJaxWsServiceExporter">
+		<property name="baseAddress" value="http://localhost:6688/"/>
+	</bean>
+
+	<bean id="lobHandler" class="org.springframework.jdbc.support.lob.OracleLobHandler">
+        <property name="nativeJdbcExtractor" ref="nativeJdbcExtractor"/>
+    </bean>
+    
+    <bean id="nativeJdbcExtractor" class="org.springframework.jdbc.support.nativejdbc.CommonsDbcpNativeJdbcExtractor"/>
+    
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://mysql2-ext.bio.ifi.lmu.de/bioprakt6" />
+		<property name="username" value="bioprakt6" />
+		<property name="password" value="H5qlpQxlgYSGc" />
+	</bean>
+	
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+</beans>
