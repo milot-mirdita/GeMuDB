@@ -6,7 +6,7 @@ import java.util.List;
 public class ProteinFunctionalEffectPrediction {
 	private String id;
 	private String sequence;
-	private List<Prediction> pred = new ArrayList<Prediction>();
+	private List<Prediction> prediction = new ArrayList<Prediction>();
 
 	public String getId() {
 		return id;
@@ -16,8 +16,12 @@ public class ProteinFunctionalEffectPrediction {
 		return sequence;
 	}
 
-	public List<Prediction> getPred() {
-		return pred;
+	public List<Prediction> getPrediction() {
+		return prediction;
+	}
+	
+	public void addPrediction(Prediction p){
+		prediction.add(p);
 	}
 
 	public void setId(String id) {
