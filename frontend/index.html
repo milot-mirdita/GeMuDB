@@ -5,7 +5,7 @@
 </head>
 <body>
 <div id="search_container"
-	data-bind="css: {hide: $root.isSearching() == 'yes' }">
+	data-bind="css: {hide: isSearching() == 'yes' }">
 	<div id="search">
 		<input data-bind="value: protein" />
 		<button data-bind="click: searchProtein">Go</button> 
@@ -13,13 +13,37 @@
 </div>
 
 <div id="result_container"
-	data-bind="text: $root.protein(), css: {hide: $root.isSearching() != 'yes' }">
-	Test
+	data-bind="css: {hide: isSearching() != 'yes' }">
+	<div id="top_bar_container">
+		<div id="flot_overview_container">
+			<div class="seeker"></div>
+			
+			<div>
+			<div id="flot_overview"  style="width:925px; height:40px;">
+			</div>
+		</div>
+	</div>
+	<div id="functional_effect_container"
+	data-bind="template: { name: 'functional_effect_template', data: smallProteinResult(), afterRender: formatProteinResult }">
+	
+	</div>
 </div>
-
 <div id="footer_container">
 </div>
+
+<script type="text/html" id="functional_effect_template">
+	<div class="flot_container"  style="width:925px; height:60px;"></div>
+	<span class="id" data-bind="text: id"></span>
+	<span class="sequence" data-bind="text: sequence"></span>
+	<span class="prediction" data-bind="foreach: predictions">
+		<span class="type" data-bind="text: type"></span>
+		<span class="reliability" data-bind="text: reliability"></span>
+		<span class="conservation" data-bind="text: conservation"></span>
+	</span>
+</script>
+
 <script src="js/jquery-1.7.2.min.js"></script>
+<script src="js/jquery.flot.min.js"></script>
 <script src="js/knockout-2.0.0.js"></script>
 <script src="js/sammy-latest.min.js"></script>
 <script src="js/app.js"></script>

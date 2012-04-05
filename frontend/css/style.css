@@ -1,3 +1,17 @@
 .hide {
 	display: none;
 }
+
+#flot_overview_container {
+	position: relative;
+}
+
+#flot_overview_container .seeker {
+	position: absolute;
+	height: 45px;
+	width: 200px;
+	border: 1px solid orange;
+	border-radius: 3px;
+	background-color: rgba(255, 128, 0, 0.15);
+	z-index: 10;
+}
