@@ -21,5 +21,11 @@ public class TestSearchService {
 		SearchProtein searchProtein = new SearchProteinImpl();
 		assertEquals("XP_002344320",searchProtein.searchProtein("XP_002344320"));
 	}
+	
+	@Test
+	public void testIdWitheSpace() {
+		SearchProtein searchProtein = new SearchProteinImpl();
+		assertEquals("XP_002344320",searchProtein.searchProtein(" XP_002344320 "));
+	}
 
 }
