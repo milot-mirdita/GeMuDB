@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProteinFunctionalEffectPrediction {
-	private String id;
+	private String refid;
 	private String sequence;
-	private List<Prediction> prediction = new ArrayList<Prediction>();
+	private List<Prediction> predictions = new ArrayList<Prediction>();
 
-	public String getId() {
-		return id;
+	public String getRefId() {
+		return refid;
 	}
 
 	public String getSequence() {
@@ -17,15 +17,15 @@ public class ProteinFunctionalEffectPrediction {
 	}
 
 	public List<Prediction> getPrediction() {
-		return prediction;
+		return predictions;
 	}
 	
 	public void addPrediction(Prediction p){
-		prediction.add(p);
+		predictions.add(p);
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setRefId(String id) {
+		this.refid = id;
 	}
 
 	public void setSequence(String sequence) {

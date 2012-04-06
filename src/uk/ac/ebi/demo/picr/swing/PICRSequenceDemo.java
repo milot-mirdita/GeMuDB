@@ -1,17 +1,33 @@
 package uk.ac.ebi.demo.picr.swing;
 
-import uk.ac.ebi.demo.picr.business.PICRClient;
-import uk.ac.ebi.demo.picr.soap.UPEntry;
-import uk.ac.ebi.demo.picr.soap.CrossReference;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 import javax.xml.ws.soap.SOAPFaultException;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
+import uk.ac.ebi.demo.picr.business.PICRClient;
+import uk.ac.ebi.demo.picr.soap.CrossReference;
+import uk.ac.ebi.demo.picr.soap.UPEntry;
 
 /**
  *    Copyright 2007 - European Bioinformatics Institute

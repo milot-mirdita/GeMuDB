@@ -1,8 +1,8 @@
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-import org.rostlab.snapdb.service.SearchProtein;
-import org.rostlab.snapdb.service.SearchProteinImpl;
+import org.rostlab.snapdb.service.SearchProteinService;
+import org.rostlab.snapdb.service.SearchProteinServiceImpl;
 
 
 public class TestSearchService {
@@ -11,20 +11,20 @@ public class TestSearchService {
 "PSFCLPASSLNRHSSSLTVAHLGPTHDCRAISRPSACLLADS";
 	@Test
 	public void testSeq() {
-		SearchProtein searchProtein = new SearchProteinImpl();
+		SearchProteinService searchProtein = new SearchProteinServiceImpl();
 		assertEquals("XP_002344320",searchProtein.searchProtein(seq));
 	}
 
 	
 	@Test
 	public void testId() {
-		SearchProtein searchProtein = new SearchProteinImpl();
+		SearchProteinService searchProtein = new SearchProteinServiceImpl();
 		assertEquals("XP_002344320",searchProtein.searchProtein("XP_002344320"));
 	}
 	
 	@Test
 	public void testIdWitheSpace() {
-		SearchProtein searchProtein = new SearchProteinImpl();
+		SearchProteinService searchProtein = new SearchProteinServiceImpl();
 		assertEquals("XP_002344320",searchProtein.searchProtein(" XP_002344320 "));
 	}
 

@@ -1,11 +1,11 @@
 package org.rostlab.snapdb.dom;
 
 public class Prediction {
-	private String type;
+	private PredictionType type;
 	private String reliability;
 	private String conservation;
 
-	public String getType() {
+	public PredictionType getType() {
 		return type;
 	}
 
@@ -17,7 +17,7 @@ public class Prediction {
 		return conservation;
 	}
 
-	public void setType(String type) {
+	public void setType(PredictionType type) {
 		this.type = type;
 	}
 

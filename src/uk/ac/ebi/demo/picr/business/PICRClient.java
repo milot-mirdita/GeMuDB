@@ -1,13 +1,13 @@
 package uk.ac.ebi.demo.picr.business;
 
-import uk.ac.ebi.demo.picr.soap.AccessionMapperService;
-import uk.ac.ebi.demo.picr.soap.AccessionMapperInterface;
-import uk.ac.ebi.demo.picr.soap.BlastParameter;
-import uk.ac.ebi.demo.picr.soap.UPEntry;
-
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+
+import uk.ac.ebi.demo.picr.soap.AccessionMapperInterface;
+import uk.ac.ebi.demo.picr.soap.AccessionMapperService;
+import uk.ac.ebi.demo.picr.soap.BlastParameter;
+import uk.ac.ebi.demo.picr.soap.UPEntry;
 
 /**
  *    Copyright 2007 - European Bioinformatics Institute
