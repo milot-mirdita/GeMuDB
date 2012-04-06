@@ -1,40 +1,68 @@
 <!doctype html>
 <html>
 <head>
+<link href='http://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="css/bootstrap.min.css" />
 <link rel="stylesheet" href="css/style.css" />
+
 </head>
 <body>
-<div id="search_container"
-	data-bind="css: {hide: isSearching() == 'yes' }">
-	<div id="search">
-		<input data-bind="value: protein" />
-		<button data-bind="click: searchProtein">Go</button> 
-	</div>
-</div>
-
-<div id="result_container"
-	data-bind="css: {hide: isSearching() != 'yes' }">
-	<div id="top_bar_container">
-		<div id="flot_overview_container">
-			<div class="seeker"></div>
-			
-			<div>
-			<div id="flot_overview"  style="width:925px; height:40px;">
+<div class="container">
+	<div class="row">
+		<div id="search_container" class="span8 offset2"
+			data-bind="css: {hide: isSearching() == 'yes' }">
+			<div class="header">
+				SNPdbe
+			</div>
+			<div class="search">
+				<form class="form-inline">
+					<input data-bind="value: protein" />
+					<button class="btn" data-bind="click: searchProtein">Go</button> 
+				</form>
 			</div>
 		</div>
 	</div>
-	<div id="functional_effect_container"
-	data-bind="template: { name: 'functional_effect_template', data: smallProteinResult(), afterRender: formatProteinResult }">
-	
+	<div class="row">
+		<div id="result_container"
+			data-bind="css: {hide: isSearching() != 'yes' }">
+			<div id="top_bar_container" class="row-fluid">
+				<div class="search span3">
+					<form class="form-horizontal">
+						<input data-bind="value: protein" />
+						<button class="btn" data-bind="click: searchProtein">Go</button> 
+					</form>
+				</div>
+				<div id="flot_overview_container" class="span9">
+					<div class="seeker" data-bind="drag: 'test'"></div>
+					<div id="flot_overview"  style="width:715px; height:40px"></div>
+				</div>
+			</div>
+			<!-- ko if: smallProteinResult() -->
+			<div id="functional_effect_container"
+			data-bind="template: { name: 'functional_effect_template', data: smallProteinResult(), afterRender: formatProteinResult }">
+			</div>
+			<!-- /ko-->
+		</div>
 	</div>
-</div>
-<div id="footer_container">
+	<div id="footer_container">
+		<div id="footer_content">
+			<div class="menu row">
+				<div class="span2">
+					<img src="img/rost_small.png" />
+				</div>
+				<div class="span10">
+					<span>Api</span>
+					<span>Database<span>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 <script type="text/html" id="functional_effect_template">
-	<div class="flot_container"  style="width:925px; height:60px;"></div>
-	<span class="id" data-bind="text: id"></span>
-	<span class="sequence" data-bind="text: sequence"></span>
+	<div class="flot_container"  style="width:926px; height:60px;"></div>
+	<span class="sequence monospace" data-bind="text: sequence"></span>
+	<span class="id" data-bind="text: id && id || ''"></span>
 	<span class="prediction" data-bind="foreach: predictions">
 		<span class="type" data-bind="text: type"></span>
 		<span class="reliability" data-bind="text: reliability"></span>
@@ -44,6 +72,7 @@
 
 <script src="js/jquery-1.7.2.min.js"></script>
 <script src="js/jquery.flot.min.js"></script>
+<script src="js/jquery.event.drag-2.0.min.js"></script>
 <script src="js/knockout-2.0.0.js"></script>
 <script src="js/sammy-latest.min.js"></script>
 <script src="js/app.js"></script>

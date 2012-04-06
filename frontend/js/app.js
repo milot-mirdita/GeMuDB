@@ -1,6 +1,6 @@
 ;
 var initProteinMixin = (function(out) {
-		var plotOptions = { 
+		var plotOptions = function () { return {
 			legend : { show : false }, 
 			xaxis : { show : false, min : 0, max : 115, minTickSize: 5, tickSize: 5 }, 
 			yaxis : { show : false, min : 1, max : 8, position : 'right', ticks : [1, 8] }, 
@@ -9,7 +9,7 @@ var initProteinMixin = (function(out) {
 				lines : { show : false, steps : false}, 
 				bars : { show : true, steps : true }, 
 				shadowSize : 1} 
-			};
+			}};
 	
 		var colormap = { 
 			"H" : ["#600", "#700", "#800", "#900", "#A00", "#B00", "#C00", "#D00", "#F00"],
@@ -20,19 +20,23 @@ var initProteinMixin = (function(out) {
 		var colorBinary = [ "#C00", "#0C0" ];
 		
 		out.subProtein = function(data, offset, predictionType, lineLength) {
+			if(!data) return null;
+		
 			var lineLength = lineLength || 115;
 			var predictions = [];
+
 			$.each(data.predictions, function(index, prediction) {
 				if(predictionType == undefined || predictionType == prediction.type) {
 					predictions.push({
 						type : prediction.type,
-						reliability : prediction.reliability.slice(offset * lineLength, (offset + 1) * lineLength),
-						conservation : prediction.conservation.slice(offset * lineLength, (offset + 1) * lineLength)
+						reliability : prediction.reliability.slice(offset, offset + lineLength),
+						conservation : prediction.conservation.slice(offset, offset + lineLength)
 					});
 				}
 			});
+					
 			return { id : data.id, 
-				sequence : data.sequence.slice(offset * lineLength, (offset + 1) * lineLength),
+				sequence : data.sequence.slice(offset, offset + lineLength),
 				predictions : predictions
 			};
 		}
@@ -48,78 +52,48 @@ var initProteinMixin = (function(out) {
 		}
 		
 		out.addGraph = function(target, data, fill) {
-		var fill = fill || false;
-			// var buffer = document.createElement('span');
-			// for(var j = 0; j < aaseq.length; j++) {
-				// $(buffer).append((function(ss) {
-					// counter++;
-					// var prob;
-					// if(ss == "H") {
-						// prob = phseq[j] * 1;
-					// } else if(ss == "E") {
-						// prob = peseq[j] * 1;
-					// } else if(ss == "C"){
-						// prob = pcseq[j] * 1;
-					// } else if(ss == "-") {
-						// return $(document.createElement('span')).attr('data-pos', counter).text(aaseq[j]);
-					// }
-					// return $(document.createElement('span')).css({color : colormap[ss][prob]}).attr('data-pos', counter).text(aaseq[j]);
-				// })(ssseq[j]));
-			// }
-
-			// var referenceBuffer = document.createElement('span');
-			// for(var j = 0; j < aaseq.length; j++) {
-				// $(referenceBuffer).append((function(s, a) {
-					// var choice = 0;
-					// if(s == a) {
-						// choice = 1;
-					// }
-					
-					// return $(document.createElement('span')).css({color : colorBinary[choice]}).text(a);
-				// })(ssseq[j], reference[j]));
-			// }
-			
-			// var line = ich.resultLine({ line : i+1, aaseq : $(buffer).html(), ssseq : ssseq, 
-				// pcseq : pcseq, peseq : peseq, phseq : phseq, reference : $(referenceBuffer).html() });
-			
+			var fill = fill || false;
+			var options = plotOptions();
+				
 			var d1 = probsToData(data.predictions[0].reliability);
 			var d2 = probsToData(data.predictions[0].conservation);
 			
 			if(fill)
-				plotOptions.xaxis.max = data.sequence.length;
+				options.xaxis.max = data.sequence.length;
 			
-			$.plot(target, [ d1, d2 ], plotOptions);
-			// $('#gorResult').append(line);
+			return $.plot(target, [ d1, d2 ], options);
 		};
 	return out;
 });
 
+var initNumberMixin = (function(out) {
+	out.clamp = function(value, min, max) {
+		return Math.min(Math.max(value, min), max);
+	};
+	return out;
+});
 
 
 
 (function() {
 	"use strict";
 	function SearchViewModel() {
+		var hidden = {};
 		var self = this;
 		
-		initProteinMixin(self);
+		initProteinMixin(hidden);
+		initNumberMixin(hidden);
 		
 		self.protein = ko.observable("Protein");
-		self.proteinResult = ko.observable({
-			id:'',
-			sequence:'',
-			predictions: [{
-					type : '',
-					reliability : '',
-					conservation : ''
-				}]
-		});
+		self.proteinResult = ko.observable();
 		
 		self.sequenceOffset = ko.observable(0);
 		self.predictionType = ko.observable("snap2");
 		
+		self.lineLength = ko.observable(115);
+		
 		self.smallProteinResult = ko.computed(function() {
-			return self.subProtein(self.proteinResult(), self.sequenceOffset(), self.predictionType());
+			return hidden.subProtein(self.proteinResult(), self.sequenceOffset(), self.predictionType(), self.lineLength());
 		});
 		
 		self.isSearching = ko.observable();
@@ -131,11 +105,12 @@ var initProteinMixin = (function(out) {
 			self.proteinResult(json);
 		};
 		
+		self.overviewFlot = undefined;
+		self.detailFlot = undefined;
+		
 		self.formatProteinResult = function(elements, data) {
-			self.addGraph($($(elements).get(1)), data);
-						debugger;
-			self.addGraph($('#flot_overview'), self.proteinResult(), true);
-
+			self.detailFlot = hidden.addGraph($($(elements).get(1)), data);
+			self.overviewFlot = hidden.addGraph($('#flot_overview'), self.proteinResult(), true);
 		}
 		
 		Sammy(function() {
@@ -148,11 +123,67 @@ var initProteinMixin = (function(out) {
 			});
 			
 			this.get('', function() {
-		
+				self.isSearching("no");
 			});
 		}).run();
 	}
 
-	// Activates knockout.js
+	ko.bindingHandlers.drag = {
+		init: function(element, valueAccessor, allBindingsAccessor, viewModel) {
+			
+			var hidden = {};
+			initNumberMixin(hidden);
+			var sequenceLength = 0;
+			var marginLeft = 2;
+			var marginRight = 2;
+			var lineLength = 0;
+			var plotWidth = 0;
+			var seekerWidth = 0;
+			
+			var plotOverview = $('#flot_overview');
+			
+			var maxOffset = 0;
+			var minOffset = 0; 
+			
+			// var maxOffset = plotOverview.offset().x;
+			// var minOffset = plotOverview.offset().x + plotOverview.width(); 
+			
+			$(element).drag("init", function(event) {
+				$(this).css({ "cursor": "pointer" });
+				sequenceLength = viewModel.proteinResult().sequence.length;
+				lineLength = viewModel.lineLength();
+				
+				plotWidth = plotOverview.width();
+				seekerWidth = plotWidth / sequenceLength * lineLength;
+				$('#flot_overview_container .seeker').width(seekerWidth);
+				
+				minOffset = marginLeft;
+				maxOffset = plotWidth - seekerWidth - marginRight;
+			},{ relative:true });
+			
+			$(element).drag(function(event, dd ){
+				var offset = hidden.clamp(dd.offsetX, minOffset, maxOffset);
+				$( this ).css({ left: offset });
+				viewModel.sequenceOffset(Math.floor((offset-2) * sequenceLength / (plotWidth-8)));
+			
+			},{ relative:true });
+		
+			$(element).drag("end", function(event) {
+				$(this).css({ "cursor": "e-resize" }, { relative:true });
+			});
+		},
+		update: function(element, valueAccessor, allBindingsAccessor, viewModel) {
+				var protein = viewModel.proteinResult();
+				if(protein) {
+					var sequenceLength = protein.sequence.length;
+					var lineLength = viewModel.lineLength();
+				
+					var plotWidth = $('#flot_overview').width();
+					var seekerWidth = plotWidth / sequenceLength * lineLength;
+					$('#flot_overview_container .seeker').width(seekerWidth);
+				}
+		}
+	};
+	
 	ko.applyBindings(new SearchViewModel());
 })();
