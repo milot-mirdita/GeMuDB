@@ -4,7 +4,7 @@ var initProteinMixin = (function(out) {
 			legend : { show : false }, 
 			xaxis : { show : false, min : 0, max : 115, minTickSize: 5, tickSize: 5 }, 
 			yaxis : { show : false, min : 1, max : 8, position : 'right', ticks : [1, 8] }, 
-			grid : { borderWidth : 1, borderColor : '#aaa'}, 
+			grid : { borderWidth : 1, borderColor : '#aaa', clickable : true }, 
 			series : { 
 				lines : { show : false, steps : false}, 
 				bars : { show : true, steps : true }, 
@@ -51,7 +51,7 @@ var initProteinMixin = (function(out) {
 			return data;
 		}
 		
-		out.addGraph = function(target, data, fill) {
+		out.addGraph = function(target, data, fill, callback) {
 			var fill = fill || false;
 			var options = plotOptions();
 				
@@ -61,7 +61,16 @@ var initProteinMixin = (function(out) {
 			if(fill)
 				options.xaxis.max = data.sequence.length;
 			
-			return $.plot(target, [ d1, d2 ], options);
+			var plot = $.plot(target, [ d1, d2 ], options);
+			
+			if(!fill) {
+				$(target).bind("plotclick", function (event, pos, item) {
+					if (item && callback) {
+						callback(item);
+					}
+				});
+			}
+			return plot;
 		};
 	return out;
 });
@@ -78,61 +87,94 @@ var initNumberMixin = (function(out) {
 (function() {
 	"use strict";
 	function SearchViewModel() {
+		// private
 		var hidden = {};
-		var self = this;
-		
 		initProteinMixin(hidden);
 		initNumberMixin(hidden);
 		
-		self.protein = ko.observable("Protein");
+		// public
+		var self = this;
+		
+		/**
+		* @arg protein id to search for
+		*/
+		self.protein = "asd";
+		
+		/**
+		* @arg protein object as json
+		*/
 		self.proteinResult = ko.observable();
 		
+		/**
+		* @arg offset to start rendering the detail graph
+		*/
 		self.sequenceOffset = ko.observable(0);
+		
+		/**
+		* @arg type of details to show
+		*/
 		self.predictionType = ko.observable("snap2");
 		
+		/**
+		* @arg length of detail graph
+		*/
 		self.lineLength = ko.observable(115);
 		
+		/**
+		* @arg index to start showing the list
+		*/
+		self.selectedIndex = ko.observable(0);
+		
+		
 		self.smallProteinResult = ko.computed(function() {
-			return hidden.subProtein(self.proteinResult(), self.sequenceOffset(), self.predictionType(), self.lineLength());
-		});
-		
-		self.isSearching = ko.observable();
+			return hidden.subProtein(self.proteinResult(), 
+									 self.sequenceOffset(), 
+									 self.predictionType(), 
+									 self.lineLength());
+		}).extend({ throttle: 1 });
+				
 		self.searchProtein = function() {
-			location.hash = "search/" + this.protein();
+			location.hash = "!/search/" + self.predictionType() + '/' + self.protein;
 		};
 		
-		self.handleProteinResult = function(json) {
-			self.proteinResult(json);
+		self.switchType = function(type) {
+			location.hash = "!/search/" + type + '/' + self.currentProtein;
 		};
-		
-		self.overviewFlot = undefined;
-		self.detailFlot = undefined;
 		
 		self.formatProteinResult = function(elements, data) {
-			self.detailFlot = hidden.addGraph($($(elements).get(1)), data);
-			self.overviewFlot = hidden.addGraph($('#flot_overview'), self.proteinResult(), true);
+			var clickHandler = function (item) {
+				self.selectedIndex(self.sequenceOffset() + item.dataIndex);
+			};
+			
+			// hack: can't use a selector to query for .flot_container
+			// elements is a collection and not DOM
+			var detailViewContainer = $($(elements).get(1));
+			hidden.addGraph(detailViewContainer, data, false, clickHandler);
+			hidden.addGraph($('#flot_overview'), self.proteinResult(), true);
 		}
 		
 		Sammy(function() {
-			this.get("#search/:protein", function() {
-				self.protein(this.params["protein"]);
-				self.isSearching("yes");
+			this.get("#!/search/:type/:protein", function() {
+				self.protein = self.currentProtein = this.params["protein"];
+				self.predictionType(this.params["type"]);
+				
 				$.getJSON("protein.json", function(result) {
-					self.handleProteinResult(result);
+					self.proteinResult(result);
 				});
+
 			});
 			
-			this.get('', function() {
-				self.isSearching("no");
+			this.get("", function() {
+				self.proteinResult("");
 			});
 		}).run();
 	}
 
 	ko.bindingHandlers.drag = {
 		init: function(element, valueAccessor, allBindingsAccessor, viewModel) {
-			
 			var hidden = {};
 			initNumberMixin(hidden);
+			
 			var sequenceLength = 0;
 			var marginLeft = 2;
 			var marginRight = 2;
@@ -145,9 +187,6 @@ var initNumberMixin = (function(out) {
 			var maxOffset = 0;
 			var minOffset = 0; 
 			
-			// var maxOffset = plotOverview.offset().x;
-			// var minOffset = plotOverview.offset().x + plotOverview.width(); 
-			
 			$(element).drag("init", function(event) {
 				$(this).css({ "cursor": "pointer" });
 				sequenceLength = viewModel.proteinResult().sequence.length;
@@ -159,7 +198,7 @@ var initNumberMixin = (function(out) {
 				
 				minOffset = marginLeft;
 				maxOffset = plotWidth - seekerWidth - marginRight;
-			},{ relative:true });
+			}, { relative:true });
 			
 			$(element).drag(function(event, dd ){
 				var offset = hidden.clamp(dd.offsetX, minOffset, maxOffset);

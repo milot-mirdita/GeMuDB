@@ -1,10 +1,9 @@
 #flot_overview_container {
 	position: relative;
 	background-color: #333;
-	padding-right:10px;
-	padding-top:5px;
-	margin:0 0 0 10px;
 	height: 42px;
+	margin-top: 3px;
+	margin-left: 2px;
 }
 
 #flot_overview_container .seeker {
@@ -18,6 +17,9 @@
 	cursor: e-resize;
 }
 
+#functional_effect_container .overlay {
+	cursor: pointer;
+}
 #search_container {
 	position: absolute;
 	top: 40%;
@@ -50,27 +52,27 @@
 	height: 47px;
 }
 
-#functional_effect_container {
+.result {
 	background-color: #eaeaea;
-	padding: 1em;
 	border: 1px solid #ccc;
+	padding: 7px;
+	box-sizing: border-box;
 }
 
 #top_bar_container .search {
-	box-sizing: border-box;
-	padding-top:10px;
-	padding-left:10px;
-	padding-bottom:0;
-	padding-right:10px;
-	margin-bottom:0;
 	height:47px;
 	display: inline-block;
 	background-color: white;
 	border-bottom-right-radius: 15px;
+	margin-left:0;
+}
+
+#top_bar_container form {
+	margin-top: 8px;
 }
 
 #top_bar_container input {
-	width: 74%;
+	width: 70%;
 }
 
 #top_bar_container button {
