@@ -96,33 +96,33 @@ var initNumberMixin = (function(out) {
 		var self = this;
 		
 		/**
-		* @arg protein id to search for
-		*/
+		 * @value protein id to search for
+		 */
 		self.protein = "asd";
 		
 		/**
-		* @arg protein object as json
-		*/
+		 * @arg protein object as json
+		 */
 		self.proteinResult = ko.observable();
-		
+	
 		/**
-		* @arg offset to start rendering the detail graph
-		*/
+		 * @arg offset to start rendering the detail graph
+		 */
 		self.sequenceOffset = ko.observable(0);
 		
 		/**
-		* @arg type of details to show
-		*/
+		 * @arg type of details to show
+		 */
 		self.predictionType = ko.observable("snap2");
 		
 		/**
-		* @arg length of detail graph
-		*/
+		 * @arg length of detail graph
+		 */
 		self.lineLength = ko.observable(115);
 		
 		/**
-		* @arg index to start showing the list
-		*/
+		 * @arg index to start showing the list
+		 */
 		self.selectedIndex = ko.observable(0);
 		
 		
@@ -133,6 +133,14 @@ var initNumberMixin = (function(out) {
 									 self.lineLength());
 		}).extend({ throttle: 1 });
 				
+		self.listResult = ko.computed(function (value) {
+			if(self.proteinResult() && self.proteinResult().id) {
+				$.getJSON("list.json", function(result) {
+					return result;
+				});
+			}	
+		}).extend({ throttle: 1 });
+
 		self.searchProtein = function() {
 			location.hash = "!/search/" + self.predictionType() + '/' + self.protein;
 		};
@@ -145,8 +153,6 @@ var initNumberMixin = (function(out) {
 			var clickHandler = function (item) {
 				var index = self.sequenceOffset() + item.dataIndex;
 				self.selectedIndex(index);
-				$('#functional_effect_list_container').scrollTo("#mutation" + index);
-				$("#mutation" + index).css('background-color', 'red');
 			};
 			
 			// hack: can't use a selector to query for .flot_container
@@ -156,6 +162,13 @@ var initNumberMixin = (function(out) {
 			hidden.addGraph($('#flot_overview'), self.proteinResult(), true);
 		}
 		
+		self.selectedIndex.subscribe(function (index) {
+			$(".mutations").css('background-color', 'inherit');
+			$("#mutation" + index).css('background-color', 'red');
+			$('#functional_effect_list_container').scrollTo("#mutation" + index, 
+				{ duration: 500, margin : true });
+		});
+
 		Sammy(function() {
 			this.get("#!/search/:type/:protein", function() {
 				self.protein = self.currentProtein = this.params["protein"];
