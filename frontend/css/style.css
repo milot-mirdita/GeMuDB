@@ -1,3 +1,14 @@
+html, body {
+	height: 100%;
+}
+
+.container {
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	margin: 0 auto -50px;
+}
+
 #flot_overview_container {
 	position: relative;
 	background-color: #333;
@@ -20,6 +31,7 @@
 #functional_effect_container .overlay {
 	cursor: pointer;
 }
+
 #search_container {
 	position: absolute;
 	top: 40%;
@@ -59,6 +71,40 @@
 	box-sizing: border-box;
 }
 
+.positions {
+	margin-left: 45px;
+	margin-top: 10px;
+}
+
+.positions > li {
+	font-size: 2em;
+	font-style: italic;
+	position: relative;
+	height: 55px;
+	padding-top: 35px;
+}
+
+.positions li ul {
+	padding: 0;
+	margin: 0;
+	position: absolute;
+	top: 0;
+	font-size: 14px;
+	font-style: normal;
+}
+
+.mutations li {
+	display: inline-block;
+	list-style-type: none;
+	width: 20px;
+	height: 20px;
+	border: 1px solid black;
+	margin: 5px;
+	padding: 5px;
+	text-align: center;
+	vertical-align: middle;
+}
+
 #top_bar_container .search {
 	height:47px;
 	display: inline-block;
@@ -81,7 +127,6 @@
 
 #footer_content {
 	box-sizing: border-box;
-	position: absolute;
 	left: 0;
 	bottom: 0;
 	padding: 1em;
@@ -89,6 +134,10 @@
 	width: 100%;
 	color: #eee;
 	text-align: center;
+}
+
+#footer_content, .push {
+	height: 50px;
 }
 
 #footer_content .menu {

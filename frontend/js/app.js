@@ -143,7 +143,10 @@ var initNumberMixin = (function(out) {
 		
 		self.formatProteinResult = function(elements, data) {
 			var clickHandler = function (item) {
-				self.selectedIndex(self.sequenceOffset() + item.dataIndex);
+				var index = self.sequenceOffset() + item.dataIndex;
+				self.selectedIndex(index);
+				$('#functional_effect_list_container').scrollTo("#mutation" + index);
+				$("#mutation" + index).css('background-color', 'red');
 			};
 			
 			// hack: can't use a selector to query for .flot_container
@@ -221,6 +224,15 @@ var initNumberMixin = (function(out) {
 					var seekerWidth = plotWidth / sequenceLength * lineLength;
 					$('#flot_overview_container .seeker').width(seekerWidth);
 				}
+		}
+	};
+	
+	ko.bindingHandlers.popover = {
+		init: function(element, valueAccessor, allBindingsAccessor, viewModel) {
+			$(element).popover(valueAccessor());
+		},
+		update: function(element, valueAccessor, allBindingsAccessor, viewModel) {
+			$(element).popover(valueAccessor());
 		}
 	};
 	

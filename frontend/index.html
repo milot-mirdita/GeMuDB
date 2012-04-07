@@ -18,40 +18,307 @@
 		</div>
 	</div>
 
-		<div data-bind="if: proteinResult()">
-			<div id="top_bar_container" class="row">
-				<div class="search span3" data-bind="template: { name: 'search_template' }"></div>
-				<div id="flot_overview_container" class="span9">
-					<div class="seeker" data-bind="drag: 'test'"></div>
-					<div id="flot_overview"  style="width:715px; height:40px"></div>
-				</div>
-			</div>
-			
-			<!-- ko if: smallProteinResult() -->
-			<div class="row">
-				<div id="functional_effect_container"
-				data-bind="template: { name: 'functional_effect_template', data: smallProteinResult(), afterRender: formatProteinResult }"  class="result span12">
-				</div>
-			</div>
-			<!-- /ko-->
-			<div class="row">
-				<div id="functional_effect_list_container" class="result span7" data-bind="text: selectedIndex">
-				</div>
-				<div id="protein_container" class="result span5">
-				</div>
+	<div data-bind="if: proteinResult()">
+		<div id="top_bar_container" class="row">
+			<div class="search span3" data-bind="template: { name: 'search_template' }"></div>
+			<div id="flot_overview_container" class="span9">
+				<div class="seeker" data-bind="drag: 'test'"></div>
+				<div id="flot_overview"  style="width:715px; height:40px"></div>
 			</div>
 		</div>
+		
+		<!-- ko if: smallProteinResult() -->
+		<div class="row">
+			<div id="functional_effect_container"
+			data-bind="template: { name: 'functional_effect_template', data: smallProteinResult(), afterRender: formatProteinResult }"  class="result span12">
+			</div>
+		</div>
+		<!-- /ko-->
+		<div class="row">
+			<div id="functional_effect_list_container" class="result span7" style="height: 300px">
+				<span data-bind="text: selectedIndex()"></span>
+<ol class="positions">
+<li>
+<ul id="mutation0" class="mutations">
+<li class="original">M</li>
+<li>A</li>
+<li>R</li>
+<li>N</li>
+<li>D</li>
+<li>C</li>
+<li>Q</li>
+<li>E</li>
+<li>G</li>
+<li>H</li>
+<li>I</li>
+<li>L</li>
+<li>K</li>
+<li>F</li>
+<li>P</li>
+<li>S</li>
+<li>T</li>
+<li>W</li>
+<li>Y</li>
+<li>V</li>
+</ul>
+</li>
+<li>
+<ul id="mutation1" class="mutations">
+<li class="original">M</li>
+<li>A</li>
+<li>R</li>
+<li>N</li>
+<li>D</li>
+<li>C</li>
+<li>Q</li>
+<li>E</li>
+<li>G</li>
+<li>H</li>
+<li>I</li>
+<li>L</li>
+<li>K</li>
+<li>F</li>
+<li>P</li>
+<li>S</li>
+<li>T</li>
+<li>W</li>
+<li>Y</li>
+<li>V</li>
+</ul>
+</li>
 
-	<div id="footer_container">
-		<div id="footer_content">
-			<div class="menu row">
-				<div class="span2">
-					<img src="img/rost_small.png" />
-				</div>
-				<div class="span10">
-					<span>Api</span>
-					<span>Database<span>
-				</div>
+<li>
+<ul class="mutations">
+<li class="original">M</li>
+<li>A</li>
+<li>R</li>
+<li>N</li>
+<li>D</li>
+<li>C</li>
+<li>Q</li>
+<li>E</li>
+<li>G</li>
+<li>H</li>
+<li>I</li>
+<li>L</li>
+<li>K</li>
+<li>F</li>
+<li>P</li>
+<li>S</li>
+<li>T</li>
+<li>W</li>
+<li>Y</li>
+<li>V</li>
+</ul>
+</li>
+
+<li>
+<ul class="mutations">
+<li class="original">M</li>
+<li>A</li>
+<li>R</li>
+<li>N</li>
+<li>D</li>
+<li>C</li>
+<li>Q</li>
+<li>E</li>
+<li>G</li>
+<li>H</li>
+<li>I</li>
+<li>L</li>
+<li>K</li>
+<li>F</li>
+<li>P</li>
+<li>S</li>
+<li>T</li>
+<li>W</li>
+<li>Y</li>
+<li>V</li>
+</ul>
+</li>
+
+<li>
+<ul class="mutations">
+<li class="original">M</li>
+<li>A</li>
+<li>R</li>
+<li>N</li>
+<li>D</li>
+<li>C</li>
+<li>Q</li>
+<li>E</li>
+<li>G</li>
+<li>H</li>
+<li>I</li>
+<li>L</li>
+<li>K</li>
+<li>F</li>
+<li>P</li>
+<li>S</li>
+<li>T</li>
+<li>W</li>
+<li>Y</li>
+<li>V</li>
+</ul>
+</li><li>
+<ul class="mutations">
+<li class="original">M</li>
+<li>A</li>
+<li>R</li>
+<li>N</li>
+<li>D</li>
+<li>C</li>
+<li>Q</li>
+<li>E</li>
+<li>G</li>
+<li>H</li>
+<li>I</li>
+<li>L</li>
+<li>K</li>
+<li>F</li>
+<li>P</li>
+<li>S</li>
+<li>T</li>
+<li>W</li>
+<li>Y</li>
+<li>V</li>
+</ul>
+</li><li>
+<ul class="mutations">
+<li class="original">M</li>
+<li>A</li>
+<li>R</li>
+<li>N</li>
+<li>D</li>
+<li>C</li>
+<li>Q</li>
+<li>E</li>
+<li>G</li>
+<li>H</li>
+<li>I</li>
+<li>L</li>
+<li>K</li>
+<li>F</li>
+<li>P</li>
+<li>S</li>
+<li>T</li>
+<li>W</li>
+<li>Y</li>
+<li>V</li>
+</ul>
+</li><li>
+<ul class="mutations">
+<li class="original">M</li>
+<li>A</li>
+<li>R</li>
+<li>N</li>
+<li>D</li>
+<li>C</li>
+<li>Q</li>
+<li>E</li>
+<li>G</li>
+<li>H</li>
+<li>I</li>
+<li>L</li>
+<li>K</li>
+<li>F</li>
+<li>P</li>
+<li>S</li>
+<li>T</li>
+<li>W</li>
+<li>Y</li>
+<li>V</li>
+</ul>
+</li><li>
+<ul  id="mutation10" class="mutations">
+<li class="original">M</li>
+<li>A</li>
+<li>R</li>
+<li>N</li>
+<li>D</li>
+<li>C</li>
+<li>Q</li>
+<li>E</li>
+<li>G</li>
+<li>H</li>
+<li>I</li>
+<li>L</li>
+<li>K</li>
+<li>F</li>
+<li>P</li>
+<li>S</li>
+<li>T</li>
+<li>W</li>
+<li>Y</li>
+<li>V</li>
+</ul>
+</li><li>
+<ul  id="mutation11" class="mutations">
+<li class="original">M</li>
+<li>A</li>
+<li>R</li>
+<li>N</li>
+<li>D</li>
+<li>C</li>
+<li>Q</li>
+<li>E</li>
+<li>G</li>
+<li>H</li>
+<li>I</li>
+<li>L</li>
+<li>K</li>
+<li>F</li>
+<li>P</li>
+<li>S</li>
+<li>T</li>
+<li>W</li>
+<li>Y</li>
+<li>V</li>
+</ul>
+</li><li>
+<ul id="mutation12" class="mutations">
+<li class="original">M</li>
+<li>A</li>
+<li>R</li>
+<li>N</li>
+<li>D</li>
+<li>C</li>
+<li>Q</li>
+<li>E</li>
+<li>G</li>
+<li>H</li>
+<li>I</li>
+<li>L</li>
+<li>K</li>
+<li>F</li>
+<li>P</li>
+<li>S</li>
+<li>T</li>
+<li>W</li>
+<li>Y</li>
+<li>V</li>
+</ul>
+</li>
+
+
+</ol>
+			</div>
+			<div id="protein_container" class="result span5">
+			</div>
+		</div>
+	</div>
+	<div class="push"></div>
+</div>
+
+<div id="footer_container">
+	<div id="footer_content">
+		<div class="menu row-fluid">
+			<div class="span2">
+				<img src="img/rost_small.png" />
+			</div>
+			<div class="span10">
+				<span>Api</span>
+				<span>Database<span>
 			</div>
 		</div>
 	</div>
@@ -59,7 +326,7 @@
 
 <script type="text/html" id="search_template">
 	<form class="form-horizontal">
-		<input data-bind="value: protein" />
+		<input data-bind="value: protein, popover: { placement: 'bottom'}" data-original-title="test" data-content="test" />
 		<button class="btn" data-bind="click: searchProtein">Go</button> 
 	</form>
 </script>
@@ -82,9 +349,10 @@
 <script src="js/jquery-1.7.2.min.js"></script>
 <script src="js/jquery.flot.min.js"></script>
 <script src="js/jquery.event.drag-2.0.min.js"></script>
+<script src="js/jquery.scrollTo-1.4.2-min.js"></script>
 <script src="js/knockout-2.0.0.js"></script>
 <script src="js/sammy-latest.min.js"></script>
-<script src="js/app.js"></script>
 <script src="js/bootstrap.min.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>
