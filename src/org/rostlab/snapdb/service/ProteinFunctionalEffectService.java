@@ -1,8 +1,8 @@
 package org.rostlab.snapdb.service;
 
-import org.rostlab.snapdb.dom.ProteinFunctionalEffectPrediction;
+import org.rostlab.snapdb.service.model.ProteinFunctionalEffectPrediction;
 
 public interface ProteinFunctionalEffectService {
-	public ProteinFunctionalEffectPrediction getFunctionlEffectPrediction(final String id);
+	public ProteinFunctionalEffectPrediction getFunctionalEffectPrediction(final String id);
 }
 

@@ -1,7 +1,7 @@
 import org.junit.Test;
-import org.rostlab.snapdb.dom.Prediction;
-import org.rostlab.snapdb.dom.PredictionType;
-import org.rostlab.snapdb.dom.ProteinFunctionalEffectPrediction;
+import org.rostlab.snapdb.service.model.Prediction;
+import org.rostlab.snapdb.service.model.PredictionType;
+import org.rostlab.snapdb.service.model.ProteinFunctionalEffectPrediction;
 
 import com.google.gson.Gson;
 

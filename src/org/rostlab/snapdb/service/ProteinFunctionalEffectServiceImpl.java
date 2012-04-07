@@ -5,18 +5,18 @@ import java.util.List;
 import org.rostlab.snapdb.dao.MutationDao;
 import org.rostlab.snapdb.dao.SequenceDao;
 import org.rostlab.snapdb.dom.Mutation;
-import org.rostlab.snapdb.dom.Prediction;
-import org.rostlab.snapdb.dom.PredictionType;
-import org.rostlab.snapdb.dom.ProteinFunctionalEffectPrediction;
 import org.rostlab.snapdb.dom.Sequence;
+import org.rostlab.snapdb.service.model.Prediction;
+import org.rostlab.snapdb.service.model.PredictionType;
+import org.rostlab.snapdb.service.model.ProteinFunctionalEffectPrediction;
 
-public class ProteinFunctionlEffectServiceImpl implements
+public class ProteinFunctionalEffectServiceImpl implements
 		ProteinFunctionalEffectService {
 	private MutationDao mutationDao;
 	private SequenceDao sequenceDao;
 
 	@Override
-	public ProteinFunctionalEffectPrediction getFunctionlEffectPrediction(
+	public ProteinFunctionalEffectPrediction getFunctionalEffectPrediction(
 			String refId) {
 
 		// catch sequence

@@ -1,5 +1,10 @@
-package org.rostlab.snapdb.dom;
+package org.rostlab.snapdb.service.model;
 
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+
+@XmlRootElement
+@XmlType(propOrder={"type", "reliability", "conservation"})
 public class Prediction {
 	private PredictionType type;
 	private String reliability;

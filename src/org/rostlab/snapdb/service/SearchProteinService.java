@@ -1,5 +1,7 @@
 package org.rostlab.snapdb.service;
 
+import org.rostlab.snapdb.service.model.ProteinId;
+
 public interface SearchProteinService {
-	public long searchProtein(final String searchString);
+	public ProteinId searchProtein(final String searchString);
 }

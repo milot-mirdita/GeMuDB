@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 
 import org.rostlab.snapdb.dao.SequenceDao;
 import org.rostlab.snapdb.dom.Sequence;
+import org.rostlab.snapdb.service.model.ProteinId;
 import org.rostlab.snapdb.util.BlankRemover;
 
 import uk.ac.ebi.demo.picr.business.PICRClient;
@@ -22,7 +23,7 @@ public class SearchProteinServiceImpl implements SearchProteinService {
 		databases.add("REFSEQ");
 	}
 	@Override
-	public long searchProtein(String searchString) {
+	public ProteinId searchProtein(String searchString) {
 		searchString = BlankRemover.trim(searchString);
 		Pattern pattern = Pattern.compile("^[A-Z]{19}.*");
 		Matcher matcher = pattern.matcher(searchString);
@@ -42,13 +43,13 @@ public class SearchProteinServiceImpl implements SearchProteinService {
 				for (CrossReference xref : entry.getIdenticalCrossReferences()) {
 					Sequence seq = sequenceDao.selectByRefId(xref.getAccession());
 					if(seq!=null)
-						return seq.getId();
+						return new ProteinId(seq.getId());
 					
 				}
 			}
-			return 0;
+			return new ProteinId();
 		}else {
-			return 0;
+			return new ProteinId();
 		}
 	}
 

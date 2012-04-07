@@ -13,16 +13,22 @@
 
 	<bean id="serviceFacade" class="org.rostlab.snapdb.facade.ServiceFacadeImpl">
 		<property name="searchProteinService" ref="searchProteinService" />
-		<property name="proteinFunctionEffectService" ref="proteinFunctionEffectService" />
+		<property name="proteinFunctionalEffectService" ref="proteinFunctionalEffectService" />
 	</bean>
 	<bean id="searchProteinService" class="org.rostlab.snapdb.service.SearchProteinServiceImpl">
 		<property name="sequenceDao" ref="sequenceDao" />
 	</bean>
-	<bean id="proteinFunctionEffectService"
-		class="org.rostlab.snapdb.service.ProteinFunctionlEffectServiceImpl">
+	<bean id="proteinFunctionalEffectService"
+		class="org.rostlab.snapdb.service.ProteinFunctionalEffectServiceImpl">
 		<property name="sequenceDao" ref="sequenceDao" />
 		<property name="mutationDao" ref="mutationDao" />
 	</bean>
+	<bean id="mutationImportService"
+		class="org.rostlab.snapdb.service.MutationImportServiceImpl">
+		<property name="sequenceDao" ref="sequenceDao" />
+		<property name="mutationDao" ref="mutationDao" />
+	</bean>
+	
 
 	<bean id="sequenceDao" class="org.rostlab.snapdb.dao.SequenceDaoImpl">
 		<property name="jdbcTemplate" ref="jdbcTemplate" />
