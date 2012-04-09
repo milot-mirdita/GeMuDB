@@ -37,14 +37,17 @@
 		<div class="row">
 			<div id="functional_effect_list_container" class="result span7" style="height: 300px">
 				<span data-bind="text: selectedIndex()"></span>
-				<div data-bind="if: !listResult()" class="progress">
+				<div class="progress" data-bind="visible : !listResult()">
 				</div>
-				<div data-bind="if: listResult()">
-					<ol class="positions" data-bind="template: { name: 'list_entry_template', foreach: selectedIndex().positions }">
-					</ol>
-				</div>
+
+				<ul class="positions" data-bind="visible : listResult(), template: { name: 'list_entry_template', foreach: listResult }, listclick: showDetailView"></ul>
 			</div>
-			<div id="protein_container" class="result span5">
+			<div id="snp_container" class="result span5" data-bind="if: snpDetails()">
+				<h1>Informations</h1>
+				<h2>SNAP2-Score</h2>
+				<span data-bind="text: snpDetails().snap2.score"></span>
+				<h2>Sift-Score</h2>
+				<span data-bind="text: snpDetails().sift.score"></span>
 			</div>
 		</div>
 	</div>
@@ -75,8 +78,8 @@
 <script type="text/html" id="functional_effect_template">
 	<div class="flot_container"  style="width:926px; height:60px;"></div>
 	<div class="btn-group" data-toggle="buttons-radio">
-		  <button class="btn" data-bind="click: $root.switchType.bind($data, 'snap2')">SNAP2</button>
-		  <button class="btn" data-bind="click: $root.switchType.bind($data, 'sift')">SIFT</button>
+		  <button class="btn" data-bind="click: $root.switchType.bind($data, 'snap2'), css : { active : $root.predictionType() == 'snap2' }">SNAP2</button>
+		  <button class="btn" data-bind="click: $root.switchType.bind($data, 'sift'), css : { active : $root.predictionType() == 'sift' }">SIFT</button>
 	</div>
 	<span class="sequence monospace" data-bind="text: sequence"></span>
 	<span class="id" data-bind="text: id && id || ''"></span>
@@ -90,27 +93,9 @@
 
 <script type="text/html" id="list_entry_template">
 	<li>
-	<ul class="mutations" data-bind="attr: { id: 'mutation' + index }">
-		<li class="original">M</li>
-		<li>A</li>
-		<li>R</li>
-		<li>N</li>
-		<li>D</li>
-		<li>C</li>
-		<li>Q</li>
-		<li>E</li>
-		<li>G</li>
-		<li>H</li>
-		<li>I</li>
-		<li>L</li>
-		<li>K</li>
-		<li>F</li>
-		<li>P</li>
-		<li>S</li>
-		<li>T</li>
-		<li>W</li>
-		<li>Y</li>
-		<li>V</li>
+	<span class="position" data-bind="text: position"></span>
+	<ul class="mutations" data-bind="attr: { id: 'mutation' + position }, foreach: { data: mutations, afterRender: $root.formatListResult }">
+		<li data-bind="text: name"></li>
 		</ul>
 	</li>
 </script>

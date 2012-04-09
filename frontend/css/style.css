@@ -86,8 +86,9 @@ html, body {
 }
 
 .positions {
-	margin-left: 45px;
+	margin-left: 5px;
 	margin-top: 10px;
+	list-style-type: none;
 }
 
 .positions > li {
@@ -100,7 +101,7 @@ html, body {
 
 .positions li ul {
 	padding: 0;
-	margin: 0;
+	margin: 0 0 0 45px;
 	position: absolute;
 	top: 0;
 	font-size: 14px;
@@ -117,6 +118,7 @@ html, body {
 	padding: 5px;
 	text-align: center;
 	vertical-align: middle;
+	cursor: pointer;
 }
 
 #top_bar_container .search {

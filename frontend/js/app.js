@@ -94,7 +94,7 @@ var initNumberMixin = (function(out) {
 		
 		// public
 		var self = this;
-		
+
 		/**
 		 * @value protein id to search for
 		 */
@@ -133,13 +133,30 @@ var initNumberMixin = (function(out) {
 									 self.lineLength());
 		}).extend({ throttle: 1 });
 				
-		self.listResult = ko.computed(function (value) {
+		self.listResult = ko.observable();
+
+		/**
+		 * @arg 
+		 */
+		self.snpDetails = ko.observable();
+
+		ko.computed(function () {
+			var depends1 = self.proteinResult();
+			var depends2 = self.sequenceOffset();
+			
+			self.listResult(null);
+			self.snpDetails(null);
+		});
+
+		ko.computed(function () {
 			if(self.proteinResult() && self.proteinResult().id) {
-				$.getJSON("list.json", function(result) {
-					return result;
-				});
-			}	
-		}).extend({ throttle: 1 });
+				self.listResult(null);
+				self.snpDetails(null);
+
+				var test = self.sequenceOffset();
+				$.getJSON("list.json", self.listResult);
+			}
+		}).extend({ throttle: 500 });
 
 		self.searchProtein = function() {
 			location.hash = "!/search/" + self.predictionType() + '/' + self.protein;
@@ -160,6 +177,33 @@ var initNumberMixin = (function(out) {
 			var detailViewContainer = $($(elements).get(1));
 			hidden.addGraph(detailViewContainer, data, false, clickHandler);
 			hidden.addGraph($('#flot_overview'), self.proteinResult(), true);
+		}
+
+		self.formatListResult = function(elements, data) {
+			//console.log(elements);
+			//console.log(data);
+
+		}
+
+		self.showDetailView = function(index, mutation) {
+			var snps = self.listResult();
+			if(!snps) {
+				self.snpDetails(null);
+				return;
+			}
+
+			for(var i in snps) {
+				if(snps[i].position == index) {
+					for(var j in snps[i].mutations) {
+						if(snps[i].mutations[j].name == mutation) {
+							self.snpDetails(snps[i].mutations[j].data);
+							return;
+						}
+					}
+				}
+			}
+
+			self.snpDetails(null);
 		}
 		
 		self.selectedIndex.subscribe(function (index) {
@@ -248,6 +292,18 @@ var initNumberMixin = (function(out) {
 			$(element).popover(valueAccessor());
 		}
 	};
+
+	ko.bindingHandlers.listclick = {
+		init: function(element, valueAccessor, allBindingsAccessor, viewModel) {
+			$(element).on("click", ".mutations li", function(event) {
+				// Hack, dont want to add data binding to each element
+				var index = $(event.target).parent().parent().find('span').text();
+				var mutation = $(event.target).text();
+				var callback = valueAccessor();
+				callback(index, mutation);
+			});
+		}
+	};
 	
-	ko.applyBindings(new SearchViewModel());
+	return ko.applyBindings(new SearchViewModel());
 })();
