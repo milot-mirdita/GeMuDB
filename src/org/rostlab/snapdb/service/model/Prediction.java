@@ -3,14 +3,16 @@ package org.rostlab.snapdb.service.model;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+import org.rostlab.snapdb.dom.MutationType;
+
 @XmlRootElement
 @XmlType(propOrder={"type", "reliability", "conservation"})
 public class Prediction {
-	private PredictionType type;
+	private MutationType type;
 	private String reliability;
 	private String conservation;
 
-	public PredictionType getType() {
+	public MutationType getType() {
 		return type;
 	}
 
@@ -22,8 +24,8 @@ public class Prediction {
 		return conservation;
 	}
 
-	public void setType(PredictionType type) {
-		this.type = type;
+	public void setType(MutationType mt) {
+		this.type = mt;
 	}
 
 	public void setReliability(String reliability) {

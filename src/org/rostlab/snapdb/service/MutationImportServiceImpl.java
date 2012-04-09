@@ -69,9 +69,10 @@ public class MutationImportServiceImpl implements MutationImportService {
 											tarFileIn), sequence);
 						}
 						if (entry.getName().endsWith(".SIFTprediction")) {
-							;
-							// parseSnapMutationFile(unpackEntry(entry,new
-							// File(pathToDir,sequence.getRefId()+".SIFTprediction"),tarFileIn));
+							parseSiftMutationFile(
+									unpackEntry(entry, new File(pathToDir,
+											sequence.getRefId() + ".SIFTprediction"),
+											tarFileIn), sequence);
 						}
 					}
 				} catch (FileNotFoundException e) {
@@ -87,6 +88,58 @@ public class MutationImportServiceImpl implements MutationImportService {
 				}
 			}
 		}
+	}
+
+	private void parseSiftMutationFile(File file, Sequence sequence) {
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new FileReader(file));
+			String line = null;
+			Mutation mutation = null;
+			int currPos = 0;
+			while ((line = reader.readLine()) != null) {
+				final String[] lineArray = line.split("\\t");
+				if(lineArray.length==1)
+					continue;
+				final String orgPosMut = lineArray[0];
+				final String effectStr = lineArray[1];
+				if(effectStr.equals("NOT SCORED")==true){
+					continue;
+				}
+				final int pos = Integer.parseInt(orgPosMut.substring(1,
+						orgPosMut.length() - 1));
+				final char org = orgPosMut.charAt(0);
+				if (pos != currPos) {
+					currPos = pos;
+					if(mutation!=null)
+						mutationDao.create(mutation);
+					mutation = new Mutation();
+					mutation.setLsequenceid(sequence.getId());
+					mutation.setPos(currPos);
+					mutation.setType(MutationType.SIFT);
+					mutation.getMutReliability()[AminoLookup.lookupAAtoIndex(org)] = 100;
+					mutation.getMutEffect()[AminoLookup.lookupAAtoIndex(org)] = false;
+				}
+				final char mut = orgPosMut.charAt(orgPosMut.length() - 1);
+				final Boolean effect = effectStr.equals("DELETERIOUS");
+				final Integer accuracy = (int) (Float.parseFloat(lineArray[2]
+						.substring(0, lineArray[3].length() - 1))*100f);
+				mutation.getMutReliability()[AminoLookup.lookupAAtoIndex(mut)] = accuracy;
+				mutation.getMutEffect()[AminoLookup.lookupAAtoIndex(mut)] = effect;
+			}
+			mutationDao.create(mutation);
+
+		} catch (FileNotFoundException e) {
+			throw new RuntimeException(e);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		} finally {
+			try {
+				reader.close();
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}		
 	}
 
 	private File unpackEntry(TarArchiveEntry entry, final File outputFile,

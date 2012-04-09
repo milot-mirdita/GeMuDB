@@ -15,4 +15,8 @@ public interface MutationDao {
 	
 	public void deleteAll();
 
+	List<Mutation> selectByIdAndLimit(long lsequence, int pos, int size);
+
+	public List<Mutation> selectByIdAndType(long id, int code);
+
 }

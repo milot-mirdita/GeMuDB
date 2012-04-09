@@ -84,10 +84,23 @@ public class MutationDaoImpl extends BaseDao implements MutationDao {
 		return jdbcTemplate.query("SELECT "+colList+
 				 " FROM mutation WHERE lsequenceid = ?", new Object[] { lsequence }, new MutationRowMapper());
 	}
+	
+	@Override
+	public List<Mutation> selectByIdAndLimit(final long lsequence,final int pos,final int size) {
+		return jdbcTemplate.query("SELECT "+colList+
+				 " FROM mutation WHERE lsequenceid = ? AND lpos > ? AND lpos < ? ", new Object[] { lsequence,pos,pos+size }, new MutationRowMapper());
+	}
 
 	@Override
 	public void deleteAll() {
 		jdbcTemplate.update("DELETE from mutation");
+	}
+
+	@Override
+	public List<Mutation> selectByIdAndType(long lsequence, int ltype) {
+		return jdbcTemplate.query("SELECT "+colList+
+				 " FROM mutation WHERE lsequenceid = ? AND ltype = ?", new Object[] { lsequence ,ltype}, new MutationRowMapper());
+	
 	}
 
 }

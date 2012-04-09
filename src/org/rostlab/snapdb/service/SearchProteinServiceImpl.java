@@ -17,11 +17,13 @@ public class SearchProteinServiceImpl implements SearchProteinService {
 	private SequenceDao sequenceDao;
 	private PICRClient client = new PICRClient();
 	private java.util.List<String> databases;
+
 	public SearchProteinServiceImpl() {
-//		  databases = client.loadDatabases();
+		// databases = client.loadDatabases();
 		databases = new ArrayList<String>();
 		databases.add("REFSEQ");
 	}
+
 	@Override
 	public ProteinId searchProtein(String searchString) {
 		searchString = BlankRemover.trim(searchString);
@@ -29,26 +31,27 @@ public class SearchProteinServiceImpl implements SearchProteinService {
 		Matcher matcher = pattern.matcher(searchString);
 		java.util.List<UPEntry> entries;
 		if (matcher.matches()) { // AA
-			searchString = "> SEQ \n"+searchString;
-			entries = client.performSequenceMapping(
-					searchString, databases.toArray());
+			searchString = "> SEQ \n" + searchString;
+			entries = client.performSequenceMapping(searchString,
+					databases.toArray());
 
 		} else { // ID
-			entries = client.performAccessionMapping(
-					searchString, databases.toArray());
+			entries = client.performAccessionMapping(searchString,
+					databases.toArray());
 
 		}
-		if(entries!=null&&entries.size() > 0){
+		if (entries != null && entries.size() > 0) {
 			for (UPEntry entry : entries) {
 				for (CrossReference xref : entry.getIdenticalCrossReferences()) {
-					Sequence seq = sequenceDao.selectByRefId(xref.getAccession());
-					if(seq!=null)
+					Sequence seq = sequenceDao.selectByRefId(xref
+							.getAccession());
+					if (seq != null)
 						return new ProteinId(seq.getId());
-					
+
 				}
 			}
 			return new ProteinId();
-		}else {
+		} else {
 			return new ProteinId();
 		}
 	}

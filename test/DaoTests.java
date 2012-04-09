@@ -16,7 +16,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 // specifies the Spring configuration to load for this test fixture
-@ContextConfiguration(locations={"file:config/Test-Context.xml"})
+@ContextConfiguration(locations={"file:config/Application-Context.xml"})
 public final class DaoTests {
 	final private static String seq="MKAQNLLKLTSPGPAPASCQHLQAQPLPHGGFSRPSSSSGLSLQAQLLLHNSLFWPSSCP"+
 "AHSGQCRPKTSSSQTPQARLLLPGGMNRPSFDLRTASAGRALASQGLLQAQLLPHGGCPR"+
