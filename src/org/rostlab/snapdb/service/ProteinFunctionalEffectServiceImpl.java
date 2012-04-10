@@ -9,6 +9,7 @@ import org.rostlab.snapdb.dom.Mutation;
 import org.rostlab.snapdb.dom.MutationType;
 import org.rostlab.snapdb.dom.Sequence;
 import org.rostlab.snapdb.service.model.MutationData;
+import org.rostlab.snapdb.service.model.MutationPredictionData;
 import org.rostlab.snapdb.service.model.MutationsPos;
 import org.rostlab.snapdb.service.model.Prediction;
 import org.rostlab.snapdb.service.model.ProteinFunctionalEffectPrediction;
@@ -37,9 +38,18 @@ public class ProteinFunctionalEffectServiceImpl implements
 				prediction.setType(mt);
 				final StringBuilder reli = new StringBuilder();
 				final StringBuilder cons = new StringBuilder();
+				int currPos  = 1;
 				for (Mutation mut : mutation) {
+					if(mut.getPos()!=currPos){
+						while(currPos!=mut.getPos()){
+							reli.append("-");
+							cons.append("-");
+							currPos++;
+						}
+					}
 					reli.append(calcReliability(mut.getMutReliability()));
 					cons.append(calcConservation(mut.getMutEffect()));
+					currPos++;
 				}
 				prediction.setConservation(cons.toString());
 				prediction.setReliability(reli.toString());
@@ -55,7 +65,7 @@ public class ProteinFunctionalEffectServiceImpl implements
 		for (int i = 0; i < effects.length; i++)
 			sumEffect += (effects[i]) ? 1 : 0;
 
-		return Math.round(sumEffect / 19 * 10);
+		return Math.round(sumEffect / 19 * 9);
 	}
 
 	private long calcReliability(Integer[] reliability) {
@@ -85,6 +95,8 @@ public class ProteinFunctionalEffectServiceImpl implements
 	public List<MutationsPos> getMutationList(final Long id,final int from,final int size) {
 		List<Mutation> mutationList = mutationDao.selectByIdAndLimit(id, from,
 				size);
+		Sequence sequence = sequenceDao.selectById(id);
+		final String sequenceString=sequence.getSequence();
 		List<MutationsPos> retList = new ArrayList<MutationsPos>(size);
 		MutationsPos currentMutationPos;
 		for (Mutation mutationDb : mutationList) {
@@ -100,13 +112,23 @@ public class ProteinFunctionalEffectServiceImpl implements
 			for (int aaindex = 0; aaindex < 20; aaindex++) {
 				if(indexExists(mutDataList, aaindex)==true){
 					MutationData mutData = mutDataList.get(aaindex);
-					mutData.addData(mutationDb.getType().toString(),
-							""+mutationDb.getMutReliability()[aaindex]);
+					mutData.addData(new MutationPredictionData(mutationDb.getType().toString(),
+							mutationDb.getMutReliability()[aaindex],
+							mutationDb.getMutEffect()[aaindex]));
 				}else{
 					mutDataList.add(generateMutationData(mutationDb,
 							AminoLookup.reversLookup(aaindex)));
 				}
 			}
+			//Reorder put wildtype in front
+			char wildTypeAA=sequenceString.charAt(mutationDb.getPos()-1);
+			int wildTypeIndex = AminoLookup.lookupAAtoIndex(wildTypeAA);
+			MutationData tmpData;
+			MutationData wildTypeData=mutDataList.get(wildTypeIndex);
+			tmpData =mutDataList.get(0);
+			mutDataList.set(0, wildTypeData);
+			mutDataList.set(wildTypeIndex, tmpData);
+			
 		}
 		return retList;
 	}
@@ -114,8 +136,9 @@ public class ProteinFunctionalEffectServiceImpl implements
 	private MutationData generateMutationData(Mutation mutationDb, Character aa) {
 		final MutationData mutData = new MutationData();
 		mutData.setAa(aa.toString());
-		mutData.addData(mutationDb.getType().toString(),
-				""+mutationDb.getMutReliability()[AminoLookup.lookupAAtoIndex(aa)]);
+		mutData.addData(new MutationPredictionData(mutationDb.getType().toString(),
+				mutationDb.getMutReliability()[AminoLookup.lookupAAtoIndex(aa)],
+				mutationDb.getMutEffect()[AminoLookup.lookupAAtoIndex(aa)]));
 		return mutData;
 	}
 

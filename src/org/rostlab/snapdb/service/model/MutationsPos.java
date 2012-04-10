@@ -6,7 +6,7 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement
+@XmlRootElement(name="MutationsPosContainer")
 @XmlType(propOrder={"position", "mutations"})
 public class MutationsPos {
 	private int position; 
