@@ -18,9 +18,11 @@ import org.rostlab.snapdb.service.model.MutationsPos;
 import org.rostlab.snapdb.service.model.ProteinFunctionalEffectPrediction;
 import org.rostlab.snapdb.service.model.ProteinId;
 
+import com.sun.jersey.api.NotFoundException;
+
 @Provider
 @Path("/protein")
-@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 public class ServiceFacadeImpl implements ServiceFacade {
 	private ProteinFunctionalEffectService proteinFunctionalEffectService;
 	private SearchProteinService searchProteinService;
@@ -28,42 +30,46 @@ public class ServiceFacadeImpl implements ServiceFacade {
 	@Override
 	@GET
 	@Path("/prediction/{id}")
-	public ProteinFunctionalEffectPrediction getFunctionalEffectPrediction(@PathParam("id") String id) {
+	public ProteinFunctionalEffectPrediction getFunctionalEffectPrediction(
+			@PathParam("id") String id) {
 		System.out.println("Call getFunctionalEffectPredcition: " + id);
-//		 ProteinFunctionalEffectPrediction pfep = new
-//		 ProteinFunctionalEffectPrediction();
-//		 pfep.setRefId("LALA");
-//		 pfep.setSequence("MKAQNLLKLTSPGPAPASCQHLQAQPLPHGGFSRPSSSSGLSLQAQLLLHNSLFWPSSCP");
-//		 Prediction p1=new Prediction();
-//		 p1.setConservation("01231051228590123850923185092135701239751293875120938571200");
-//		 p1.setType(PredictionType.SNAP);
-//		 p1.setReliability("01231051228590123850923185092135701239751293875120938571200");
-//		 pfep.addPrediction(p1);
-//		return pfep;
-		return proteinFunctionalEffectService.getFunctionalEffectPrediction(Long.parseLong(id));
+		// ProteinFunctionalEffectPrediction pfep = new
+		// ProteinFunctionalEffectPrediction();
+		// pfep.setRefId("LALA");
+		// pfep.setSequence("MKAQNLLKLTSPGPAPASCQHLQAQPLPHGGFSRPSSSSGLSLQAQLLLHNSLFWPSSCP");
+		// Prediction p1=new Prediction();
+		// p1.setConservation("01231051228590123850923185092135701239751293875120938571200");
+		// p1.setType(PredictionType.SNAP);
+		// p1.setReliability("01231051228590123850923185092135701239751293875120938571200");
+		// pfep.addPrediction(p1);
+		// return pfep;
+		return proteinFunctionalEffectService
+				.getFunctionalEffectPrediction(Long.parseLong(id));
 	}
 
 	@Override
 	@POST
 	@Path("/search")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public ProteinId searchProtein(@FormParam("q")  String searchString) {
+	public ProteinId searchProtein(@FormParam("q") String searchString) {
 		System.out.println("Search protein: " + searchString);
-		return searchProteinService
-				.searchProtein(searchString);
+		ProteinId retId = searchProteinService.searchProtein(searchString);
+		if (retId == null)
+			throw new NotFoundException("");
+		else
+			return retId;
 	}
 
-	
 	@Override
 	@GET
 	@Path("/mutations/{id}/{from}/{size}")
-	public List<MutationsPos> getMutationList(@PathParam("id") String id, @PathParam("from") Integer from,@PathParam("size") Integer size) {
+	public List<MutationsPos> getMutationList(@PathParam("id") String id,
+			@PathParam("from") Integer from, @PathParam("size") Integer size) {
 		System.out.println("Call getMutationList: " + id);
-		return proteinFunctionalEffectService.getMutationList(Long.parseLong(id), from, size);
+		return proteinFunctionalEffectService.getMutationList(
+				Long.parseLong(id), from, size);
 	}
 
-	
-	
 	public ProteinFunctionalEffectService getProteinFunctionalEffectService() {
 		return proteinFunctionalEffectService;
 	}
