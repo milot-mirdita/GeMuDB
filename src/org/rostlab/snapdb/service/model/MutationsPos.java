@@ -3,6 +3,11 @@ package org.rostlab.snapdb.service.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+
+@XmlRootElement
+@XmlType(propOrder={"position", "mutations"})
 public class MutationsPos {
 	private int position; 
 	private List<MutationData> mutations;

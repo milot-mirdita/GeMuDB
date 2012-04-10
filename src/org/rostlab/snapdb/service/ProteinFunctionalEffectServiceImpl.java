@@ -11,7 +11,6 @@ import org.rostlab.snapdb.dom.Sequence;
 import org.rostlab.snapdb.service.model.MutationData;
 import org.rostlab.snapdb.service.model.MutationsPos;
 import org.rostlab.snapdb.service.model.Prediction;
-import org.rostlab.snapdb.service.model.PredictionType;
 import org.rostlab.snapdb.service.model.ProteinFunctionalEffectPrediction;
 import org.rostlab.snapdb.util.AminoLookup;
 
@@ -83,23 +82,30 @@ public class ProteinFunctionalEffectServiceImpl implements
 	}
 
 	@Override
-	public List<MutationsPos> getMutationList(Long id, int from, int size) {
+	public List<MutationsPos> getMutationList(final Long id,final int from,final int size) {
 		List<Mutation> mutationList = mutationDao.selectByIdAndLimit(id, from,
 				size);
 		List<MutationsPos> retList = new ArrayList<MutationsPos>(size);
 		MutationsPos currentMutationPos;
 		for (Mutation mutationDb : mutationList) {
-			if (indexExists(retList, mutationDb.getPos() - 1) == false) {
+			final int currPos = mutationDb.getPos() - from;
+			if (indexExists(retList, currPos) == false) {
 				currentMutationPos = new MutationsPos();
 				currentMutationPos.setPosition(mutationDb.getPos());
-				retList.add(mutationDb.getPos() - 1, currentMutationPos);
+				retList.add(currPos, currentMutationPos);
 			}
-			currentMutationPos = retList.get(mutationDb.getPos() - 1);
+			currentMutationPos = retList.get(currPos);
 
 			List<MutationData> mutDataList = currentMutationPos.getMutations();
 			for (int aaindex = 0; aaindex < 20; aaindex++) {
-				mutDataList.add(generateMutationData(mutationDb,
-						AminoLookup.reversLookup(aaindex)));
+				if(indexExists(mutDataList, aaindex)==true){
+					MutationData mutData = mutDataList.get(aaindex);
+					mutData.addData(mutationDb.getType().toString(),
+							""+mutationDb.getMutReliability()[aaindex]);
+				}else{
+					mutDataList.add(generateMutationData(mutationDb,
+							AminoLookup.reversLookup(aaindex)));
+				}
 			}
 		}
 		return retList;
@@ -107,12 +113,13 @@ public class ProteinFunctionalEffectServiceImpl implements
 
 	private MutationData generateMutationData(Mutation mutationDb, Character aa) {
 		final MutationData mutData = new MutationData();
+		mutData.setAa(aa.toString());
 		mutData.addData(mutationDb.getType().toString(),
-				mutationDb.getMutReliability()[AminoLookup.lookupAAtoIndex(aa)]);
+				""+mutationDb.getMutReliability()[AminoLookup.lookupAAtoIndex(aa)]);
 		return mutData;
 	}
 
-	public boolean indexExists(final List list, final int index) {
-		return index >= 0 && index <= list.size();
+	public boolean indexExists(@SuppressWarnings("rawtypes") final List list, final int index) {
+		return index >= 0 && index < list.size();
 	}
 }
