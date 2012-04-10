@@ -14,6 +14,7 @@ import javax.ws.rs.ext.Provider;
 
 import org.rostlab.snapdb.service.ProteinFunctionalEffectService;
 import org.rostlab.snapdb.service.SearchProteinService;
+import org.rostlab.snapdb.service.model.MutationPosContainer;
 import org.rostlab.snapdb.service.model.MutationsPos;
 import org.rostlab.snapdb.service.model.ProteinFunctionalEffectPrediction;
 import org.rostlab.snapdb.service.model.ProteinId;
@@ -63,7 +64,7 @@ public class ServiceFacadeImpl implements ServiceFacade {
 	@Override
 	@GET
 	@Path("/mutations/{id}/{from}/{size}")
-	public List<MutationsPos> getMutationList(@PathParam("id") String id,
+	public MutationPosContainer getMutationList(@PathParam("id") String id,
 			@PathParam("from") Integer from, @PathParam("size") Integer size) {
 		System.out.println("Call getMutationList: " + id);
 		return proteinFunctionalEffectService.getMutationList(

@@ -9,6 +9,7 @@ import org.rostlab.snapdb.dom.Mutation;
 import org.rostlab.snapdb.dom.MutationType;
 import org.rostlab.snapdb.dom.Sequence;
 import org.rostlab.snapdb.service.model.MutationData;
+import org.rostlab.snapdb.service.model.MutationPosContainer;
 import org.rostlab.snapdb.service.model.MutationPredictionData;
 import org.rostlab.snapdb.service.model.MutationsPos;
 import org.rostlab.snapdb.service.model.Prediction;
@@ -33,15 +34,15 @@ public class ProteinFunctionalEffectServiceImpl implements
 			for (MutationType mt : MutationType.values()) {
 				final Prediction prediction = new Prediction();
 				// select by id and type
-				final List<Mutation> mutation = mutationDao.selectByIdAndType(sequence
-						.getId(),mt.getCode());
+				final List<Mutation> mutation = mutationDao.selectByIdAndType(
+						sequence.getId(), mt.getCode());
 				prediction.setType(mt);
 				final StringBuilder reli = new StringBuilder();
 				final StringBuilder cons = new StringBuilder();
-				int currPos  = 1;
+				int currPos = 1;
 				for (Mutation mut : mutation) {
-					if(mut.getPos()!=currPos){
-						while(currPos!=mut.getPos()){
+					if (mut.getPos() != currPos) {
+						while (currPos != mut.getPos()) {
 							reli.append("-");
 							cons.append("-");
 							currPos++;
@@ -92,12 +93,15 @@ public class ProteinFunctionalEffectServiceImpl implements
 	}
 
 	@Override
-	public List<MutationsPos> getMutationList(final Long id,final int from,final int size) {
+	public MutationPosContainer getMutationList(final Long id, final int from,
+			final int size) {
 		List<Mutation> mutationList = mutationDao.selectByIdAndLimit(id, from,
 				size);
 		Sequence sequence = sequenceDao.selectById(id);
-		final String sequenceString=sequence.getSequence();
-		List<MutationsPos> retList = new ArrayList<MutationsPos>(size);
+		final String sequenceString = sequence.getSequence();
+		final MutationPosContainer mutationPosContainer = new MutationPosContainer(
+				size);
+		List<MutationsPos> retList = mutationPosContainer.getMutationsPos();
 		MutationsPos currentMutationPos;
 		for (Mutation mutationDb : mutationList) {
 			final int currPos = mutationDb.getPos() - from;
@@ -110,39 +114,42 @@ public class ProteinFunctionalEffectServiceImpl implements
 
 			List<MutationData> mutDataList = currentMutationPos.getMutations();
 			for (int aaindex = 0; aaindex < 20; aaindex++) {
-				if(indexExists(mutDataList, aaindex)==true){
+				if (indexExists(mutDataList, aaindex) == true) {
 					MutationData mutData = mutDataList.get(aaindex);
-					mutData.addData(new MutationPredictionData(mutationDb.getType().toString(),
-							mutationDb.getMutReliability()[aaindex],
-							mutationDb.getMutEffect()[aaindex]));
-				}else{
+					mutData.addData(new MutationPredictionData(mutationDb
+							.getType().toString(), mutationDb
+							.getMutReliability()[aaindex], mutationDb
+							.getMutEffect()[aaindex]));
+				} else {
 					mutDataList.add(generateMutationData(mutationDb,
 							AminoLookup.reversLookup(aaindex)));
 				}
 			}
-			//Reorder put wildtype in front
-			char wildTypeAA=sequenceString.charAt(mutationDb.getPos()-1);
+			// Reorder put wildtype in front
+			char wildTypeAA = sequenceString.charAt(mutationDb.getPos() - 1);
 			int wildTypeIndex = AminoLookup.lookupAAtoIndex(wildTypeAA);
 			MutationData tmpData;
-			MutationData wildTypeData=mutDataList.get(wildTypeIndex);
-			tmpData =mutDataList.get(0);
+			MutationData wildTypeData = mutDataList.get(wildTypeIndex);
+			tmpData = mutDataList.get(0);
 			mutDataList.set(0, wildTypeData);
 			mutDataList.set(wildTypeIndex, tmpData);
-			
+
 		}
-		return retList;
+		return mutationPosContainer;
 	}
 
 	private MutationData generateMutationData(Mutation mutationDb, Character aa) {
 		final MutationData mutData = new MutationData();
 		mutData.setAa(aa.toString());
-		mutData.addData(new MutationPredictionData(mutationDb.getType().toString(),
-				mutationDb.getMutReliability()[AminoLookup.lookupAAtoIndex(aa)],
-				mutationDb.getMutEffect()[AminoLookup.lookupAAtoIndex(aa)]));
+		mutData.addData(new MutationPredictionData(mutationDb.getType()
+				.toString(), mutationDb.getMutReliability()[AminoLookup
+				.lookupAAtoIndex(aa)], mutationDb.getMutEffect()[AminoLookup
+				.lookupAAtoIndex(aa)]));
 		return mutData;
 	}
 
-	public boolean indexExists(@SuppressWarnings("rawtypes") final List list, final int index) {
+	public boolean indexExists(@SuppressWarnings("rawtypes") final List list,
+			final int index) {
 		return index >= 0 && index < list.size();
 	}
 }
