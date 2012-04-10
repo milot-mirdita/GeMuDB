@@ -112,7 +112,7 @@ public class ProteinFunctionalEffectServiceImpl implements
 			}
 			currentMutationPos = retList.get(currPos);
 
-			List<MutationData> mutDataList = currentMutationPos.getMutations();
+			final List<MutationData> mutDataList = currentMutationPos.getMutations();
 			for (int aaindex = 0; aaindex < 20; aaindex++) {
 				if (indexExists(mutDataList, aaindex) == true) {
 					MutationData mutData = mutDataList.get(aaindex);
@@ -127,13 +127,14 @@ public class ProteinFunctionalEffectServiceImpl implements
 			}
 			// Reorder put wildtype in front
 			char wildTypeAA = sequenceString.charAt(mutationDb.getPos() - 1);
-			int wildTypeIndex = AminoLookup.lookupAAtoIndex(wildTypeAA);
-			MutationData tmpData;
-			MutationData wildTypeData = mutDataList.get(wildTypeIndex);
-			tmpData = mutDataList.get(0);
-			mutDataList.set(0, wildTypeData);
-			mutDataList.set(wildTypeIndex, tmpData);
-
+			if(mutDataList.get(0).getAa().equals(""+wildTypeAA)==false){
+				int wildTypeIndex = AminoLookup.lookupAAtoIndex(wildTypeAA);
+				MutationData tmpData;
+				MutationData wildTypeData = mutDataList.get(wildTypeIndex);
+				tmpData = mutDataList.get(0);
+				mutDataList.set(0, wildTypeData);
+				mutDataList.set(wildTypeIndex, tmpData);
+			}
 		}
 		return mutationPosContainer;
 	}

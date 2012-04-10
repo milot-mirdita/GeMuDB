@@ -3,10 +3,13 @@ package org.rostlab.snapdb.service.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAccessOrder;
+import javax.xml.bind.annotation.XmlAccessorOrder;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
+@XmlAccessorOrder(XmlAccessOrder.UNDEFINED)
 public class MutationPosContainer {
 	private List<MutationsPos> mutationsPos;
 

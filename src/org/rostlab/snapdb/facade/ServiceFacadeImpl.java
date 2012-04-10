@@ -1,7 +1,5 @@
 package org.rostlab.snapdb.facade;
 
-import java.util.List;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -15,7 +13,6 @@ import javax.ws.rs.ext.Provider;
 import org.rostlab.snapdb.service.ProteinFunctionalEffectService;
 import org.rostlab.snapdb.service.SearchProteinService;
 import org.rostlab.snapdb.service.model.MutationPosContainer;
-import org.rostlab.snapdb.service.model.MutationsPos;
 import org.rostlab.snapdb.service.model.ProteinFunctionalEffectPrediction;
 import org.rostlab.snapdb.service.model.ProteinId;
 
