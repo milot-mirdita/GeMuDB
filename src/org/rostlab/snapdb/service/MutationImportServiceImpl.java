@@ -10,7 +10,9 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
@@ -96,6 +98,7 @@ public class MutationImportServiceImpl implements MutationImportService {
 			String line = null;
 			Mutation mutation = null;
 			int currPos = 0;
+			final List<Mutation> listToAdd = new ArrayList<Mutation>();
 			while ((line = reader.readLine()) != null) {
 				final String[] lineArray = line.split("\\t");
 				if(lineArray.length==1)
@@ -111,7 +114,7 @@ public class MutationImportServiceImpl implements MutationImportService {
 				if (pos != currPos) {
 					currPos = pos;
 					if(mutation!=null)
-						mutationDao.create(mutation);
+						listToAdd.add(mutation);
 					mutation = new Mutation();
 					mutation.setLsequenceid(sequence.getId());
 					mutation.setPos(currPos);
@@ -126,8 +129,8 @@ public class MutationImportServiceImpl implements MutationImportService {
 				mutation.getMutReliability()[AminoLookup.lookupAAtoIndex(mut)] = accuracy;
 				mutation.getMutEffect()[AminoLookup.lookupAAtoIndex(mut)] = effect;
 			}
-			mutationDao.create(mutation);
-
+			listToAdd.add(mutation);
+			mutationDao.insertBatch(listToAdd);
 		} catch (FileNotFoundException e) {
 			throw new RuntimeException(e);
 		} catch (IOException e) {
@@ -197,6 +200,7 @@ public class MutationImportServiceImpl implements MutationImportService {
 			String line = null;
 			Mutation mutation = null;
 			int currPos = 0;
+			final List<Mutation> listToAdd = new ArrayList<Mutation>();
 			while ((line = reader.readLine()) != null) {
 				final String[] lineArray = line.split("\\t");
 				final String orgPosMut = lineArray[0];
@@ -208,7 +212,7 @@ public class MutationImportServiceImpl implements MutationImportService {
 				if (pos != currPos) {
 					currPos = pos;
 					if(mutation!=null)
-						mutationDao.create(mutation);
+						listToAdd.add(mutation);
 					mutation = new Mutation();
 					mutation.setLsequenceid(sequence.getId());
 					mutation.setPos(currPos);
@@ -223,8 +227,8 @@ public class MutationImportServiceImpl implements MutationImportService {
 				mutation.getMutReliability()[AminoLookup.lookupAAtoIndex(mut)] = accuracy;
 				mutation.getMutEffect()[AminoLookup.lookupAAtoIndex(mut)] = effect;
 			}
-			mutationDao.create(mutation);
-
+			listToAdd.add(mutation);
+			mutationDao.insertBatch(listToAdd);
 		} catch (FileNotFoundException e) {
 			throw new RuntimeException(e);
 		} catch (IOException e) {
