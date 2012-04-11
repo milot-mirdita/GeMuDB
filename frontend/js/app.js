@@ -11,20 +11,18 @@ var initProteinMixin = (function(out) {
 				shadowSize : 1} 
 			}};
 		
-		out.subProtein = function(data, offset, predictionType, lineLength) {
+		out.subProtein = function(data, offset, lineLength) {
 			if(!data) return null;
 		
 			var lineLength = lineLength || 115;
 			var predictions = [];
 
 			$.each(data.predictions, function(index, prediction) {
-				if(predictionType == undefined || predictionType == prediction.type) {
-					predictions.push({
-						type : prediction.type,
-						reliability : prediction.reliability.slice(offset, offset + lineLength),
-						conservation : prediction.conservation.slice(offset, offset + lineLength)
-					});
-				}
+				predictions.push({
+					type : prediction.type,
+					reliability : prediction.reliability.slice(offset, offset + lineLength),
+					conservation : prediction.conservation.slice(offset, offset + lineLength)
+				});
 			});
 					
 			return { id : data.id, 
@@ -43,27 +41,23 @@ var initProteinMixin = (function(out) {
 			return data;
 		}
 		
-		out.addGraph = function(target, data, type, fill, callback) {
+		out.addGraph = function(target, data, types, fill, callback) {
 			var fill = fill || false;
 			var options = plotOptions();
 
-			var index = -1;
-			for(var t in data.predictions) {
-				if(data.predictions[t].type === type) {
-					index = t;
+			var graphs = [];
+			for(var i in data.predictions) {
+				for(var j in types) {
+					if(data.predictions[i].type == types[j]) {
+						graphs.push(probsToData(data.predictions[j].conservation));
+					}
 				}
 			}
 
-			if(index == -1)
-				return;
-	
-			var d1 = probsToData(data.predictions[index].reliability);
-			var d2 = probsToData(data.predictions[index].conservation);
-			
 			if(fill)
 				options.xaxis.max = data.sequence.length;
 			
-			var plot = $.plot(target, [ d2 ], options);
+			var plot = $.plot(target, graphs, options);
 			
 			if(!fill) {
 				$(target).bind("plotclick", function (event, pos, item) {
@@ -85,6 +79,12 @@ var initNumberMixin = (function(out) {
 });
 
 
+var Protein = function() {
+	this.id = ko.observable("");
+	this.refid = ko.observable("");
+	this.sequence = ko.observable("");
+	this.predictions = ko.observableArray();
+};
 
 (function() {
 	"use strict";
@@ -101,12 +101,11 @@ var initNumberMixin = (function(out) {
 		 * @value protein id to search for
 		 */
 		self.protein = "NP_005378";
-
 		
 		/**
 		 * @arg protein object as json
 		 */
-		self.proteinResult = ko.observable();
+		self.proteinResult = new Protein();
 	
 		/**
 		 * @arg offset to start rendering the detail graph
@@ -116,7 +115,7 @@ var initNumberMixin = (function(out) {
 		/**
 		 * @arg type of details to show
 		 */
-		self.predictionType = ko.observable("SNAP");
+		self.predictionType = ko.observableArray(["SNAP"]);
 		
 		/**
 		 * @arg length of detail graph
@@ -124,9 +123,9 @@ var initNumberMixin = (function(out) {
 		self.lineLength = 115;	
 		
 		self.smallProteinResult = ko.computed(function() {
-			return hidden.subProtein(self.proteinResult(), 
-									 self.sequenceOffset(), 
-									 self.predictionType(), 
+			var protein = ko.toJS(self.proteinResult);
+			return hidden.subProtein(protein, 
+									 self.sequenceOffset(),
 									 self.lineLength);
 		}).extend({ throttle: 1 });
 				
@@ -144,11 +143,9 @@ var initNumberMixin = (function(out) {
 			self.snpDetails(null);
 		});
 
-		self.proteinResult.subscribe(function(value) {console.log(value);});
-
 		ko.computed(function () {
-			if(self.proteinResult()) {
-				var id =  self.proteinResult().id;
+			if(self.proteinResult.id()) {
+				var id =  self.proteinResult.id();
 				var offset = (self.sequenceOffset() + 1);
 				var length = self.lineLength;
 
@@ -163,18 +160,26 @@ var initNumberMixin = (function(out) {
 		}).extend({ throttle: 500 });
 
 		self.searchProtein = function() {
-			location.hash = "!/search/" + self.predictionType() + '/' + self.protein;
+			location.hash = "!/search/" + self.protein;
 		};
 		
-		self.switchType = function(type) {
-			location.hash = "!/search/" + type + '/' + self.currentProtein;
-		};
+		// self.switchType = function(type) {
+		// 	location.hash = "!/search/" + type + '/' + self.currentProtein;
+		// };
+
+		self.toggleType = function(type) {
+			var index = $.inArray(type, self.predictionType());
+			if(index == -1)
+				self.predictionType().push(type);
+			else
+				self.predictionType().splice(index, 1);
+		}
 		
 		self.formatProteinResult = function(elements, data) {
 			var clickHandler = function (item) {
-				var index = self.sequenceOffset() + item.dataIndex;
-				$(".mutations").css('background-color', 'inherit');
-				$("#mutation" + index).css('background-color', 'red');
+				var index = self.sequenceOffset() + item.dataIndex + 1;
+				$(".mutations").parent().css('background-color', 'inherit');
+				$("#mutation" + index).parent().css('background-color', 'red');
 				$('#functional_effect_list_container').scrollTo("#mutation" + index, 
 					{ duration: 500, margin : true });
 
@@ -184,7 +189,7 @@ var initNumberMixin = (function(out) {
 			// elements is a collection and not DOM
 			var detailViewContainer = $($(elements).get(1));
 			hidden.addGraph(detailViewContainer, data, self.predictionType(), false, clickHandler);
-			hidden.addGraph($('#flot_overview'), self.proteinResult(), self.predictionType(), true);
+			hidden.addGraph($('#flot_overview'), ko.toJS(self.proteinResult), self.predictionType(), true);
 		}
 
 		self.formatListResult = function(elements, data) {
@@ -211,30 +216,33 @@ var initNumberMixin = (function(out) {
 		}
 
 		Sammy(function() {
-			this.get("#!/search/:type/:protein", function() {
-				self.protein = self.currentProtein = this.params["protein"];
-				self.predictionType(this.params["type"]);
+			this.get("#!/search/:protein", function() {
+				//self.predictionType(this.params["type"]);
+				if(self.currentProtein != this.params["protein"]) {
+					self.protein = self.currentProtein = this.params["protein"];
 
-				var errorHandler = function () {
+					var errorHandler = function () {
 
-				}
-				
-				$.when($.post('http://localhost/api/resources/protein/search', 
-						{q: self.protein}, undefined, "json"))
-					.done(function(searchResult) {
-						$.when($.getJSON('http://localhost/api/resources/protein/prediction/' + searchResult.id))
-						.done(function (proteinResult) {
-							proteinResult.id = (searchResult.id - 0);
-							self.proteinResult(proteinResult);
+					}
+					
+					$.when($.post('http://localhost/api/resources/protein/search', 
+							{q: self.protein}, undefined, "json"))
+						.done(function(searchResult) {
+							$.when($.getJSON('http://localhost/api/resources/protein/prediction/' + searchResult.id))
+							.done(function (proteinResult) {
+								self.proteinResult.id(searchResult.id - 0);
+								self.proteinResult.sequence(proteinResult.sequence);
+								self.proteinResult.refid(proteinResult.refid);
+								self.proteinResult.predictions(proteinResult.predictions);
+							})
+							.fail(errorHandler);
 						})
 						.fail(errorHandler);
-					})
-					.fail(errorHandler);
-
+				}
 			});
 			
 			this.get("", function() {
-				self.proteinResult("");
+				self.proteinResult = new Protein();
 			});
 		}).run();
 	}
@@ -258,7 +266,7 @@ var initNumberMixin = (function(out) {
 			
 			$(element).drag("init", function(event) {
 				$(element).css({ "cursor": "pointer" });
-				sequenceLength = viewModel.proteinResult().sequence.length;
+				sequenceLength = viewModel.proteinResult.sequence().length;
 				lineLength = viewModel.lineLength;
 				
 				plotWidth = plotOverview.width();
@@ -280,7 +288,7 @@ var initNumberMixin = (function(out) {
 			});
 		},
 		update: function(element, valueAccessor, allBindingsAccessor, viewModel) {
-				var protein = viewModel.proteinResult();
+				var protein = ko.toJS(viewModel.proteinResult);
 				if(protein) {
 					
 					var sequenceLength = protein.sequence.length;

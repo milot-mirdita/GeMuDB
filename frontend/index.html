@@ -10,7 +10,7 @@
 <div class="container">
 	<div class="row">
 		<div id="search_container" class="span8 offset2"
-			data-bind="if: !proteinResult()">
+			data-bind="visible: !proteinResult.id()">
 			<div class="header">
 				SNPdbe
 			</div>
@@ -18,7 +18,7 @@
 		</div>
 	</div>
 
-	<div data-bind="if: proteinResult()">
+	<div data-bind="visible: proteinResult.id()">
 		<div id="top_bar_container" class="row">
 			<div class="search span3" data-bind="template: { name: 'search_template' }"></div>
 			<div id="flot_overview_container" class="span9">
@@ -77,8 +77,8 @@
 <script type="text/html" id="functional_effect_template">
 	<div class="flot_container"  style="width:926px; height:60px;"></div>
 	<div class="btn-group" data-toggle="buttons-radio">
-		  <button class="btn" data-bind="click: $root.switchType.bind($data, 'SNAP'), css : { active : $root.predictionType() == 'SNAP' }">SNAP2</button>
-		  <button class="btn" data-bind="click: $root.switchType.bind($data, 'SIFT'), css : { active : $root.predictionType() == 'SIFT' }">SIFT</button>
+		  <button class="btn" data-bind="click: $root.toggleType.bind($data, 'SNAP'), css : { active : $root.predictionType() == 'SNAP' }">SNAP2</button>
+		  <button class="btn" data-bind="click: $root.toggleType.bind($data, 'SIFT'), css : { active : $root.predictionType() == 'SIFT' }">SIFT</button>
 	</div>
 	<span class="sequence monospace" data-bind="text: sequence"></span>
 	<span class="id" data-bind="text: id && id || ''"></span>
