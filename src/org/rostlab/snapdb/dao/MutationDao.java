@@ -19,4 +19,6 @@ public interface MutationDao {
 
 	public List<Mutation> selectByIdAndType(long id, int code);
 
+	public void insertBatch(List<Mutation> mutation);
+
 }

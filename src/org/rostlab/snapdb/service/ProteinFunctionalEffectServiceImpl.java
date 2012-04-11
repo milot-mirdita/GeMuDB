@@ -1,6 +1,6 @@
 package org.rostlab.snapdb.service;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.rostlab.snapdb.dao.MutationDao;
@@ -127,13 +127,11 @@ public class ProteinFunctionalEffectServiceImpl implements
 			}
 			// Reorder put wildtype in front
 			char wildTypeAA = sequenceString.charAt(mutationDb.getPos() - 1);
-			if(mutDataList.get(0).getAa().equals(""+wildTypeAA)==false){
+			if(mutDataList.get(0).isWildType()==false){
 				int wildTypeIndex = AminoLookup.lookupAAtoIndex(wildTypeAA);
-				MutationData tmpData;
 				MutationData wildTypeData = mutDataList.get(wildTypeIndex);
-				tmpData = mutDataList.get(0);
-				mutDataList.set(0, wildTypeData);
-				mutDataList.set(wildTypeIndex, tmpData);
+				wildTypeData.setWildType(true);
+				Collections.sort(mutDataList);
 			}
 		}
 		return mutationPosContainer;

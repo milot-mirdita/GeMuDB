@@ -8,10 +8,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement
-@XmlType(propOrder = { "aa", "data" })
-public class MutationData {
+@XmlType(propOrder = { "aa","wildType", "data" })
+public class MutationData implements Comparable<MutationData> {
+
 	private String aa;
 	private List<MutationPredictionData> data;
+
+	private Boolean wildType = false;
 
 	public MutationData() {
 		data = new ArrayList<MutationPredictionData>();
@@ -38,6 +41,27 @@ public class MutationData {
 
 	public void addData(MutationPredictionData obj) {
 		data.add(obj);
+	}
+
+	@XmlElement(name = "wildType")
+	public Boolean isWildType() {
+		return wildType;
+	}
+
+	public void setWildType(Boolean wildType) {
+		this.wildType = wildType;
+	}
+
+	@Override
+	public int compareTo(MutationData o) {
+		if (this.isWildType() && o.isWildType() == false)
+			return -1;
+		else if (this.isWildType() == false && o.isWildType() == false)
+			return this.getAa().compareTo(o.getAa());
+		else if (this.isWildType() == false && o.isWildType())
+			return 1;
+		else
+			return 0;
 	}
 
 }
