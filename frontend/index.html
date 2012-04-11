@@ -10,7 +10,7 @@
 <div class="container">
 	<div class="row">
 		<div id="search_container" class="span8 offset2"
-			data-bind="if: !proteinResult()">
+			data-bind="visible: !proteinResult.id()">
 			<div class="header">
 				SNPdbe
 			</div>
@@ -18,7 +18,7 @@
 		</div>
 	</div>
 
-	<div data-bind="if: proteinResult()">
+	<div data-bind="visible: proteinResult.id()">
 		<div id="top_bar_container" class="row">
 			<div class="search span3" data-bind="template: { name: 'search_template' }"></div>
 			<div id="flot_overview_container" class="span9">
@@ -36,7 +36,6 @@
 		<!-- /ko-->
 		<div class="row">
 			<div id="functional_effect_list_container" class="result span7" style="height: 300px">
-				<span data-bind="text: selectedIndex()"></span>
 				<div class="progress" data-bind="visible : !listResult()">
 				</div>
 
@@ -45,9 +44,9 @@
 			<div id="snp_container" class="result span5" data-bind="if: snpDetails()">
 				<h1>Informations</h1>
 				<h2>SNAP2-Score</h2>
-				<span data-bind="text: snpDetails().snap2.score"></span>
+				<span data-bind="text: snpDetails()[0].score"></span>
 				<h2>Sift-Score</h2>
-				<span data-bind="text: snpDetails().sift.score"></span>
+				<span data-bind="text: snpDetails()[1].score"></span>
 			</div>
 		</div>
 	</div>
@@ -78,8 +77,8 @@
 <script type="text/html" id="functional_effect_template">
 	<div class="flot_container"  style="width:926px; height:60px;"></div>
 	<div class="btn-group" data-toggle="buttons-radio">
-		  <button class="btn" data-bind="click: $root.switchType.bind($data, 'snap2'), css : { active : $root.predictionType() == 'snap2' }">SNAP2</button>
-		  <button class="btn" data-bind="click: $root.switchType.bind($data, 'sift'), css : { active : $root.predictionType() == 'sift' }">SIFT</button>
+		  <button class="btn" data-bind="click: $root.toggleType.bind($data, 'SNAP'), css : { active : $root.predictionType() == 'SNAP' }">SNAP2</button>
+		  <button class="btn" data-bind="click: $root.toggleType.bind($data, 'SIFT'), css : { active : $root.predictionType() == 'SIFT' }">SIFT</button>
 	</div>
 	<span class="sequence monospace" data-bind="text: sequence"></span>
 	<span class="id" data-bind="text: id && id || ''"></span>
@@ -95,7 +94,7 @@
 	<li>
 	<span class="position" data-bind="text: position"></span>
 	<ul class="mutations" data-bind="attr: { id: 'mutation' + position }, foreach: { data: mutations, afterRender: $root.formatListResult }">
-		<li data-bind="text: name"></li>
+		<li data-bind="text: aa"></li>
 		</ul>
 	</li>
 </script>
@@ -105,6 +104,7 @@
 <script src="js/jquery.event.drag-2.0.min.js"></script>
 <script src="js/jquery.scrollTo-1.4.2-min.js"></script>
 <script src="js/knockout-2.0.0.js"></script>
+<script src="js/knockout.mapping-latest.js"></script>
 <script src="js/sammy-latest.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/app.js"></script>
