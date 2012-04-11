@@ -10,14 +10,6 @@ var initProteinMixin = (function(out) {
 				bars : { show : true, steps : true }, 
 				shadowSize : 1} 
 			}};
-	
-		var colormap = { 
-			"H" : ["#600", "#700", "#800", "#900", "#A00", "#B00", "#C00", "#D00", "#F00"],
-			"E" : ["#006", "#007", "#008", "#009", "#00A", "#00B", "#00C", "#00D", "#00F"],
-			"C" : ["#665000", "#775500", "#886500", "#997500", "#AA8000", "#BB8500", "#CC9000", "#DD9000", "#FF9500"]
-		};
-
-		var colorBinary = [ "#C00", "#0C0" ];
 		
 		out.subProtein = function(data, offset, predictionType, lineLength) {
 			if(!data) return null;
@@ -51,17 +43,27 @@ var initProteinMixin = (function(out) {
 			return data;
 		}
 		
-		out.addGraph = function(target, data, fill, callback) {
+		out.addGraph = function(target, data, type, fill, callback) {
 			var fill = fill || false;
 			var options = plotOptions();
-				
-			var d1 = probsToData(data.predictions[0].reliability);
-			var d2 = probsToData(data.predictions[0].conservation);
+
+			var index = -1;
+			for(var t in data.predictions) {
+				if(data.predictions[t].type === type) {
+					index = t;
+				}
+			}
+
+			if(index == -1)
+				return;
+	
+			var d1 = probsToData(data.predictions[index].reliability);
+			var d2 = probsToData(data.predictions[index].conservation);
 			
 			if(fill)
 				options.xaxis.max = data.sequence.length;
 			
-			var plot = $.plot(target, [ d1, d2 ], options);
+			var plot = $.plot(target, [ d2 ], options);
 			
 			if(!fill) {
 				$(target).bind("plotclick", function (event, pos, item) {
@@ -98,7 +100,8 @@ var initNumberMixin = (function(out) {
 		/**
 		 * @value protein id to search for
 		 */
-		self.protein = "asd";
+		self.protein = "NP_005378";
+
 		
 		/**
 		 * @arg protein object as json
@@ -113,24 +116,18 @@ var initNumberMixin = (function(out) {
 		/**
 		 * @arg type of details to show
 		 */
-		self.predictionType = ko.observable("snap2");
+		self.predictionType = ko.observable("SNAP");
 		
 		/**
 		 * @arg length of detail graph
 		 */
-		self.lineLength = ko.observable(115);
-		
-		/**
-		 * @arg index to start showing the list
-		 */
-		self.selectedIndex = ko.observable(0);
-		
+		self.lineLength = 115;	
 		
 		self.smallProteinResult = ko.computed(function() {
 			return hidden.subProtein(self.proteinResult(), 
 									 self.sequenceOffset(), 
 									 self.predictionType(), 
-									 self.lineLength());
+									 self.lineLength);
 		}).extend({ throttle: 1 });
 				
 		self.listResult = ko.observable();
@@ -140,21 +137,28 @@ var initNumberMixin = (function(out) {
 		 */
 		self.snpDetails = ko.observable();
 
+
 		ko.computed(function () {
-			var depends1 = self.proteinResult();
 			var depends2 = self.sequenceOffset();
-			
 			self.listResult(null);
 			self.snpDetails(null);
 		});
 
-		ko.computed(function () {
-			if(self.proteinResult() && self.proteinResult().id) {
-				self.listResult(null);
-				self.snpDetails(null);
+		self.proteinResult.subscribe(function(value) {console.log(value);});
 
-				var test = self.sequenceOffset();
-				$.getJSON("list.json", self.listResult);
+		ko.computed(function () {
+			if(self.proteinResult()) {
+				var id =  self.proteinResult().id;
+				var offset = (self.sequenceOffset() + 1);
+				var length = self.lineLength;
+
+				$.when($.getJSON('http://localhost/api/resources/protein/mutations/' + id + '/' + offset + '/' + length))
+				 .done(function (result) {
+				 	self.listResult(result.mutationsPos);
+				 })
+				 .fail(function (error) {
+				 	console.warn(error);
+				 });
 			}
 		}).extend({ throttle: 500 });
 
@@ -169,14 +173,18 @@ var initNumberMixin = (function(out) {
 		self.formatProteinResult = function(elements, data) {
 			var clickHandler = function (item) {
 				var index = self.sequenceOffset() + item.dataIndex;
-				self.selectedIndex(index);
+				$(".mutations").css('background-color', 'inherit');
+				$("#mutation" + index).css('background-color', 'red');
+				$('#functional_effect_list_container').scrollTo("#mutation" + index, 
+					{ duration: 500, margin : true });
+
 			};
 			
 			// hack: can't use a selector to query for .flot_container
 			// elements is a collection and not DOM
 			var detailViewContainer = $($(elements).get(1));
-			hidden.addGraph(detailViewContainer, data, false, clickHandler);
-			hidden.addGraph($('#flot_overview'), self.proteinResult(), true);
+			hidden.addGraph(detailViewContainer, data, self.predictionType(), false, clickHandler);
+			hidden.addGraph($('#flot_overview'), self.proteinResult(), self.predictionType(), true);
 		}
 
 		self.formatListResult = function(elements, data) {
@@ -187,15 +195,11 @@ var initNumberMixin = (function(out) {
 
 		self.showDetailView = function(index, mutation) {
 			var snps = self.listResult();
-			if(!snps) {
-				self.snpDetails(null);
-				return;
-			}
 
 			for(var i in snps) {
 				if(snps[i].position == index) {
 					for(var j in snps[i].mutations) {
-						if(snps[i].mutations[j].name == mutation) {
+						if(snps[i].mutations[j].aa == mutation) {
 							self.snpDetails(snps[i].mutations[j].data);
 							return;
 						}
@@ -205,22 +209,27 @@ var initNumberMixin = (function(out) {
 
 			self.snpDetails(null);
 		}
-		
-		self.selectedIndex.subscribe(function (index) {
-			$(".mutations").css('background-color', 'inherit');
-			$("#mutation" + index).css('background-color', 'red');
-			$('#functional_effect_list_container').scrollTo("#mutation" + index, 
-				{ duration: 500, margin : true });
-		});
 
 		Sammy(function() {
 			this.get("#!/search/:type/:protein", function() {
 				self.protein = self.currentProtein = this.params["protein"];
 				self.predictionType(this.params["type"]);
+
+				var errorHandler = function () {
+
+				}
 				
-				$.getJSON("protein.json", function(result) {
-					self.proteinResult(result);
-				});
+				$.when($.post('http://localhost/api/resources/protein/search', 
+						{q: self.protein}, undefined, "json"))
+					.done(function(searchResult) {
+						$.when($.getJSON('http://localhost/api/resources/protein/prediction/' + searchResult.id))
+						.done(function (proteinResult) {
+							proteinResult.id = (searchResult.id - 0);
+							self.proteinResult(proteinResult);
+						})
+						.fail(errorHandler);
+					})
+					.fail(errorHandler);
 
 			});
 			
@@ -248,9 +257,9 @@ var initNumberMixin = (function(out) {
 			var minOffset = 0; 
 			
 			$(element).drag("init", function(event) {
-				$(this).css({ "cursor": "pointer" });
+				$(element).css({ "cursor": "pointer" });
 				sequenceLength = viewModel.proteinResult().sequence.length;
-				lineLength = viewModel.lineLength();
+				lineLength = viewModel.lineLength;
 				
 				plotWidth = plotOverview.width();
 				seekerWidth = plotWidth / sequenceLength * lineLength;
@@ -262,23 +271,24 @@ var initNumberMixin = (function(out) {
 			
 			$(element).drag(function(event, dd ){
 				var offset = hidden.clamp(dd.offsetX, minOffset, maxOffset);
-				$( this ).css({ left: offset });
-				viewModel.sequenceOffset(Math.floor((offset-2) * sequenceLength / (plotWidth-8)));
-			
+				$(element).css('left', offset);
+				viewModel.sequenceOffset(Math.floor((offset-2) * sequenceLength / (plotWidth-8)));		
 			},{ relative:true });
 		
 			$(element).drag("end", function(event) {
-				$(this).css({ "cursor": "e-resize" }, { relative:true });
+				$(element).css({ "cursor": "e-resize" }, { relative:true });
 			});
 		},
 		update: function(element, valueAccessor, allBindingsAccessor, viewModel) {
 				var protein = viewModel.proteinResult();
 				if(protein) {
+					
 					var sequenceLength = protein.sequence.length;
-					var lineLength = viewModel.lineLength();
+					var lineLength = viewModel.lineLength;
 				
 					var plotWidth = $('#flot_overview').width();
 					var seekerWidth = plotWidth / sequenceLength * lineLength;
+
 					$('#flot_overview_container .seeker').width(seekerWidth);
 				}
 		}
