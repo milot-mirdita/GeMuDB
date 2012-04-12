@@ -119,6 +119,8 @@ public class ProteinFunctionalEffectServiceImpl implements
 			final int size) {
 
 		Sequence sequence = sequenceDao.selectByRefId(refId);
+		if(sequence==null)
+			return null;
 		List<Mutation> mutationList = mutationDao.selectByIdAndLimit(sequence.getId(), from,
 				size);
 		final String sequenceString = sequence.getSequence();

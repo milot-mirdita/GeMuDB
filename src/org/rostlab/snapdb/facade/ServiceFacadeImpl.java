@@ -1,5 +1,6 @@
 package org.rostlab.snapdb.facade;
 
+import javax.crypto.spec.PSource;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -84,7 +85,11 @@ public class ServiceFacadeImpl implements ServiceFacade {
 	public MutationPosContainer getMutationList(@PathParam("id") String id,
 			@PathParam("from") Integer from, @PathParam("size") Integer size) {
 		System.out.println("Call getMutationList: " + id);
-		return proteinFunctionalEffectService.getMutationList(id, from, size);
+		MutationPosContainer posContainer=proteinFunctionalEffectService.getMutationList(id, from, size);
+		if(posContainer==null)
+			throw new BadRequestException();
+		else
+			return posContainer;
 	}
 
 	public ProteinFunctionalEffectService getProteinFunctionalEffectService() {
