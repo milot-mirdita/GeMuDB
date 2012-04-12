@@ -1,6 +1,5 @@
 package org.rostlab.snapdb.facade;
 
-import javax.crypto.spec.PSource;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -11,10 +10,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
+import org.rostlab.snapdb.service.ProteinDetailService;
 import org.rostlab.snapdb.service.ProteinFunctionalEffectService;
 import org.rostlab.snapdb.service.SearchProteinService;
 import org.rostlab.snapdb.service.model.BadRequestException;
 import org.rostlab.snapdb.service.model.MutationPosContainer;
+import org.rostlab.snapdb.service.model.ProteinDetail;
 import org.rostlab.snapdb.service.model.ProteinFunctionalEffectPrediction;
 import org.rostlab.snapdb.service.model.ProteinId;
 
@@ -26,12 +27,12 @@ import com.sun.jersey.api.NotFoundException;
 public class ServiceFacadeImpl implements ServiceFacade {
 	private ProteinFunctionalEffectService proteinFunctionalEffectService;
 	private SearchProteinService searchProteinService;
-
+	private ProteinDetailService proteinDetailService;
 	@Override
 	@GET
 	@Path("/prediction/{id}")
 	public ProteinFunctionalEffectPrediction getFunctionalEffectPrediction(
-			@PathParam("id") String id) {
+			@PathParam("id")  String id) {
 		System.out.println("Call getFunctionalEffectPredcition: " + id);
 		ProteinFunctionalEffectPrediction pfep = proteinFunctionalEffectService
 				.getFunctionalEffectPrediction(id);
@@ -92,6 +93,20 @@ public class ServiceFacadeImpl implements ServiceFacade {
 			return posContainer;
 	}
 
+	@Override
+	@GET
+	@Path("/detail/{id}")
+	public ProteinDetail getProteinDetail(@PathParam("id") String id){
+		System.out.println("Call getProteinDetail: " + id);
+		ProteinDetail pd=  proteinDetailService.getProteinDetail(id);
+		if(pd==null){
+			throw new BadRequestException();
+		}else{
+			return pd;
+		}
+	}
+	
+	
 	public ProteinFunctionalEffectService getProteinFunctionalEffectService() {
 		return proteinFunctionalEffectService;
 	}
@@ -108,6 +123,14 @@ public class ServiceFacadeImpl implements ServiceFacade {
 	public void setSearchProteinService(
 			SearchProteinService searchProteinService) {
 		this.searchProteinService = searchProteinService;
+	}
+
+	public ProteinDetailService getProteinDetailService() {
+		return proteinDetailService;
+	}
+
+	public void setProteinDetailService(ProteinDetailService proteinDetailService) {
+		this.proteinDetailService = proteinDetailService;
 	}
 
 }

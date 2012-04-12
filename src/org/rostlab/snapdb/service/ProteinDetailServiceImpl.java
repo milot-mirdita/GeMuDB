@@ -53,13 +53,15 @@ public class ProteinDetailServiceImpl implements ProteinDetailService {
 			EFetchSequenceServiceStub fetchSequence = new EFetchSequenceServiceStub();
 			EFetchSequenceServiceStub.EFetchRequest seqReq = new EFetchSequenceServiceStub.EFetchRequest();
 			seqReq.setId(proteinids[0]);
+			seqReq.setDb("protein");
 			EFetchSequenceServiceStub.EFetchResult seqRes = fetchSequence
 					.run_eFetch(seqReq);
 			// results output
 			for (int i = 0; i < seqRes.getGBSet().getGBSetSequence().length; i++) {
 				EFetchSequenceServiceStub.GBSeq_type0 obj = seqRes.getGBSet()
 						.getGBSetSequence()[i].getGBSeq();
-				proteinDetail.setDefinition(obj.getGBSeq_organism());
+				proteinDetail.setOrganismName(obj.getGBSeq_organism());
+				proteinDetail.setSource(obj.getGBSeq_source());
 				proteinDetail.setDefinition(obj.getGBSeq_definition());
 				break;
 			}
