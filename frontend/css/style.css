@@ -95,10 +95,22 @@ html, body {
 .positions li.section {
 	-moz-border-radius: 0.75em;
      border-radius: 0.40em; 
-	background-color: #00FF00;
-	background: -webkit-gradient(linear, left center, right center, from(#FF0000), to(#00FF00));
-	background: -moz-linear-gradient(left, #FF0000 0%, #00FF00 100%);
+	background: #ff0000; /* Old browsers */
+	background: -moz-linear-gradient(top, #ff0000 0%, #ff0000 50%, #00ff00 50%, #00ff00 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ff0000), color-stop(50%,#ff0000), color-stop(50%,#00ff00), color-stop(100%,#00ff00)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #ff0000 0%,#ff0000 50%,#00ff00 50%,#00ff00 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #ff0000 0%,#ff0000 50%,#00ff00 50%,#00ff00 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #ff0000 0%,#ff0000 50%,#00ff00 50%,#00ff00 100%); /* IE10+ */
+	background: linear-gradient(top, #ff0000 0%,#ff0000 50%,#00ff00 50%,#00ff00 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff0000', endColorstr='#00ff00',GradientType=0 ); /* IE6-9 */
+
 }
+.positions li.section:hover {
+	-moz-box-shadow:    inset 0 0 10px #000000;
+   -webkit-box-shadow: inset 0 0 10px #000000;
+   box-shadow:         inset 0 0 10px #000000;
+}
+
 .positions > li {
 	font-size: 2em;
 	font-style: italic;

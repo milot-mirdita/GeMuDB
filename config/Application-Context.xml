@@ -11,9 +11,14 @@
 
 
 
+
 	<bean id="serviceFacade" class="org.rostlab.snapdb.facade.ServiceFacadeImpl">
 		<property name="searchProteinService" ref="searchProteinService" />
 		<property name="proteinFunctionalEffectService" ref="proteinFunctionalEffectService" />
+	</bean>
+	
+	<bean id="proteinDetailService" class="org.rostlab.snapdb.service.ProteinDetailServiceImpl">
+		<property name="sequenceDao" ref="sequenceDao" />
 	</bean>
 	<bean id="searchProteinService" class="org.rostlab.snapdb.service.SearchProteinServiceImpl">
 		<property name="sequenceDao" ref="sequenceDao" />
