@@ -15,7 +15,7 @@ CREATE TABLE sequence (
 	 szsequencehash VARCHAR(32),
 	 szchain VARCHAR(16),
      PRIMARY KEY(lid),
-	 INDEX (szrefid),
+	 UNIQUE (szrefid),
 	 UNIQUE (szsequencehash)
 ) ENGINE=MyISAM;
 
