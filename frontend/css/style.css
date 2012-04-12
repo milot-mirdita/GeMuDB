@@ -173,3 +173,19 @@ html, body {
 .hide {
 	display: none;
 }
+
+
+li.section {
+    padding: 0;
+}
+
+li.section span.snap {
+    margin: 0;
+    background-color: #FF0000;
+}
+
+li.section span.sift {
+    margin: 0;
+    background-color: #0000FF;
+}
+

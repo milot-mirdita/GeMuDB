@@ -166,6 +166,11 @@ var Protein = function() {
 		// self.switchType = function(type) {
 		// 	location.hash = "!/search/" + type + '/' + self.currentProtein;
 		// };
+		
+		self.toggleAmino = function(aa){
+			
+			
+		}
 
 		self.toggleType = function(type) {
 			var index = $.inArray(type, self.predictionType());
