@@ -9,12 +9,10 @@
 
 	<context:annotation-config />
 
-
-
-
 	<bean id="serviceFacade" class="org.rostlab.snapdb.facade.ServiceFacadeImpl">
 		<property name="searchProteinService" ref="searchProteinService" />
 		<property name="proteinFunctionalEffectService" ref="proteinFunctionalEffectService" />
+		<property name="proteinDetailService" ref="proteinDetailService" />
 	</bean>
 	
 	<bean id="proteinDetailService" class="org.rostlab.snapdb.service.ProteinDetailServiceImpl">
