@@ -11,7 +11,7 @@
 <div class="container">
 	<div class="row">
 		<div id="search_container" class="span8 offset2"
-			data-bind="visible: !proteinResult.id()">
+			data-bind="visible: !proteinResult.refid()">
 			<div class="header">
 				SNPdbe
 			</div>
@@ -19,7 +19,7 @@
 		</div>
 	</div>
 
-	<div data-bind="visible: proteinResult.id()">
+	<div data-bind="visible: proteinResult.refid()">
 		<div id="top_bar_container" class="row">
 			<div class="search span3" data-bind="template: { name: 'search_template' }"></div>
 			<div id="flot_overview_container" class="span9">
@@ -76,37 +76,38 @@
 </script>
 
 <script type="text/html" id="functional_effect_template">
+	<div class="row">
+		<div class="btn-group span2" data-toggle="buttons-checkbox">
+			  <button class="btn active">SNAP2</button>
+			  <button class="btn active">SIFT</button>
+		</div>
+		<div class="btn-group span9" data-toggle="buttons-checkbox">
+	  		<button class="btn active">A</button>
+	  		<button class="btn active">C</button>
+	  		<button class="btn active">D</button>
+	  		<button class="btn active">E</button>
+	  		<button class="btn active">F</button>
+	  		<button class="btn active">G</button>
+	  		<button class="btn active">H</button>
+	  		<button class="btn active">I</button>
+	  		<button class="btn active">K</button>
+	  		<button class="btn active">L</button>
+	  		<button class="btn active">M</button>
+	  		<button class="btn active">N</button>
+	  		<button class="btn active">P</button>
+	  		<button class="btn active">Q</button>
+	  		<button class="btn active">R</button>
+	  		<button class="btn active">S</button>
+	  		<button class="btn active">T</button>
+	  		<button class="btn active">V</button>
+	  		<button class="btn active">W</button>
+	  		<button class="btn active">Y</button>
+		</div>
+	</div>
 	<div class="flot_container"  style="width:926px; height:60px;"></div>
-	<div class="btn-group" data-toggle="buttons-radio">
-		  <button class="btn" data-bind="click: $root.toggleType.bind($data, 'SNAP'), css : { active : $root.predictionType() == 'SNAP' }">SNAP2</button>
-		  <button class="btn" data-bind="click: $root.toggleType.bind($data, 'SIFT'), css : { active : $root.predictionType() == 'SIFT' }">SIFT</button>
-	</div>
-	<div class="btn-group" data-toggle="buttons-checkbox">
-  		<button class="btn active" data-bind="click: $root.toggleType.bind($data, 'SNAP')">A</button>
-  		<button class="btn active">C</button>
-  		<button class="btn active">D</button>
-  		<button class="btn active">E</button>
-  		<button class="btn active">F</button>
-  		<button class="btn active">G</button>
-  		<button class="btn active">H</button>
-  		<button class="btn active">I</button>
-  		<button class="btn active">K</button>
-  		<button class="btn active">L</button>
-  		<button class="btn active">M</button>
-  		<button class="btn active">N</button>
-  		<button class="btn active">P</button>
-  		<button class="btn active">Q</button>
-  		<button class="btn active">R</button>
-  		<button class="btn active">S</button>
-  		<button class="btn active">T</button>
-  		<button class="btn active">V</button>
-  		<button class="btn active">W</button>
-  		<button class="btn active">Y</button>
-	</div>
-
 
 	<span class="sequence monospace" data-bind="text: sequence"></span>
-	<span class="id" data-bind="text: id && id || ''"></span>
+	<span class="id" data-bind="if: refid, text: refid"></span>
 	<span class="prediction" data-bind="foreach: predictions">
 		<span class="type" data-bind="text: type"></span>
 		<span class="reliability" data-bind="text: reliability"></span>

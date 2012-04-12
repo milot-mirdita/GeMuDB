@@ -25,7 +25,7 @@ var initProteinMixin = (function(out) {
 				});
 			});
 					
-			return { id : data.id, 
+			return { refid : data.refid, 
 				sequence : data.sequence.slice(offset, offset + lineLength),
 				predictions : predictions
 			};
@@ -80,7 +80,6 @@ var initNumberMixin = (function(out) {
 
 
 var Protein = function() {
-	this.id = ko.observable("");
 	this.refid = ko.observable("");
 	this.sequence = ko.observable("");
 	this.predictions = ko.observableArray();
@@ -144,8 +143,8 @@ var Protein = function() {
 		});
 
 		ko.computed(function () {
-			if(self.proteinResult.id()) {
-				var id =  self.proteinResult.id();
+			if(self.proteinResult.refid()) {
+				var id =  self.proteinResult.refid();
 				var offset = (self.sequenceOffset() + 1);
 				var length = self.lineLength;
 
@@ -192,8 +191,7 @@ var Protein = function() {
 			
 			// hack: can't use a selector to query for .flot_container
 			// elements is a collection and not DOM
-			var detailViewContainer = $($(elements).get(1));
-			hidden.addGraph(detailViewContainer, data, self.predictionType(), false, clickHandler);
+			hidden.addGraph($('.flot_container'), data, self.predictionType(), false, clickHandler);
 			hidden.addGraph($('#flot_overview'), ko.toJS(self.proteinResult), self.predictionType(), true);
 		}
 
@@ -221,28 +219,38 @@ var Protein = function() {
 		}
 
 		Sammy(function() {
-			this.get("#!/search/:protein", function() {
-				//self.predictionType(this.params["type"]);
-				if(self.currentProtein != this.params["protein"]) {
-					self.protein = self.currentProtein = this.params["protein"];
+			this.ajaxErrorHandler = function (error) {
+				console.log(error);
+			};
 
-					var errorHandler = function () {
+			this.get("#!/search/:protein", function(context) {
+				var protein = this.params["protein"];
+				
+				$.when($.post('http://localhost/api/resources/protein/search', 
+						{q: protein}, undefined, "json"))
+					.done(function(searchResult) {
+						context.redirect('#!', 'show', searchResult.refid);
+					})
+					.fail(this.ajaxErrorHandler);
+			});
 
-					}
-					
-					$.when($.post('http://localhost/api/resources/protein/search', 
-							{q: self.protein}, undefined, "json"))
-						.done(function(searchResult) {
-							$.when($.getJSON('http://localhost/api/resources/protein/prediction/' + searchResult.id))
-							.done(function (proteinResult) {
-								self.proteinResult.id(searchResult.id - 0);
-								self.proteinResult.sequence(proteinResult.sequence);
-								self.proteinResult.refid(proteinResult.refid);
-								self.proteinResult.predictions(proteinResult.predictions);
-							})
-							.fail(errorHandler);
+			this.get('#!/show/:protein', function(context) {
+				var protein = this.params["protein"];
+				if(self.currentProtein != protein) {
+					self.protein = self.currentProtein = protein;
+
+					var errorHandler = function (error) {
+						console.log(error);
+					};
+
+					$.when($.getJSON('http://localhost/api/resources/protein/prediction/' 
+									 + self.currentProtein))
+						.done(function (proteinResult) {
+							self.proteinResult.sequence(proteinResult.sequence);
+							self.proteinResult.refid(protein);
+							self.proteinResult.predictions(proteinResult.predictions);
 						})
-						.fail(errorHandler);
+						.fail(this.ajaxErrorHandler);
 				}
 			});
 			
