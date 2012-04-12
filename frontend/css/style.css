@@ -94,7 +94,10 @@ html, body {
 
 .positions li.section {
 	-moz-border-radius: 0.75em;
-     border-radius: 0.40em;
+     border-radius: 0.40em; 
+	background-color: #00FF00;
+	background: -webkit-gradient(linear, left center, right center, from(#FF0000), to(#00FF00));
+	background: -moz-linear-gradient(left, #FF0000 0%, #00FF00 100%);
 }
 .positions > li {
 	font-size: 2em;
@@ -180,11 +183,5 @@ html, body {
 }
 
 
-li.section span.snap {
-    background-color: #FF0000;
-}
 
-li.section span.sift {
-    background-color: #0000FF;
-}
 

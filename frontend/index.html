@@ -80,32 +80,29 @@
 		  <button class="btn" data-bind="click: $root.toggleType.bind($data, 'SNAP'), css : { active : $root.predictionType() == 'SNAP' }">SNAP2</button>
 		  <button class="btn" data-bind="click: $root.toggleType.bind($data, 'SIFT'), css : { active : $root.predictionType() == 'SIFT' }">SIFT</button>
 	</div>
-'A', 'C', 'D', 'E', 'F', 'G', 'H',
-			'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'Y' };
-
-
 	<div class="btn-group" data-toggle="buttons-checkbox">
-  		<button class="btn">A</button>
-  		<button class="btn">C</button>
-  		<button class="btn">D</button>
-  		<button class="btn">E</button>
-  		<button class="btn">F</button>
-  		<button class="btn">G</button>
-  		<button class="btn">H</button>
-  		<button class="btn">I</button>
-  		<button class="btn">K</button>
-  		<button class="btn">L</button>
-  		<button class="btn">M</button>
-  		<button class="btn">N</button>
-  		<button class="btn">P</button>
-  		<button class="btn">Q</button>
-  		<button class="btn">R</button>
-  		<button class="btn">S</button>
-  		<button class="btn">T</button>
-  		<button class="btn">V</button>
-  		<button class="btn">W</button>
-  		<button class="btn">Y</button>
+  		<button class="btn active" data-bind="click: $root.toggleType.bind($data, 'SNAP')">A</button>
+  		<button class="btn active">C</button>
+  		<button class="btn active">D</button>
+  		<button class="btn active">E</button>
+  		<button class="btn active">F</button>
+  		<button class="btn active">G</button>
+  		<button class="btn active">H</button>
+  		<button class="btn active">I</button>
+  		<button class="btn active">K</button>
+  		<button class="btn active">L</button>
+  		<button class="btn active">M</button>
+  		<button class="btn active">N</button>
+  		<button class="btn active">P</button>
+  		<button class="btn active">Q</button>
+  		<button class="btn active">R</button>
+  		<button class="btn active">S</button>
+  		<button class="btn active">T</button>
+  		<button class="btn active">V</button>
+  		<button class="btn active">W</button>
+  		<button class="btn active">Y</button>
 	</div>
+
 
 	<span class="sequence monospace" data-bind="text: sequence"></span>
 	<span class="id" data-bind="text: id && id || ''"></span>
@@ -119,9 +116,9 @@
 
 <script type="text/html" id="list_entry_template">
 	<li>
-	<span class="position" data-bind="text: position"></span>
-	<ul class="mutations" data-bind="attr: { id: 'mutation' + position }, foreach: { data: mutations, afterRender: $root.formatListResult }">
-		<li data-bind="text: aa"></li>
+		<span class="position" data-bind="text: position"></span>
+		<ul class="mutations" data-bind="attr: { id: 'mutation' + position }, foreach: { data: mutations, afterRender: $root.formatListResult }">
+			<li class="section" data-bind="text: aa"></li>
 		</ul>
 	</li>
 </script>
