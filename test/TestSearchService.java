@@ -22,19 +22,19 @@ public class TestSearchService {
 
 	@Test
 	public void testSeq() {
-		assertEquals(new Long(35), searchProteinService.searchProtein(seq).getId());
+		assertEquals("NP_005378", searchProteinService.searchProtein(seq).getRefId());
 	}
 
 	@Test
 	public void testId() {
-		assertEquals(new Long(33),
-				searchProteinService.searchProtein("NP_005378").getId());
+		assertEquals("NP_005378",
+				searchProteinService.searchProtein("NP_005378").getRefId());
 	}
 
 	@Test
 	public void testIdWitheSpace() {
-		assertEquals(new Long(33),
-				searchProteinService.searchProtein(" NP_005378 ").getId());
+		assertEquals("NP_005378",
+				searchProteinService.searchProtein(" NP_005378 ").getRefId());
 	}
 
 }

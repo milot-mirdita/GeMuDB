@@ -59,11 +59,9 @@ public class ProteinDetailServiceImpl implements ProteinDetailService {
 			for (int i = 0; i < seqRes.getGBSet().getGBSetSequence().length; i++) {
 				EFetchSequenceServiceStub.GBSeq_type0 obj = seqRes.getGBSet()
 						.getGBSetSequence()[i].getGBSeq();
-				System.out.println("Organism: " + obj.getGBSeq_organism());
-				System.out.println("Locus: " + obj.getGBSeq_locus());
-				System.out.println("Definition: " + obj.getGBSeq_definition());
-				System.out
-						.println("------------------------------------------");
+				proteinDetail.setDefinition(obj.getGBSeq_organism());
+				proteinDetail.setDefinition(obj.getGBSeq_definition());
+				break;
 			}
 		} catch (Exception e) {
 

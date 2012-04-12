@@ -72,7 +72,7 @@ public class ServiceFacadeImpl implements ServiceFacade {
 	public ProteinId searchProtein(@FormParam("q") String searchString) {
 		System.out.println("Search protein: " + searchString);
 		ProteinId retId = searchProteinService.searchProtein(searchString);
-		if (retId.getId() == null)
+		if (retId.getRefId() == null)
 			throw new NotFoundException("");
 		else
 			return retId;
