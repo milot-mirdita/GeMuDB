@@ -100,11 +100,14 @@ public class MutationImportServiceImpl implements MutationImportService {
 			int currPos = 0;
 			final List<Mutation> listToAdd = new ArrayList<Mutation>();
 			while ((line = reader.readLine()) != null) {
+				if(line.startsWith("WARNING!")==true)
+					continue;
 				final String[] lineArray = line.split("\\t");
 				if(lineArray.length==1)
 					continue;
 				final String orgPosMut = lineArray[0];
 				final String effectStr = lineArray[1];
+				
 				if(effectStr.equals("NOT SCORED")==true){
 					continue;
 				}
