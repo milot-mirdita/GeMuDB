@@ -12,6 +12,7 @@ import javax.ws.rs.ext.Provider;
 
 import org.rostlab.snapdb.service.ProteinFunctionalEffectService;
 import org.rostlab.snapdb.service.SearchProteinService;
+import org.rostlab.snapdb.service.model.BadRequestException;
 import org.rostlab.snapdb.service.model.MutationPosContainer;
 import org.rostlab.snapdb.service.model.ProteinFunctionalEffectPrediction;
 import org.rostlab.snapdb.service.model.ProteinId;
@@ -29,20 +30,39 @@ public class ServiceFacadeImpl implements ServiceFacade {
 	@GET
 	@Path("/prediction/{id}")
 	public ProteinFunctionalEffectPrediction getFunctionalEffectPrediction(
-			@PathParam("id") String id) {
+			@PathParam("id") Long id) {
 		System.out.println("Call getFunctionalEffectPredcition: " + id);
-		// ProteinFunctionalEffectPrediction pfep = new
-		// ProteinFunctionalEffectPrediction();
-		// pfep.setRefId("LALA");
-		// pfep.setSequence("MKAQNLLKLTSPGPAPASCQHLQAQPLPHGGFSRPSSSSGLSLQAQLLLHNSLFWPSSCP");
-		// Prediction p1=new Prediction();
-		// p1.setConservation("01231051228590123850923185092135701239751293875120938571200");
-		// p1.setType(PredictionType.SNAP);
-		// p1.setReliability("01231051228590123850923185092135701239751293875120938571200");
-		// pfep.addPrediction(p1);
-		// return pfep;
-		return proteinFunctionalEffectService
-				.getFunctionalEffectPrediction(Long.parseLong(id));
+		ProteinFunctionalEffectPrediction pfep = proteinFunctionalEffectService
+				.getFunctionalEffectPrediction(id);
+		if (pfep != null) {
+			return pfep;
+		} else {
+			throw new BadRequestException();
+		}
+	}
+
+	@Override
+	@GET
+	@Path("/prediction/{id}/{alphabet}")
+	public ProteinFunctionalEffectPrediction getFunctionalEffectPrediction(
+			@PathParam("id") Long id, @PathParam("alphabet") String alphabet) {
+		System.out.println("Call getFunctionalEffectPredcition: " + id
+				+ " alphabet: " + alphabet);
+		alphabet = alphabet.toUpperCase();
+		for (int i = 0; i < alphabet.length(); i++) {
+			if ("ACDEFGHIKLMNPQRSTVWY".contains(String.valueOf(alphabet
+					.charAt(i))) == false) {
+				throw new BadRequestException();
+			}
+		}
+		;
+		ProteinFunctionalEffectPrediction pfep = proteinFunctionalEffectService
+				.getFunctionalEffectPrediction(id);
+		if (pfep != null) {
+			return pfep;
+		} else {
+			throw new BadRequestException();
+		}
 	}
 
 	@Override
@@ -61,11 +81,10 @@ public class ServiceFacadeImpl implements ServiceFacade {
 	@Override
 	@GET
 	@Path("/mutations/{id}/{from}/{size}")
-	public MutationPosContainer getMutationList(@PathParam("id") String id,
+	public MutationPosContainer getMutationList(@PathParam("id") Long id,
 			@PathParam("from") Integer from, @PathParam("size") Integer size) {
 		System.out.println("Call getMutationList: " + id);
-		return proteinFunctionalEffectService.getMutationList(
-				Long.parseLong(id), from, size);
+		return proteinFunctionalEffectService.getMutationList(id, from, size);
 	}
 
 	public ProteinFunctionalEffectService getProteinFunctionalEffectService() {

@@ -1,5 +1,6 @@
 package org.rostlab.snapdb.service;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -23,9 +24,21 @@ public class ProteinFunctionalEffectServiceImpl implements
 
 	@Override
 	public ProteinFunctionalEffectPrediction getFunctionalEffectPrediction(
-			Long lid) {
+			Long id) {
+		return getFunctionalEffectPrediction(id, "ACDEFGHIKLMNPQRSTVWY");
+		//return getFunctionalEffectPrediction(id, "AY");
+	}
+
+	@Override
+	public ProteinFunctionalEffectPrediction getFunctionalEffectPrediction(
+			Long lid, final String alphabet) {
 
 		// catch sequence
+		Boolean[] aaToPredict = new Boolean[20];
+		Arrays.fill(aaToPredict, Boolean.FALSE);
+		for (int i = 0; i < alphabet.length(); i++) {
+			aaToPredict[AminoLookup.lookupAAtoIndex(alphabet.charAt(i))] = true;
+		}
 		final ProteinFunctionalEffectPrediction pfep = new ProteinFunctionalEffectPrediction();
 		Sequence sequence = sequenceDao.selectById(lid);
 		if (sequence != null) {
@@ -48,8 +61,10 @@ public class ProteinFunctionalEffectServiceImpl implements
 							currPos++;
 						}
 					}
-					reli.append(calcReliability(mut.getMutReliability()));
-					cons.append(calcConservation(mut.getMutEffect()));
+					reli.append(calcReliability(mut.getMutReliability(),
+							aaToPredict));
+					cons.append(calcConservation(mut.getMutEffect(),
+							aaToPredict));
 					currPos++;
 				}
 				prediction.setConservation(cons.toString());
@@ -61,19 +76,27 @@ public class ProteinFunctionalEffectServiceImpl implements
 		return null;
 	}
 
-	private long calcConservation(Boolean[] effects) {
+	private long calcConservation(Boolean[] effects, Boolean[] aaToPredict) {
 		float sumEffect = 0;
+		int counter = 0;
 		for (int i = 0; i < effects.length; i++)
-			sumEffect += (effects[i]) ? 1 : 0;
+			if (aaToPredict[i] == true) {
+				counter++;
+				sumEffect += (effects[i]) ? 1 : 0;
+			}
 
-		return Math.round(sumEffect / 19 * 9);
+		return Math.round(sumEffect / counter * 9);
 	}
 
-	private long calcReliability(Integer[] reliability) {
+	private long calcReliability(Integer[] reliability, Boolean[] aaToPredict) {
 		float sumReli = 0;
+		int counter = 0;
 		for (int i = 0; i < reliability.length; i++)
-			sumReli += reliability[i];
-		return Math.round(sumReli / 19 / 10) - 1;
+			if (aaToPredict[i] == true) {
+				counter++;
+				sumReli += reliability[i];
+			}
+		return Math.round(sumReli / counter / 10) - 1;
 	}
 
 	public MutationDao getMutationDao() {
@@ -112,7 +135,8 @@ public class ProteinFunctionalEffectServiceImpl implements
 			}
 			currentMutationPos = retList.get(currPos);
 
-			final List<MutationData> mutDataList = currentMutationPos.getMutations();
+			final List<MutationData> mutDataList = currentMutationPos
+					.getMutations();
 			for (int aaindex = 0; aaindex < 20; aaindex++) {
 				if (indexExists(mutDataList, aaindex) == true) {
 					MutationData mutData = mutDataList.get(aaindex);
@@ -127,7 +151,7 @@ public class ProteinFunctionalEffectServiceImpl implements
 			}
 			// Reorder put wildtype in front
 			char wildTypeAA = sequenceString.charAt(mutationDb.getPos() - 1);
-			if(mutDataList.get(0).isWildType()==false){
+			if (mutDataList.get(0).isWildType() == false) {
 				int wildTypeIndex = AminoLookup.lookupAAtoIndex(wildTypeAA);
 				MutationData wildTypeData = mutDataList.get(wildTypeIndex);
 				wildTypeData.setWildType(true);
@@ -151,4 +175,5 @@ public class ProteinFunctionalEffectServiceImpl implements
 			final int index) {
 		return index >= 0 && index < list.size();
 	}
+
 }
