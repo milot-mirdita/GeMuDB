@@ -46,7 +46,7 @@ public class SearchProteinServiceImpl implements SearchProteinService {
 					Sequence seq = sequenceDao.selectByRefId(xref
 							.getAccession());
 					if (seq != null)
-						return new ProteinId(seq.getId());
+						return new ProteinId(seq.getRefId());
 
 				}
 			}

@@ -8,16 +8,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name ="Proteinprediction")
-@XmlType(propOrder={"refId", "sequence", "prediction"})
+@XmlType(propOrder={ "sequence", "prediction"})
 public class ProteinFunctionalEffectPrediction {
-	private String refid;
 	private String sequence;
 	private List<Prediction> predictions = new ArrayList<Prediction>();
 
-	@XmlElement(name = "refid")
-	public String getRefId() {
-		return refid;
-	}
+
 	@XmlElement(name = "sequence")
 	public String getSequence() {
 		return sequence;
@@ -32,9 +28,6 @@ public class ProteinFunctionalEffectPrediction {
 		predictions.add(p);
 	}
 
-	public void setRefId(String id) {
-		this.refid = id;
-	}
 
 	public void setSequence(String sequence) {
 		this.sequence = sequence;

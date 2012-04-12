@@ -42,7 +42,6 @@ public class ProteinFunctionalEffectServiceImpl implements
 		final ProteinFunctionalEffectPrediction pfep = new ProteinFunctionalEffectPrediction();
 		Sequence sequence = sequenceDao.selectByRefId(refId);
 		if (sequence != null) {
-			pfep.setRefId(sequence.getRefId());
 			pfep.setSequence(sequence.getSequence());
 			for (MutationType mt : MutationType.values()) {
 				final Prediction prediction = new Prediction();

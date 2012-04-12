@@ -1,6 +1,8 @@
 package org.rostlab.snapdb.service.model;
 
 public class ProteinDetail {
+	private String organismName;
+	private String definition;
 	private String officialGenFullName;
 	private String officialGenSymbol;
 	private String genLocation;

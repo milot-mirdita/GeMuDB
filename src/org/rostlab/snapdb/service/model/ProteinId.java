@@ -4,23 +4,23 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name="Proteinid")
 public class ProteinId {
-	private Long id;
+	private String refId;
 	
 	public ProteinId() {
 	}
 	
 	
-	public ProteinId(Long id) {
-		this.id = id;
+	public ProteinId(String id) {
+		this.refId = id;
 	}
 
 
-	public Long getId() {
-		return id;
+	public String getRefId() {
+		return refId;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setId(String id) {
+		this.refId = id;
 	}
 	
 }
