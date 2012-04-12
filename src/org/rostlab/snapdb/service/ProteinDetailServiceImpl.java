@@ -26,7 +26,7 @@ public class ProteinDetailServiceImpl implements ProteinDetailService {
 		ProteinDetail proteinDetail = new ProteinDetail();
 		try {
 
-			final String[] ids= queryDataBaseForTerm(seq.getRefId(),"gene")
+			final String[] ids= queryDataBaseForTerm(seq.getRefId(),"gene");
 			// results output
 			EFetchGeneServiceStub fetchGen = new EFetchGeneServiceStub();
 			EFetchGeneServiceStub.EFetchRequest fetchGenReq = new EFetchGeneServiceStub.EFetchRequest();
