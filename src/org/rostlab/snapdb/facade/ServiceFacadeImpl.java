@@ -30,7 +30,7 @@ public class ServiceFacadeImpl implements ServiceFacade {
 	@GET
 	@Path("/prediction/{id}")
 	public ProteinFunctionalEffectPrediction getFunctionalEffectPrediction(
-			@PathParam("id") Long id) {
+			@PathParam("id") String id) {
 		System.out.println("Call getFunctionalEffectPredcition: " + id);
 		ProteinFunctionalEffectPrediction pfep = proteinFunctionalEffectService
 				.getFunctionalEffectPrediction(id);
@@ -45,7 +45,7 @@ public class ServiceFacadeImpl implements ServiceFacade {
 	@GET
 	@Path("/prediction/{id}/{alphabet}")
 	public ProteinFunctionalEffectPrediction getFunctionalEffectPrediction(
-			@PathParam("id") Long id, @PathParam("alphabet") String alphabet) {
+			@PathParam("id") String id, @PathParam("alphabet") String alphabet) {
 		System.out.println("Call getFunctionalEffectPredcition: " + id
 				+ " alphabet: " + alphabet);
 		alphabet = alphabet.toUpperCase();
@@ -81,7 +81,7 @@ public class ServiceFacadeImpl implements ServiceFacade {
 	@Override
 	@GET
 	@Path("/mutations/{id}/{from}/{size}")
-	public MutationPosContainer getMutationList(@PathParam("id") Long id,
+	public MutationPosContainer getMutationList(@PathParam("id") String id,
 			@PathParam("from") Integer from, @PathParam("size") Integer size) {
 		System.out.println("Call getMutationList: " + id);
 		return proteinFunctionalEffectService.getMutationList(id, from, size);

@@ -4,9 +4,9 @@ import org.rostlab.snapdb.service.model.MutationPosContainer;
 import org.rostlab.snapdb.service.model.ProteinFunctionalEffectPrediction;
 
 public interface ProteinFunctionalEffectService {
-	public ProteinFunctionalEffectPrediction getFunctionalEffectPrediction(final Long id);
-	public MutationPosContainer getMutationList(final Long id,int from,int size);
-	ProteinFunctionalEffectPrediction getFunctionalEffectPrediction(Long lid,
-			String alphabet);
+	public ProteinFunctionalEffectPrediction getFunctionalEffectPrediction(final String id);
+	public MutationPosContainer getMutationList(final String id,final int from,final int size);
+	public ProteinFunctionalEffectPrediction getFunctionalEffectPrediction(final String lid,
+			final String alphabet);
 }
 

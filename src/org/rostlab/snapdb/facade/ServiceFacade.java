@@ -6,12 +6,12 @@ import org.rostlab.snapdb.service.model.ProteinId;
 
 public interface ServiceFacade {
 	public ProteinFunctionalEffectPrediction getFunctionalEffectPrediction(
-			Long id);
+			String id);
 
 	public ProteinId searchProtein(String searchString);
 
-	MutationPosContainer getMutationList(Long id, Integer from, Integer size);
+	MutationPosContainer getMutationList(String id, Integer from, Integer size);
 
-	ProteinFunctionalEffectPrediction getFunctionalEffectPrediction(Long id,
+	ProteinFunctionalEffectPrediction getFunctionalEffectPrediction(String id,
 			String alphabet);
 }

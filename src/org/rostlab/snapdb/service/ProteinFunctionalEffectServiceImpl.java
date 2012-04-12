@@ -24,14 +24,14 @@ public class ProteinFunctionalEffectServiceImpl implements
 
 	@Override
 	public ProteinFunctionalEffectPrediction getFunctionalEffectPrediction(
-			Long id) {
+			final String id) {
 		return getFunctionalEffectPrediction(id, "ACDEFGHIKLMNPQRSTVWY");
 		//return getFunctionalEffectPrediction(id, "AY");
 	}
 
 	@Override
 	public ProteinFunctionalEffectPrediction getFunctionalEffectPrediction(
-			Long lid, final String alphabet) {
+			final String refId, final String alphabet) {
 
 		// catch sequence
 		Boolean[] aaToPredict = new Boolean[20];
@@ -40,7 +40,7 @@ public class ProteinFunctionalEffectServiceImpl implements
 			aaToPredict[AminoLookup.lookupAAtoIndex(alphabet.charAt(i))] = true;
 		}
 		final ProteinFunctionalEffectPrediction pfep = new ProteinFunctionalEffectPrediction();
-		Sequence sequence = sequenceDao.selectById(lid);
+		Sequence sequence = sequenceDao.selectByRefId(refId);
 		if (sequence != null) {
 			pfep.setRefId(sequence.getRefId());
 			pfep.setSequence(sequence.getSequence());
@@ -116,11 +116,12 @@ public class ProteinFunctionalEffectServiceImpl implements
 	}
 
 	@Override
-	public MutationPosContainer getMutationList(final Long id, final int from,
+	public MutationPosContainer getMutationList(final String refId, final int from,
 			final int size) {
-		List<Mutation> mutationList = mutationDao.selectByIdAndLimit(id, from,
+
+		Sequence sequence = sequenceDao.selectByRefId(refId);
+		List<Mutation> mutationList = mutationDao.selectByIdAndLimit(sequence.getId(), from,
 				size);
-		Sequence sequence = sequenceDao.selectById(id);
 		final String sequenceString = sequence.getSequence();
 		final MutationPosContainer mutationPosContainer = new MutationPosContainer(
 				size);
