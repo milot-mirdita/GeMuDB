@@ -100,7 +100,7 @@ public class MutationImportServiceImpl implements MutationImportService {
 			int currPos = 0;
 			final List<Mutation> listToAdd = new ArrayList<Mutation>();
 			while ((line = reader.readLine()) != null) {
-				if(line.startsWith("WARNING!")==true)
+				if(line.startsWith("WARNING")==true)
 					continue;
 				final String[] lineArray = line.split("\\t");
 				if(lineArray.length==1)
