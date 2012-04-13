@@ -3,7 +3,7 @@ package org.rostlab.snapdb.service.model;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement
+@XmlRootElement(name = "ProteinDetail")
 public class ProteinDetail {
 	private String organismName;
 	private String definition;
@@ -12,32 +12,32 @@ public class ProteinDetail {
 	private String genLocation;
 	private String source;
 
-	@XmlElement(name = "organismName")
+	@XmlElement(name = "OrganismName")
 	public String getOrganismName() {
 		return organismName;
 	}
 
-	@XmlElement(name = "definition")
+	@XmlElement(name = "Definition")
 	public String getDefinition() {
 		return definition;
 	}
 
-	@XmlElement(name = "officialGenFullName")
+	@XmlElement(name = "OfficialGenFullName")
 	public String getOfficialGenFullName() {
 		return officialGenFullName;
 	}
 
-	@XmlElement(name = "officialGenSymbol")
+	@XmlElement(name = "OfficialGenSymbol")
 	public String getOfficialGenSymbol() {
 		return officialGenSymbol;
 	}
 
-	@XmlElement(name = "genLocation")
+	@XmlElement(name = "GenLocation")
 	public String getGenLocation() {
 		return genLocation;
 	}
 
-	@XmlElement(name = "source")
+	@XmlElement(name = "Source")
 	public String getSource() {
 		return source;
 	}

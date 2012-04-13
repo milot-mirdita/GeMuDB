@@ -7,14 +7,14 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement
+@XmlRootElement(name = "NcbiSnpDetail")
 @XmlType(propOrder = { "snpid", "position", "mutation", "effect", "omimEntries" })
 public class NcbiSnpDetail {
 	private Integer snpid = null;
 	private Integer position = null;
 	private Character mutation = null;
 	private Boolean effect = null;
-	private List<OmimEntry> omimEntries=new ArrayList<OmimEntry>();
+	private List<OmimEntry> omimEntries = new ArrayList<OmimEntry>();
 
 	@XmlElement(name = "snpid")
 	public Integer getSnpid() {

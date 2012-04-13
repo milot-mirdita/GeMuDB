@@ -123,7 +123,7 @@ public class ProteinDetailServiceImpl implements ProteinDetailService {
 	public NcbiSnpDetailContainer getProteinSnpDetail(String refid) {
 		final Sequence seq = sequenceDao.selectByRefId(refid);
 		if (seq == null)
-			return new NcbiSnpDetailContainer(0);
+			return null;
 		return getProteinSnpDetail(seq.getRefId(), seq.getVersion());
 	}
 	

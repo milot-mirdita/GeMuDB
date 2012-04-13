@@ -15,6 +15,7 @@ import org.rostlab.snapdb.service.ProteinFunctionalEffectService;
 import org.rostlab.snapdb.service.SearchProteinService;
 import org.rostlab.snapdb.service.model.BadRequestException;
 import org.rostlab.snapdb.service.model.MutationPosContainer;
+import org.rostlab.snapdb.service.model.NcbiSnpDetailContainer;
 import org.rostlab.snapdb.service.model.ProteinDetail;
 import org.rostlab.snapdb.service.model.ProteinFunctionalEffectPrediction;
 import org.rostlab.snapdb.service.model.ProteinId;
@@ -105,6 +106,18 @@ public class ServiceFacadeImpl implements ServiceFacade {
 			throw new BadRequestException();
 		} else {
 			return pd;
+		}
+	}
+	
+	@Override
+	@GET
+	@Path("/ncbisnp/{id}")
+	public NcbiSnpDetailContainer getProteinSnpDetail(@PathParam("id") String refid) {
+		NcbiSnpDetailContainer nsdc= proteinDetailService.getProteinSnpDetail(refid);
+		if (nsdc == null) {
+			throw new BadRequestException();
+		} else {
+			return nsdc;
 		}
 	}
 
