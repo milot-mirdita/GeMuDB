@@ -53,6 +53,7 @@ public class MutationImportServiceImpl implements MutationImportService {
 							+ pathToFasta.getAbsolutePath());
 				}
 				final Sequence sequence = parseFastaFile(pathToFasta);
+				sequenceDao.create(sequence);
 				// read mutation
 				InputStream fileIn = null;
 				TarArchiveInputStream tarFileIn = null;
@@ -64,20 +65,20 @@ public class MutationImportServiceImpl implements MutationImportService {
 					TarArchiveEntry entry = null;
 					while ((entry = tarFileIn.getNextTarEntry()) != null) {
 						if (entry.getName().endsWith(".snap2")) {
-							final List<Mutation> mutList=parseSnapMutationFile(
+							final List<Mutation> mutList = parseSnapMutationFile(
 									unpackEntry(entry, new File(pathToDir,
 											sequence.getRefId() + ".snap2"),
 											tarFileIn), sequence);
-							if(mutList.size()>0)
+							if (mutList.size() > 0)
 								mutationDao.insertBatch(mutList);
 						}
 						if (entry.getName().endsWith(".SIFTprediction")) {
-							final List<Mutation> mutList=parseSiftMutationFile(
+							final List<Mutation> mutList = parseSiftMutationFile(
 									unpackEntry(entry, new File(pathToDir,
 											sequence.getRefId()
 													+ ".SIFTprediction"),
 											tarFileIn), sequence);
-							if(mutList.size()>0)
+							if (mutList.size() > 0)
 								mutationDao.insertBatch(mutList);
 						}
 					}
@@ -138,7 +139,7 @@ public class MutationImportServiceImpl implements MutationImportService {
 				mutation.getMutReliability()[AminoLookup.lookupAAtoIndex(mut)] = accuracy;
 				mutation.getMutEffect()[AminoLookup.lookupAAtoIndex(mut)] = effect;
 			}
-			if(mutation!=null)
+			if (mutation != null)
 				listToAdd.add(mutation);
 			return listToAdd;
 		} catch (FileNotFoundException e) {
@@ -154,7 +155,7 @@ public class MutationImportServiceImpl implements MutationImportService {
 		}
 	}
 
-	private File unpackEntry(TarArchiveEntry entry, final File outputFile,
+	public File unpackEntry(TarArchiveEntry entry, final File outputFile,
 			final TarArchiveInputStream tarFileIn) {
 
 		BufferedOutputStream outputStream;
@@ -177,7 +178,7 @@ public class MutationImportServiceImpl implements MutationImportService {
 		return null;
 	}
 
-	private Sequence parseFastaFile(File pathToFasta) {
+	public Sequence parseFastaFile(File pathToFasta) {
 		LinkedHashMap<String, ProteinSequence> a;
 		final Sequence sequence = new Sequence();
 		try {
@@ -196,11 +197,10 @@ public class MutationImportServiceImpl implements MutationImportService {
 					sequence.setSequence(entry.getValue().getSequenceAsString());
 				}
 			}
-			sequenceDao.create(sequence);
+			return sequence;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-		return sequence;
 	}
 
 	public List<Mutation> parseSnapMutationFile(File file, Sequence sequence) {
@@ -238,7 +238,7 @@ public class MutationImportServiceImpl implements MutationImportService {
 				mutation.getMutReliability()[AminoLookup.lookupAAtoIndex(mut)] = accuracy;
 				mutation.getMutEffect()[AminoLookup.lookupAAtoIndex(mut)] = effect;
 			}
-			if(mutation!=null)
+			if (mutation != null)
 				listToAdd.add(mutation);
 			return listToAdd;
 		} catch (FileNotFoundException e) {
