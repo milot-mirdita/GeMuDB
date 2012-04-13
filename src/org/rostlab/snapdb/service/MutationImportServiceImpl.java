@@ -138,7 +138,8 @@ public class MutationImportServiceImpl implements MutationImportService {
 				mutation.getMutReliability()[AminoLookup.lookupAAtoIndex(mut)] = accuracy;
 				mutation.getMutEffect()[AminoLookup.lookupAAtoIndex(mut)] = effect;
 			}
-			listToAdd.add(mutation);
+			if(mutation!=null)
+				listToAdd.add(mutation);
 			return listToAdd;
 		} catch (FileNotFoundException e) {
 			throw new RuntimeException(e);
@@ -237,7 +238,8 @@ public class MutationImportServiceImpl implements MutationImportService {
 				mutation.getMutReliability()[AminoLookup.lookupAAtoIndex(mut)] = accuracy;
 				mutation.getMutEffect()[AminoLookup.lookupAAtoIndex(mut)] = effect;
 			}
-			listToAdd.add(mutation);
+			if(mutation!=null)
+				listToAdd.add(mutation);
 			return listToAdd;
 		} catch (FileNotFoundException e) {
 			throw new RuntimeException(e);
