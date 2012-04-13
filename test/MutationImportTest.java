@@ -27,7 +27,7 @@ public final class MutationImportTest {
 	@Test
 	public void bugImport() {
 		mutationImportService.parseSiftMutationFile(new File(
-				"input/XP_003118606.SIFTprediction"), new Sequence());
+				"input/NP_114066.SIFTprediction"), new Sequence());
 	}
 
 	@Test

@@ -151,5 +151,6 @@
 	<classpathentry kind="lib" path="lib/woden-impl-dom-1.0M9.jar"/>
 	<classpathentry kind="lib" path="lib/XmlSchema-1.4.7.jar"/>
 	<classpathentry kind="lib" path="lib/ncbiwebservice.jar"/>
+	<classpathentry kind="lib" path="lib/snpxsd.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

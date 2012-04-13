@@ -64,17 +64,21 @@ public class MutationImportServiceImpl implements MutationImportService {
 					TarArchiveEntry entry = null;
 					while ((entry = tarFileIn.getNextTarEntry()) != null) {
 						if (entry.getName().endsWith(".snap2")) {
-							mutationDao.insertBatch(parseSnapMutationFile(
+							final List<Mutation> mutList=parseSnapMutationFile(
 									unpackEntry(entry, new File(pathToDir,
 											sequence.getRefId() + ".snap2"),
-											tarFileIn), sequence));
+											tarFileIn), sequence);
+							if(mutList.size()>0)
+								mutationDao.insertBatch(mutList);
 						}
 						if (entry.getName().endsWith(".SIFTprediction")) {
-							mutationDao.insertBatch(parseSiftMutationFile(
+							final List<Mutation> mutList=parseSiftMutationFile(
 									unpackEntry(entry, new File(pathToDir,
 											sequence.getRefId()
 													+ ".SIFTprediction"),
-											tarFileIn), sequence));
+											tarFileIn), sequence);
+							if(mutList.size()>0)
+								mutationDao.insertBatch(mutList);
 						}
 					}
 				} catch (FileNotFoundException e) {
