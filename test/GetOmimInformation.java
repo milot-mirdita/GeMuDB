@@ -1,9 +1,12 @@
+import gov.nih.nlm.ncbi.snp.docsum.ExchangeSetDocument;
 import gov.nih.nlm.ncbi.www.soap.eutils.EFetchGeneServiceStub;
 import gov.nih.nlm.ncbi.www.soap.eutils.EFetchGeneServiceStub.Entrezgene_type0;
 import gov.nih.nlm.ncbi.www.soap.eutils.EFetchSequenceServiceStub;
-import gov.nih.nlm.ncbi.www.soap.eutils.EFetchSnpServiceStub;
 import gov.nih.nlm.ncbi.www.soap.eutils.EUtilsServiceStub;
 
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.junit.Test;
 
 public class GetOmimInformation {
@@ -32,16 +35,22 @@ public class GetOmimInformation {
 
 			EFetchGeneServiceStub fetchGen = new EFetchGeneServiceStub();
 			EFetchGeneServiceStub.EFetchRequest fetchGenReq = new EFetchGeneServiceStub.EFetchRequest();
-			fetchGenReq.setId(res.getIdList().getId()[0]);
-			EFetchGeneServiceStub.EFetchResult fetchGenRes = fetchGen.run_eFetch(fetchGenReq);
-			for (int i = 0; i < fetchGenRes.getEntrezgeneSet().getEntrezgeneSetSequence().length; i++) {
-				Entrezgene_type0 obj = fetchGenRes.getEntrezgeneSet().getEntrezgeneSetSequence()[i].getEntrezgene();
-				System.out.print("Official Full Name: ");	
-				System.out.println(obj.getEntrezgene_gene().getGeneRef().getGeneRef_desc());
+			fetchGenReq.setId(ids);
+			EFetchGeneServiceStub.EFetchResult fetchGenRes = fetchGen
+					.run_eFetch(fetchGenReq);
+			for (int i = 0; i < fetchGenRes.getEntrezgeneSet()
+					.getEntrezgeneSetSequence().length; i++) {
+				Entrezgene_type0 obj = fetchGenRes.getEntrezgeneSet()
+						.getEntrezgeneSetSequence()[i].getEntrezgene();
+				System.out.print("Official Full Name: ");
+				System.out.println(obj.getEntrezgene_gene().getGeneRef()
+						.getGeneRef_desc());
 				System.out.print("Official Symbol: ");
-				System.out.println(obj.getEntrezgene_gene().getGeneRef().getGeneRef_locus());
+				System.out.println(obj.getEntrezgene_gene().getGeneRef()
+						.getGeneRef_locus());
 				System.out.print("Location: ");
-				System.out.println(obj.getEntrezgene_gene().getGeneRef().getGeneRef_maploc());
+				System.out.println(obj.getEntrezgene_gene().getGeneRef()
+						.getGeneRef_maploc());
 			}
 		} catch (Exception e) {
 
@@ -56,7 +65,7 @@ public class GetOmimInformation {
 			EUtilsServiceStub service = new EUtilsServiceStub();
 
 			EUtilsServiceStub.ESearchRequest req = new EUtilsServiceStub.ESearchRequest();
-			req.setTerm("NP_064582.2");
+			req.setTerm("NP_653088.1 AND \"missense\"[FXN_CLASS]");
 			req.setDb("snp");
 			EUtilsServiceStub.ESearchResult res = service.run_eSearch(req);
 			// results output
@@ -69,25 +78,29 @@ public class GetOmimInformation {
 			}
 			System.out.println("Search in PubMed for \"cat\" returned "
 					+ res.getCount() + " hits");
-			System.out.println("Search links in nuccore for the first " + N
+			System.out.println("Search links in  for the first " + N
 					+ " UIDs: " + ids);
 			System.out.println();
-			EFetchSnpServiceStub fetchService = new EFetchSnpServiceStub();
-			EFetchSnpServiceStub.EFetchRequest reqIdSnp = new EFetchSnpServiceStub.EFetchRequest();
-			reqIdSnp.setId(res.getIdList().getId()[0]);
-			EFetchSnpServiceStub.EFetchResult resIdSnp = fetchService.run_eFetch(reqIdSnp);
 			// results output
-			// for (int i = 0; i < resIdSnp.getExchangeSet().get().length; i++)
-			// {
-			// EFetchSequenceServiceStub.GBSeq_type0 obj = resIdSnp.getGBSet()
-			// .getGBSetSequence()[i].getGBSeq();
-			// System.out.println("Organism: " + obj.getGBSeq_organism());
-			// System.out.println("Locus: " + obj.getGBSeq_locus());
-			// System.out.println("Definition: " + obj.getGBSeq_definition());
-			// System.out
-			// .println("------------------------------------------");
-			// }
+			HttpClient client = new HttpClient();
+			final String snpUrl = String
+					.format("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=snp&id=%s&retmode=xml",
+							ids);
+			System.out.println(snpUrl);
+			GetMethod method = new GetMethod(snpUrl);
+			// Provide custom retry handler is necessary
 
+			// Execute the method.
+			int statusCode = client.executeMethod(method);
+
+			if (statusCode != HttpStatus.SC_OK) {
+				System.err.println("Method failed: " + method.getStatusLine());
+			}
+
+			// Read the response body.
+			ExchangeSetDocument exchangeDoc;
+			exchangeDoc=ExchangeSetDocument.Factory.parse(method.getResponseBodyAsString());
+			System.out.println(exchangeDoc.getExchangeSet().getRsArray().length);
 			EUtilsServiceStub.ELinkRequest reqOmim = new EUtilsServiceStub.ELinkRequest();
 			reqOmim.setDb("omim");
 			reqOmim.setDbfrom("snp");

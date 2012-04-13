@@ -64,16 +64,21 @@ public class MutationImportServiceImpl implements MutationImportService {
 					TarArchiveEntry entry = null;
 					while ((entry = tarFileIn.getNextTarEntry()) != null) {
 						if (entry.getName().endsWith(".snap2")) {
-							parseSnapMutationFile(
+							final List<Mutation> mutList=parseSnapMutationFile(
 									unpackEntry(entry, new File(pathToDir,
 											sequence.getRefId() + ".snap2"),
 											tarFileIn), sequence);
+							if(mutList.size()>0)
+								mutationDao.insertBatch(mutList);
 						}
 						if (entry.getName().endsWith(".SIFTprediction")) {
-							parseSiftMutationFile(
+							final List<Mutation> mutList=parseSiftMutationFile(
 									unpackEntry(entry, new File(pathToDir,
-											sequence.getRefId() + ".SIFTprediction"),
+											sequence.getRefId()
+													+ ".SIFTprediction"),
 											tarFileIn), sequence);
+							if(mutList.size()>0)
+								mutationDao.insertBatch(mutList);
 						}
 					}
 				} catch (FileNotFoundException e) {
@@ -91,7 +96,7 @@ public class MutationImportServiceImpl implements MutationImportService {
 		}
 	}
 
-	private void parseSiftMutationFile(File file, Sequence sequence) {
+	public List<Mutation> parseSiftMutationFile(File file, Sequence sequence) {
 		BufferedReader reader = null;
 		try {
 			reader = new BufferedReader(new FileReader(file));
@@ -100,12 +105,15 @@ public class MutationImportServiceImpl implements MutationImportService {
 			int currPos = 0;
 			final List<Mutation> listToAdd = new ArrayList<Mutation>();
 			while ((line = reader.readLine()) != null) {
+				if (line.startsWith("WARNING") == true)
+					continue;
 				final String[] lineArray = line.split("\\t");
-				if(lineArray.length==1)
+				if (lineArray.length == 1)
 					continue;
 				final String orgPosMut = lineArray[0];
 				final String effectStr = lineArray[1];
-				if(effectStr.equals("NOT SCORED")==true){
+
+				if (effectStr.equals("NOT SCORED") == true) {
 					continue;
 				}
 				final int pos = Integer.parseInt(orgPosMut.substring(1,
@@ -113,24 +121,25 @@ public class MutationImportServiceImpl implements MutationImportService {
 				final char org = orgPosMut.charAt(0);
 				if (pos != currPos) {
 					currPos = pos;
-					if(mutation!=null)
+					if (mutation != null)
 						listToAdd.add(mutation);
 					mutation = new Mutation();
 					mutation.setLsequenceid(sequence.getId());
 					mutation.setPos(currPos);
 					mutation.setType(MutationType.SIFT);
-					mutation.getMutReliability()[AminoLookup.lookupAAtoIndex(org)] = 100;
+					mutation.getMutReliability()[AminoLookup
+							.lookupAAtoIndex(org)] = 255;
 					mutation.getMutEffect()[AminoLookup.lookupAAtoIndex(org)] = false;
 				}
 				final char mut = orgPosMut.charAt(orgPosMut.length() - 1);
 				final Boolean effect = effectStr.equals("DELETERIOUS");
 				final Integer accuracy = (int) (Float.parseFloat(lineArray[2]
-						.substring(0, lineArray[3].length() - 1))*100f);
+						.substring(0, lineArray[3].length() - 1)) * 100f);
 				mutation.getMutReliability()[AminoLookup.lookupAAtoIndex(mut)] = accuracy;
 				mutation.getMutEffect()[AminoLookup.lookupAAtoIndex(mut)] = effect;
 			}
 			listToAdd.add(mutation);
-			mutationDao.insertBatch(listToAdd);
+			return listToAdd;
 		} catch (FileNotFoundException e) {
 			throw new RuntimeException(e);
 		} catch (IOException e) {
@@ -141,7 +150,7 @@ public class MutationImportServiceImpl implements MutationImportService {
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
-		}		
+		}
 	}
 
 	private File unpackEntry(TarArchiveEntry entry, final File outputFile,
@@ -193,7 +202,7 @@ public class MutationImportServiceImpl implements MutationImportService {
 		return sequence;
 	}
 
-	private void parseSnapMutationFile(File file, Sequence sequence) {
+	public List<Mutation> parseSnapMutationFile(File file, Sequence sequence) {
 		BufferedReader reader = null;
 		try {
 			reader = new BufferedReader(new FileReader(file));
@@ -211,13 +220,14 @@ public class MutationImportServiceImpl implements MutationImportService {
 				final char org = orgPosMut.charAt(0);
 				if (pos != currPos) {
 					currPos = pos;
-					if(mutation!=null)
+					if (mutation != null)
 						listToAdd.add(mutation);
 					mutation = new Mutation();
 					mutation.setLsequenceid(sequence.getId());
 					mutation.setPos(currPos);
 					mutation.setType(MutationType.SNAP);
-					mutation.getMutReliability()[AminoLookup.lookupAAtoIndex(org)] = 100;
+					mutation.getMutReliability()[AminoLookup
+							.lookupAAtoIndex(org)] = 255;
 					mutation.getMutEffect()[AminoLookup.lookupAAtoIndex(org)] = false;
 				}
 				final char mut = orgPosMut.charAt(orgPosMut.length() - 1);
@@ -228,7 +238,7 @@ public class MutationImportServiceImpl implements MutationImportService {
 				mutation.getMutEffect()[AminoLookup.lookupAAtoIndex(mut)] = effect;
 			}
 			listToAdd.add(mutation);
-			mutationDao.insertBatch(listToAdd);
+			return listToAdd;
 		} catch (FileNotFoundException e) {
 			throw new RuntimeException(e);
 		} catch (IOException e) {
@@ -240,7 +250,6 @@ public class MutationImportServiceImpl implements MutationImportService {
 				throw new RuntimeException(e);
 			}
 		}
-
 	}
 
 	public MutationDao getMutationDao() {

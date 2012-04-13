@@ -1,14 +1,19 @@
 package org.rostlab.snapdb.dom;
 
+import java.util.Arrays;
+
 public class Mutation {
 	private long lsequenceid;
 	private Character orgAminoAcid;
-	private Boolean[] mutEffect = new Boolean[20];
-	private Integer[] mutReliability = new Integer[20];
+	private Boolean[] mutEffect = new Boolean[21];
+	private Integer[] mutReliability = new Integer[21];
 
 	private Integer pos;
 	private MutationType type;
-
+	public Mutation() {
+		Arrays.fill(mutEffect, false);
+		Arrays.fill(mutReliability, 255);
+	}
 	public long getLsequenceid() {
 		return lsequenceid;
 	}

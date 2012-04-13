@@ -28,11 +28,12 @@ public class ServiceFacadeImpl implements ServiceFacade {
 	private ProteinFunctionalEffectService proteinFunctionalEffectService;
 	private SearchProteinService searchProteinService;
 	private ProteinDetailService proteinDetailService;
+
 	@Override
 	@GET
 	@Path("/prediction/{id}")
 	public ProteinFunctionalEffectPrediction getFunctionalEffectPrediction(
-			@PathParam("id")  String id) {
+			@PathParam("id") String id) {
 		System.out.println("Call getFunctionalEffectPredcition: " + id);
 		ProteinFunctionalEffectPrediction pfep = proteinFunctionalEffectService
 				.getFunctionalEffectPrediction(id);
@@ -86,8 +87,9 @@ public class ServiceFacadeImpl implements ServiceFacade {
 	public MutationPosContainer getMutationList(@PathParam("id") String id,
 			@PathParam("from") Integer from, @PathParam("size") Integer size) {
 		System.out.println("Call getMutationList: " + id);
-		MutationPosContainer posContainer=proteinFunctionalEffectService.getMutationList(id, from, size);
-		if(posContainer==null)
+		MutationPosContainer posContainer = proteinFunctionalEffectService
+				.getMutationList(id, from, size);
+		if (posContainer == null)
 			throw new BadRequestException();
 		else
 			return posContainer;
@@ -96,17 +98,16 @@ public class ServiceFacadeImpl implements ServiceFacade {
 	@Override
 	@GET
 	@Path("/detail/{id}")
-	public ProteinDetail getProteinDetail(@PathParam("id") String id){
+	public ProteinDetail getProteinDetail(@PathParam("id") String id) {
 		System.out.println("Call getProteinDetail: " + id);
-		ProteinDetail pd=  proteinDetailService.getProteinDetail(id);
-		if(pd==null){
+		ProteinDetail pd = proteinDetailService.getProteinDetail(id);
+		if (pd == null) {
 			throw new BadRequestException();
-		}else{
+		} else {
 			return pd;
 		}
 	}
-	
-	
+
 	public ProteinFunctionalEffectService getProteinFunctionalEffectService() {
 		return proteinFunctionalEffectService;
 	}
@@ -129,7 +130,8 @@ public class ServiceFacadeImpl implements ServiceFacade {
 		return proteinDetailService;
 	}
 
-	public void setProteinDetailService(ProteinDetailService proteinDetailService) {
+	public void setProteinDetailService(
+			ProteinDetailService proteinDetailService) {
 		this.proteinDetailService = proteinDetailService;
 	}
 

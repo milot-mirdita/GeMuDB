@@ -24,10 +24,10 @@ public final class DaoTests {
 	
 	final private Boolean[] effect=
 		{false,true,false,true,false,true,false,false,false,false,
-		 true,false,true,false,false,false,false,true,true,false};
+		 true,false,true,false,false,false,false,true,true,true,false};
 	final private Integer[] reli=
 		{80,50,60,70,50,70,90,86,23,64,
-		 76,87,68,89,43,57,69,43,79,35};
+		 76,87,68,89,43,57,69,43,79,73,35};
     // this instance will be dependency injected by type
     @Autowired    
     private SequenceDao sequenceDao;

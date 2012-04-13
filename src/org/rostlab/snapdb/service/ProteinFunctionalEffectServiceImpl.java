@@ -34,7 +34,7 @@ public class ProteinFunctionalEffectServiceImpl implements
 			final String refId, final String alphabet) {
 
 		// catch sequence
-		Boolean[] aaToPredict = new Boolean[20];
+		Boolean[] aaToPredict = new Boolean[21];
 		Arrays.fill(aaToPredict, Boolean.FALSE);
 		for (int i = 0; i < alphabet.length(); i++) {
 			aaToPredict[AminoLookup.lookupAAtoIndex(alphabet.charAt(i))] = true;

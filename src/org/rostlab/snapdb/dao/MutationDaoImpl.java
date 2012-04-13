@@ -17,7 +17,7 @@ public class MutationDaoImpl extends BaseDao implements MutationDao {
 			+ "leffect_m, lreliability_m, leffect_n, lreliability_n, leffect_p, lreliability_p, "
 			+ "leffect_q, lreliability_q, leffect_r, lreliability_r, leffect_s, lreliability_s, "
 			+ "leffect_t, lreliability_t, leffect_v, lreliability_v, leffect_w, lreliability_w, "
-			+ "leffect_y, lreliability_y ";
+			+ "leffect_x, lreliability_x, leffect_y, lreliability_y ";
 
 	@Override
 	public void create(final Mutation mut) {
@@ -26,7 +26,7 @@ public class MutationDaoImpl extends BaseDao implements MutationDao {
 				+ "VALUES (?, ?, ?, ?, ?, " + "?, ?, ?, ?, ?, ?, "
 				+ "?, ?, ?, ?, ?, ?, " + "?, ?, ?, ?, ?, ?, "
 				+ "?, ?, ?, ?, ?, ?, " + "?, ?, ?, ?, ?, ?, "
-				+ "?, ?, ?, ?, ?, ?, " + "?, ? )",
+				+ "?, ?, ?, ?, ?, ?, " + "?, ?, ?, ? )",
 				new PreparedStatementSetter() {
 					public void setValues(PreparedStatement preparedStatement)
 							throws SQLException {
@@ -83,6 +83,9 @@ public class MutationDaoImpl extends BaseDao implements MutationDao {
 						preparedStatement.setBoolean(42, mut.getMutEffect()[19]);
 						preparedStatement.setInt(43,
 								mut.getMutReliability()[19]);
+						preparedStatement.setBoolean(44, mut.getMutEffect()[20]);
+						preparedStatement.setInt(45,
+								mut.getMutReliability()[20]);
 					}
 				});
 	}
@@ -126,7 +129,7 @@ public class MutationDaoImpl extends BaseDao implements MutationDao {
 				+ "VALUES (?, ?, ?, ?, ?, " + "?, ?, ?, ?, ?, ?, "
 				+ "?, ?, ?, ?, ?, ?, " + "?, ?, ?, ?, ?, ?, "
 				+ "?, ?, ?, ?, ?, ?, " + "?, ?, ?, ?, ?, ?, "
-				+ "?, ?, ?, ?, ?, ?, " + "?, ? )";
+				+ "?, ?, ?, ?, ?, ?, " + "?, ?, ?, ? )";
 
 		jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 
@@ -176,7 +179,9 @@ public class MutationDaoImpl extends BaseDao implements MutationDao {
 				preparedStatement.setBoolean(40, mut.getMutEffect()[18]);
 				preparedStatement.setInt(41, mut.getMutReliability()[18]);
 				preparedStatement.setBoolean(42, mut.getMutEffect()[19]);
-				preparedStatement.setInt(43, mut.getMutReliability()[19]);
+				preparedStatement.setInt(43,mut.getMutReliability()[19]);
+				preparedStatement.setBoolean(44, mut.getMutEffect()[20]);
+				preparedStatement.setInt(45,mut.getMutReliability()[20]);
 			}
 
 			@Override
