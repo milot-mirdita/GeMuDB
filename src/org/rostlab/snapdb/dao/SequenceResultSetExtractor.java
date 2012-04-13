@@ -15,6 +15,7 @@ public class SequenceResultSetExtractor implements ResultSetExtractor<Sequence> 
 		seq.setSequence(rs.getString("szsequence"));
 		seq.setSequenceHash(rs.getString("szsequencehash"));
 		seq.setRefId(rs.getString("szrefid"));
+		seq.setVersion(rs.getInt("lversion"));
 		return seq;
 	}
 

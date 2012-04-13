@@ -189,11 +189,20 @@ public class MutationImportServiceImpl implements MutationImportService {
 				if (header == null
 						|| entry.getValue().getOriginalHeader()
 								.contains(header) == false) {
-					header = entry.getValue().getOriginalHeader().split("\\.")[0];
-					final String refId = header.split("\\|")[3];
+					header = entry.getValue().getOriginalHeader();
+					final String refIdWithVersion = header.split("\\|")[3];
+					final String[] refid_array = refIdWithVersion.split("\\.");
+					final String refId = refid_array[0];
+					final Integer version;
+					if (refid_array.length > 1)
+						version = Integer.parseInt(refid_array[1]);
+					else
+						version = new Integer(1);
+
 					if (refId == null)
 						throw new RuntimeException("no refid found");
 					sequence.setRefId(refId);
+					sequence.setVersion(version);
 					sequence.setSequence(entry.getValue().getSequenceAsString());
 				}
 			}

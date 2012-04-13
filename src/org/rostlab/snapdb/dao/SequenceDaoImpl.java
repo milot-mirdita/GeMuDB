@@ -5,15 +5,15 @@ import java.util.List;
 import org.rostlab.snapdb.dom.Sequence;
 
 public class SequenceDaoImpl extends BaseDao implements SequenceDao {
-	final private String colList = "lid, szsequence, szsequencehash, szrefid ";
+	final private String colList = "lid, szsequence, szsequencehash, szrefid, lversion ";
 
 	@Override
 	public void create(Sequence seq) {
 		jdbcTemplate.update(
-				"INSERT INTO sequence (szsequence, szsequencehash, szrefid) "
-						+ "VALUES (?, MD5(?), ?)",
+				"INSERT INTO sequence (szsequence, szsequencehash, szrefid, lversion) "
+						+ "VALUES (?, MD5(?), ?, ?)",
 				new Object[] { seq.getSequence(), seq.getSequence(),
-						seq.getRefId() });
+						seq.getRefId(), seq.getVersion() });
 		seq.setId(getLastId());
 	}
 

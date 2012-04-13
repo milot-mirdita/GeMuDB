@@ -2,18 +2,13 @@ DROP TABLE IF EXISTS `mutation`;
 DROP TABLE IF EXISTS `sequence`;
 DROP TABLE IF EXISTS `organism`;
 
-CREATE TABLE organism (
-	 lid INTEGER UNSIGNED auto_increment,
-	 szname VARCHAR(256),
-	 PRIMARY KEY(lid)
-) ENGINE=MyISAM;
-
 CREATE TABLE sequence (
 	 lid INTEGER UNSIGNED auto_increment,
 	 szrefid VARCHAR(100),
+	 lversion INTEGER UNSIGNED ,
 	 szsequence LONGTEXT NOT NULL,
 	 szsequencehash VARCHAR(32),
-	 szchain VARCHAR(16),
+	 dtcreate TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
      PRIMARY KEY(lid),
 	 UNIQUE (szrefid),
 	 UNIQUE (szsequencehash)

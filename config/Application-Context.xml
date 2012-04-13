@@ -37,10 +37,6 @@
 		<property name="jdbcTemplate" ref="jdbcTemplate" />
 	</bean>
 
-	<bean id="organismDao" class="org.rostlab.snapdb.dao.OrganismDaoImpl">
-		<property name="jdbcTemplate" ref="jdbcTemplate" />
-	</bean>
-
 	<bean id="mutationDao" class="org.rostlab.snapdb.dao.MutationDaoImpl">
 		<property name="jdbcTemplate" ref="jdbcTemplate" />
 	</bean>

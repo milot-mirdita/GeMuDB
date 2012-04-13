@@ -46,6 +46,7 @@ public final class DaoTests {
     	sequence = new Sequence();
     	sequence.setRefId("REF123332515");;
     	sequence.setSequence(seq);
+    	sequence.setVersion(1);
     	sequenceDao.create(sequence);
     	assertTrue(sequence.getId()>0);
     	Sequence tmpSeq=sequenceDao.selectById(sequence.getId());
@@ -54,6 +55,7 @@ public final class DaoTests {
     	tmpSeq=sequenceDao.selectByRefId(sequence.getRefId());
     	assertEquals(sequence.getRefId(), tmpSeq.getRefId());
     	assertEquals(sequence.getSequence(), tmpSeq.getSequence());
+    	assertEquals(sequence.getVersion(), tmpSeq.getVersion());
     	assertTrue(tmpSeq.equals("")==false);
     }
     

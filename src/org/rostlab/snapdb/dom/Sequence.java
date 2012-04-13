@@ -6,6 +6,7 @@ public class Sequence {
 	private String sequenceHash;
 	private String refId;
 	private Organism organism;
+	private Integer version;
 
 	public Sequence() {
 	}
@@ -56,4 +57,10 @@ public class Sequence {
 		this.organism = organism;
 	}
 
+	public Integer getVersion() {
+		return version;
+	}
+	public void setVersion(Integer version){
+		this.version = version;
+	}
 }
