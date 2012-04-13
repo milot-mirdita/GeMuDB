@@ -29,9 +29,41 @@
 		</div>
 		
 		<!-- ko if: smallProteinResult() -->
-		<div class="row">
-			<div id="functional_effect_container"
-			data-bind="template: { name: 'functional_effect_template', data: smallProteinResult(), afterRender: formatProteinResult }"  class="result span12">
+		<div id="functional_effect_container" class="result">
+			<div class="row">
+				<div id="active_types" class="btn-group span2" data-toggle="buttons-checkbox">
+					  <button class="btn active"
+		data-bind="typeclick: 'SNAP'">SNAP2</button>
+					  <button class="btn"
+		data-bind="typeclick: 'SIFT'">SIFT</button>
+				</div>
+				<div id="active_alphabet" class="btn-group span9" data-toggle="buttons-checkbox" data-bind="alphabetclick: true">
+			  		<button class="btn active a">A</button>
+			  		<button class="btn active c">C</button>
+			  		<button class="btn active d">D</button>
+			  		<button class="btn active e">E</button>
+			  		<button class="btn active f">F</button>
+			  		<button class="btn active g">G</button>
+			  		<button class="btn active h">H</button>
+			  		<button class="btn active i">I</button>
+			  		<button class="btn active k">K</button>
+			  		<button class="btn active l">L</button>
+			  		<button class="btn active m">M</button>
+			  		<button class="btn active n">N</button>
+			  		<button class="btn active p">P</button>
+			  		<button class="btn active q">Q</button>
+			  		<button class="btn active r">R</button>
+			  		<button class="btn active s">S</button>
+			  		<button class="btn active t">T</button>
+			  		<button class="btn active v">V</button>
+			  		<button class="btn active w">W</button>
+			  		<button class="btn active y">Y</button>
+				</div>
+			</div>
+			<div class="row">
+				<div
+				data-bind="template: { name: 'functional_effect_template', data: smallProteinResult(), afterRender: formatProteinResult }" class="span12">
+				</div>
 			</div>
 		</div>
 		<!-- /ko-->
@@ -76,34 +108,6 @@
 </script>
 
 <script type="text/html" id="functional_effect_template">
-	<div class="row">
-		<div class="btn-group span2" data-toggle="buttons-checkbox">
-			  <button class="btn active">SNAP2</button>
-			  <button class="btn active">SIFT</button>
-		</div>
-		<div class="btn-group span9" data-toggle="buttons-checkbox">
-	  		<button class="btn active">A</button>
-	  		<button class="btn active">C</button>
-	  		<button class="btn active">D</button>
-	  		<button class="btn active">E</button>
-	  		<button class="btn active">F</button>
-	  		<button class="btn active">G</button>
-	  		<button class="btn active">H</button>
-	  		<button class="btn active">I</button>
-	  		<button class="btn active">K</button>
-	  		<button class="btn active">L</button>
-	  		<button class="btn active">M</button>
-	  		<button class="btn active">N</button>
-	  		<button class="btn active">P</button>
-	  		<button class="btn active">Q</button>
-	  		<button class="btn active">R</button>
-	  		<button class="btn active">S</button>
-	  		<button class="btn active">T</button>
-	  		<button class="btn active">V</button>
-	  		<button class="btn active">W</button>
-	  		<button class="btn active">Y</button>
-		</div>
-	</div>
 	<div class="flot_container"  style="width:926px; height:60px;"></div>
 
 	<span class="sequence monospace" data-bind="text: sequence"></span>
