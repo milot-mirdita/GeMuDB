@@ -47,6 +47,7 @@ html, body {
 }
 
 #search_container {
+	display: block;
 	position: absolute;
 	top: 40%;
 }
@@ -76,6 +77,10 @@ html, body {
 	margin: 0 0 0.5em 0;
 	background-color: #333;
 	height: 47px;
+}
+
+#result_container {
+	display: none;
 }
 
 .result {

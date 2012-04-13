@@ -10,8 +10,7 @@
 <body>
 <div class="container">
 	<div class="row">
-		<div id="search_container" class="span8 offset2"
-			data-bind="visible: !proteinResult.refid()">
+		<div id="search_container" class="span8 offset2">
 			<div class="header">
 				SNPdbe
 			</div>
@@ -19,16 +18,15 @@
 		</div>
 	</div>
 
-	<div data-bind="visible: proteinResult.refid()">
+	<div id="result_container">
 		<div id="top_bar_container" class="row">
 			<div class="search span3" data-bind="template: { name: 'search_template' }"></div>
 			<div id="flot_overview_container" class="span9">
-				<div class="seeker" data-bind="drag: 'test'"></div>
+				<div class="seeker" data-bind="drag: sequenceOffsetCallback"></div>
 				<div id="flot_overview"  style="width:715px; height:40px"></div>
 			</div>
 		</div>
 		
-		<!-- ko if: smallProteinResult() -->
 		<div id="functional_effect_container" class="result">
 			<div class="row">
 				<div id="active_types" class="btn-group span2" data-toggle="buttons-checkbox">
@@ -61,12 +59,20 @@
 				</div>
 			</div>
 			<div class="row">
-				<div
-				data-bind="template: { name: 'functional_effect_template', data: smallProteinResult(), afterRender: formatProteinResult }" class="span12">
+				<div class="span12">
+					<div id="flot_details"  style="width:926px; height:60px;"></div>
+
+					<span class="sequence monospace" data-bind="text: slicedProtein.sequence()"></span>
+					<span class="id" data-bind="text: slicedProtein.refid()"></span>
+					<span class="prediction" data-bind="foreach: slicedProtein.predictions">
+						<span class="type" data-bind="text: type"></span>
+						<span class="reliability" data-bind="text: reliability"></span>
+						<span class="conservation" data-bind="text: conservation"></span>
+					</span>
 				</div>
 			</div>
 		</div>
-		<!-- /ko-->
+
 		<div class="row">
 			<div id="functional_effect_list_container" class="result span7" style="height: 300px">
 				<div class="progress" data-bind="visible : !listResult()">
@@ -107,19 +113,6 @@
 	</form>
 </script>
 
-<script type="text/html" id="functional_effect_template">
-	<div class="flot_container"  style="width:926px; height:60px;"></div>
-
-	<span class="sequence monospace" data-bind="text: sequence"></span>
-	<span class="id" data-bind="if: refid, text: refid"></span>
-	<span class="prediction" data-bind="foreach: predictions">
-		<span class="type" data-bind="text: type"></span>
-		<span class="reliability" data-bind="text: reliability"></span>
-		<span class="conservation" data-bind="text: conservation"></span>
-	</span>
-</script>
-
-
 <script type="text/html" id="list_entry_template">
 	<li>
 		<span class="position" data-bind="text: position"></span>
@@ -133,6 +126,7 @@
 <script src="js/jquery.flot.min.js"></script>
 <script src="js/jquery.event.drag-2.0.min.js"></script>
 <script src="js/jquery.scrollTo-1.4.2-min.js"></script>
+<script src="js/underscore-min.js"></script>
 <script src="js/knockout-2.0.0.debug.js"></script>
 <script src="js/knockout.mapping-latest.js"></script>
 <script src="js/sammy-latest.min.js"></script>

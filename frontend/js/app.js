@@ -78,23 +78,40 @@ var initNumberMixin = (function(out) {
 	return out;
 });
 
-var initStringHelperMixin = (function(out) {
-	out.splitTypes = function(string) {
+var initStateMixin = (function(out) {
+	var splitTypes = function(string) {
 		return string.toString().split(":");
 	};
 
-	out.buildTypeString = function(types) {
+	var buildTypeString = function(types) {
 		return types.join(":");
 	};
+	out.serializeState = function(obj) {
+		var result = "";
+		result += "/" + obj.protein.refid;
+		result += "/" + buildTypeString(obj.types);
+		result += "/" + (obj.alphabet || "ACDEFGHIKLMNPQRSTVWY");
+		result += "/" + obj.offset;
+		result += "/" + (obj.detail.index || -1);
+		result += "/" + (obj.detail.mutation || -1);
 
-	out.splitAlphabet = function(string) {
-		return string.toString().split("");
+		return result;
 	};
 
-	out.buildAlphabetString = function(chars) {
-		return chars.join("");
-	};
-	return out;
+	out.unserializeState = function(string) {
+		var tmp = string.toString().split("/");
+
+		return {
+			offset : (tmp[4] - 0),
+			types : splitTypes(tmp[2]),
+			alphabet : tmp[3],
+			detail : {
+				index : (tmp[5] - 0),
+				mutation : (tmp[6] - 0)
+			},
+			protein : null
+		};
+	}
 });
 
 
@@ -102,109 +119,67 @@ var initStringHelperMixin = (function(out) {
 var Protein = function() {
 	this.refid = ko.observable("");
 	this.sequence = ko.observable("");
-	this.predictions = ko.observableArray();
+	this.predictions = ko.observableArray([]);
 };
 
 (function() {
 	"use strict";
+	var constants = {
+		lineLength : 115,
+		baseUrl : "http://localhost/api/resources/"
+	};
+
 	function SearchViewModel() {
 		// private
 		var hidden = {};
 		initProteinMixin(hidden);
 		initNumberMixin(hidden);
-		initStringHelperMixin(hidden);
+		initStateMixin(hidden);
 		
-		// public
 		var self = this;
 
-		self.baseUrl = "http://localhost/api/resources/";
-
-		/**
-		 * @value protein id to search for
-		 */
-		self.protein = "NP_005378";
-		
-		/**
-		 * @arg protein object as json
-		 */
-		self.proteinResult = new Protein();
+		self.protein = 'NP_005378';
 	
-		/**
-		 * @arg offset to start rendering the detail graph
-		 */
-		self.sequenceOffset = ko.observable(0);
+		self.currentState = {
+			offset : 0,
+			types : [
+				'SNAP'
+			],
+			alphabet : '',
+			detail : {
+				index : null,
+				mutation : null
+			},
+			protein : null
+		};
 		
-		/**
-		 * @arg type of details to show
-		 */
-		self.predictionTypes = ko.observableArray(["SNAP"]);
 		
 		/**
 		 * @arg length of detail graph
 		 */
-		self.lineLength = 115;	
-		
-		self.smallProteinResult = ko.computed(function() {
-			var protein = ko.toJS(self.proteinResult);
-			return hidden.subProtein(protein, 
-									 self.sequenceOffset(),
-									 self.lineLength);
-		}).extend({ throttle: 1 });
-				
 		self.listResult = ko.observable();
 
 		/**
 		 * @arg 
 		 */
-		self.selectedIndex = ko.observable();
-		self.selectedMutation = ko.observable();
 		self.snpDetails = ko.observable();
 
+		// ko.computed(function () {
+		// 	if(self.proteinResult.refid) {
+		// 		var id = self.proteinResult.refid;
+		// 		var offset = ((self.sequenceOffset() - 0) + 1);
+		// 		var length = self.lineLength;
 
-		ko.computed(function () {
-			var depends2 = self.sequenceOffset();
-			self.listResult(null);
-			self.snpDetails(null);
-			self.selectedIndex(null);
-			self.selectedMutation(null);
-		});
-
-		ko.computed(function () {
-			if(self.proteinResult.refid()) {
-				var id =  self.proteinResult.refid();
-				var offset = ((self.sequenceOffset() - 0) + 1);
-				var length = self.lineLength;
-
-				$.when($.getJSON(self.baseUrl + 'protein/mutations/' + id + '/' + offset + '/' + length))
-				 .done(function (result) {
-			 		self.listResult(result.mutationsPos);
-				 })
-				 .fail(function (error) {
-				 	console.warn(error);
-				 });
-			}
-		}).extend({ throttle: 500 });
-
-		self.searchProtein = function() {
-			location.hash = "!/search/" + self.protein;
-		};
-				
-		self.formatProteinResult = function(elements, data) {
-			var clickHandler = function (item) {
-				var index = self.sequenceOffset() + item.dataIndex + 1;
-				$(".mutations").parent().css('background-color', 'inherit');
-				$("#mutation" + index).parent().css('background-color', 'red');
-				$('#functional_effect_list_container').scrollTo("#mutation" + index, 
-					{ duration: 500, margin : true });
-
-			};
+		// 		$.when($.getJSON(constants.baseUrl + 'protein/mutations/' + id + '/' + offset + '/' + length))
+		// 		 .done(function (result) {
+		// 	 		self.listResult(result.mutationsPos);
+		// 		 })
+		// 		 .fail(function (error) {
+		// 		 	console.warn(error);
+		// 		 });
+		// 	}
+		// }).extend({ throttle: 500 });
 			
-			// hack: can't use a selector to query for .flot_container
-			// elements is a collection and not DOM
-			hidden.addGraph($('.flot_container'), data, self.predictionTypes(), false, clickHandler);
-			hidden.addGraph($('#flot_overview'), ko.toJS(self.proteinResult), self.predictionTypes(), true);
-		}
-
 		self.formatListResult = function(elements, data) {
 			//console.log(elements);
 			//console.log(data);
@@ -231,25 +206,58 @@ var Protein = function() {
 			self.snpDetails(null);
 		}
 
-		self.alphabetInvalidator = ko.observable(0);
-		self.invalidateAlphabet = function () {
-			var value = self.alphabetInvalidator();
-			self.alphabetInvalidator(!value);
+		self.searchProtein = function() {
+			location.hash = "!/search/" + self.protein;
 		};
 
-		ko.computed(function () {
-			var depends = self.alphabetInvalidator();
+		var showSearch = function() {
+			$("#search_container").show();
+			$("#result_container").hide();
+		};
 
-			var types = hidden.buildTypeString(self.predictionTypes());
-			var alphabet = $('#active_alphabet .active').text();
-			var offset = self.sequenceOffset() || 0;
-			var index = self.selectedIndex() || -1;
-			var mutation = self.selectedMutation() || -1;
+		var hideSearch = function() {
+			$("#search_container").hide();
+			$("#result_container").show();
+		};
 
-			location.hash = "!/show/" + self.protein + "/" + types + "/" + alphabet 
-								+ "/" + offset  + "/" + index + "/" + mutation;
+		self.slicedProtein = new Protein();
+		self.updateByProteinResult = function(proteinResult) {
+			var offset = self.currentState.offset;
+			var types = self.currentState.types;
+			
+			self.currentState.protein = proteinResult;
 
-		}).extend({throttle:500});
+			var slicedProtein = hidden.subProtein(proteinResult, offset, constants.lineLength);
+			
+			self.slicedProtein.refid(slicedProtein.refid);
+			self.slicedProtein.sequence(slicedProtein.sequence);
+			self.slicedProtein.predictions(slicedProtein.predictions);
+
+			self.updateGraphs(proteinResult, slicedProtein, types);
+		};
+
+		self.updateGraphs = function(normal, scliced, types) {
+			var clickHandler = function (item) {
+				var index = self.sequenceOffset + item.dataIndex + 1;
+				$(".mutations").parent().css('background-color', 'inherit');
+				$("#mutation" + index).parent().css('background-color', 'red');
+				$('#functional_effect_list_container').scrollTo("#mutation" + index, 
+					{ duration: 500, margin : true });
+
+			};
+
+			hidden.addGraph($('#flot_details'), scliced, types, false, clickHandler);
+			hidden.addGraph($('#flot_overview'), normal, types, true);
+		}
+
+		self.sequenceOffsetCallback = _.throttle(function (value) {
+			self.currentState.offset = value;
+			var slicedProtein = hidden.subProtein(self.currentState.protein, value, constants.lineLength);
+			self.slicedProtein.refid(slicedProtein.refid);
+			self.slicedProtein.sequence(slicedProtein.sequence);
+			self.slicedProtein.predictions(slicedProtein.predictions);
+			self.updateGraphs(self.currentState.protein, slicedProtein, self.currentState.types);
+		}, 32);
 
 		Sammy(function() {
 			this.ajaxErrorHandler = function (error) {
@@ -259,97 +267,83 @@ var Protein = function() {
 			this.get("#!/search/:protein", function(context) {
 				var protein = this.params["protein"];
 				
-				$.when($.post(self.baseUrl + "protein/search", 
+				$.when($.post(constants.baseUrl + "protein/search", 
 						{q: protein}, undefined, "json"))
 					.done(function(searchResult) {
-						context.redirect("#!", "show", searchResult.refid, "SNAP:SIFT", 
-							"ACDEFGHIKLMNPQRSTVWY", "0", "-1", "-1");
+						context.redirect("#!", "show", searchResult.refid);
 					})
 					.fail(this.ajaxErrorHandler);
 			});
 
-			this.get("#!/show/:protein/:types/:alphabet/:offset/:index/:mutation", function(context) {
-				var protein = this.params["protein"];
-				var alphabet = this.params["alphabet"];
-			
-				var chars = hidden.splitAlphabet(alphabet);
-				$("#active_alphabet .active").removeClass("active");
-				for(var c in chars) {
-					$("." + chars[c].toLowerCase(), "#active_alphabet").addClass("active");
-				}
-				self.invalidateAlphabet();
+			this.get("#!/show/:refid", function() {
+				var reference = this.params["refid"];
+				if(self.currentReferenceId != reference) {
+					self.currentReferenceId = reference;
 
-				self.predictionTypes(hidden.splitTypes(this.params["types"]));
-				self.sequenceOffset(this.params["offset"] - 0);
-				self.showDetailView(this.params["index"], this.params["mutation"]);
-
-				if((self.currentProtein != protein) || (self.currentAlphabet != alphabet)) {
-					self.currentAlphabet = alphabet;
-					self.protein = self.currentProtein = protein;
-
-					$.when($.getJSON(self.baseUrl + "protein/prediction/" 
-									 + protein + "/" + alphabet))
+					$.when($.getJSON(constants.baseUrl + "protein/prediction/" 
+									 + reference))
 						.done(function (proteinResult) {
-							self.proteinResult.sequence(proteinResult.sequence);
-							self.proteinResult.refid(protein);
-							self.proteinResult.predictions(proteinResult.predictions);
+							proteinResult.refid = reference;
+							self.updateByProteinResult(proteinResult);
+							hideSearch();
+
 						})
 						.fail(this.ajaxErrorHandler);
 				}
 			});
 			
 			this.get("", function() {
-				self.proteinResult = new Protein();
+				showSearch();
 			});
 		}).run();
 	}
 
 	ko.bindingHandlers.drag = {
 		init: function(element, valueAccessor, allBindingsAccessor, viewModel) {
-			var hidden = {};
-			initNumberMixin(hidden);
-			
-			var sequenceLength = 0;
-			var marginLeft = 2;
-			var marginRight = 2;
-			var lineLength = 0;
-			var plotWidth = 0;
-			var seekerWidth = 0;
-			
-			var plotOverview = $('#flot_overview');
-			
-			var maxOffset = 0;
-			var minOffset = 0; 
-			
-			$(element).drag("init", function(event) {
+			var initialize = _.throttle(function() {
+				if(!viewModel.currentState.protein
+					|| viewModel.currentState.protein.sequence == 0) {
+					setTimeout(initialize, 64);
+					return;
+				}
+
 				$(element).css({ "cursor": "pointer" });
-				sequenceLength = viewModel.proteinResult.sequence().length;
-				lineLength = viewModel.lineLength;
+
+				var hidden = {};
+				initNumberMixin(hidden);
 				
-				plotWidth = plotOverview.width();
-				seekerWidth = plotWidth / sequenceLength * lineLength;
+				var plotOverview = $('#flot_overview');
+
+				var sequenceLength = viewModel.currentState.protein.sequence.length;
+				var marginLeft = 2;
+				var marginRight = 2;
+				var lineLength = constants.lineLength;
+				var plotWidth = plotOverview.width();
+				var seekerWidth = plotWidth / sequenceLength * lineLength;
+				 
 				$('#flot_overview_container .seeker').width(seekerWidth);
 				
-				minOffset = marginLeft;
-				maxOffset = plotWidth - seekerWidth - marginRight;
-			}, { relative:true });
+				var minOffset = marginLeft; 
+				var maxOffset = plotWidth - seekerWidth - marginRight;
+				
+				$(element).drag(function(event, dd ){
+					var offset = hidden.clamp(dd.offsetX, minOffset, maxOffset);
+					$(element).css('left', offset);
+					// valueAccessor() is the callback to be called with an parameter
+					valueAccessor()(Math.floor((offset-2) * sequenceLength / (plotWidth-8)));	
+				},{ relative:true });
 			
-			$(element).drag(function(event, dd ){
-				var offset = hidden.clamp(dd.offsetX, minOffset, maxOffset);
-				$(element).css('left', offset);
-				viewModel.sequenceOffset(Math.floor((offset-2) * sequenceLength / (plotWidth-8)));		
-			},{ relative:true });
-		
-			$(element).drag("end", function(event) {
-				$(element).css({ "cursor": "e-resize" }, { relative:true });
-			});
+				$(element).drag("end", function(event) {
+					$(element).css({ "cursor": "e-resize" }, { relative:true });
+				});
+			}, 64);
+			setTimeout(initialize, 64);
 		},
 		update: function(element, valueAccessor, allBindingsAccessor, viewModel) {
-				var protein = ko.toJS(viewModel.proteinResult);
+				var protein = viewModel.currentState.protein;
 				if(protein) {
-					
 					var sequenceLength = protein.sequence.length;
-					var lineLength = viewModel.lineLength;
+					var lineLength = constants.lineLength;
 				
 					var plotWidth = $('#flot_overview').width();
 					var seekerWidth = plotWidth / sequenceLength * lineLength;
@@ -383,12 +377,12 @@ var Protein = function() {
 	ko.bindingHandlers.typeclick = {
 		init: function(element, valueAccessor, allBindingsAccessor, viewModel, context) {
 			$(element).click(function(event) {
-				var index = $.inArray(valueAccessor(), viewModel.predictionTypes());
+				var index = $.inArray(valueAccessor(), viewModel.currentState.types);
 				if(index == -1)
-					viewModel.predictionTypes.push(valueAccessor());
+					viewModel.currentState.types.push(valueAccessor());
 				else { 
 					if($("#active_types .active").size() > 1) {
-						viewModel.predictionTypes.splice(index, 1);
+						viewModel.currentState.types.splice(index, 1);
 					} else {
 						event.preventDefault();
 						event.stopPropagation();
@@ -403,13 +397,13 @@ var Protein = function() {
 			$(element).on("click", ".btn", function(event) {
 				var size = $("#active_alphabet .active").size();
 				if(!$(this).hasClass('active')) {
-					viewModel.invalidateAlphabet();
+					//viewModel.invalidateAlphabet();
 					return;
 				}
 
 				if(size > 1) {
 					setTimeout(function() {
-						viewModel.invalidateAlphabet();
+						//viewModel.invalidateAlphabet();
 					}, 20);
 				} else {
 					event.preventDefault();
