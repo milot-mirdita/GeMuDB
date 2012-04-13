@@ -3,6 +3,8 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.rostlab.snapdb.service.ProteinDetailService;
+import org.rostlab.snapdb.service.model.NcbiSnpDetailContainer;
+import org.rostlab.snapdb.service.model.OmimEntry;
 import org.rostlab.snapdb.service.model.ProteinDetail;
 import org.rostlab.snapdb.service.model.NcbiSnpDetail;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +29,52 @@ public class TestProteinDetail {
 
 	@Test
 	public void testSnp() {
-		NcbiSnpDetail pd = proteinDetailService.getProteinSnpDetail("NP_001073592.1");
+		NcbiSnpDetailContainer pd = proteinDetailService.getProteinSnpDetail("NP_001073592",1);
+		for(NcbiSnpDetail nsd : pd.getNcbiSnpDetailContainer()){
+			System.out.println("Snpid: "+nsd.getSnpid());
+			System.out.println("Mutation: "+nsd.getMutation());
+			System.out.println("Position: "+nsd.getPosition());
+			System.out.println("Effect: "+nsd.getEffect());
+			for(OmimEntry oe:nsd.getOmimEntries()){
+				System.out.println("Omimid: "+oe.getLinkId());
+			}
+		}
+//		assertEquals("NUP98", pd.getOfficialGenSymbol());
+//		assertEquals("11p15.5", pd.getGenLocation());
+//		assertEquals("Homo sapiens", pd.getOrganismName());
+//		assertEquals("Homo sapiens (human)", pd.getSource());
+	}
+	
+	@Test
+	public void testSnpNoResult() {
+		NcbiSnpDetailContainer pd = proteinDetailService.getProteinSnpDetail("NP_005378",0);
+		for(NcbiSnpDetail nsd : pd.getNcbiSnpDetailContainer()){
+			System.out.println("Snpid: "+nsd.getSnpid());
+			System.out.println("Mutation: "+nsd.getMutation());
+			System.out.println("Position: "+nsd.getPosition());
+			System.out.println("Effect: "+nsd.getEffect());
+			for(OmimEntry oe:nsd.getOmimEntries()){
+				System.out.println("Omimid: "+oe.getLinkId());
+			}
+		}
+//		assertEquals("NUP98", pd.getOfficialGenSymbol());
+//		assertEquals("11p15.5", pd.getGenLocation());
+//		assertEquals("Homo sapiens", pd.getOrganismName());
+//		assertEquals("Homo sapiens (human)", pd.getSource());
+	}
+	
+	@Test
+	public void testSnpNoOmim() {
+		NcbiSnpDetailContainer pd = proteinDetailService.getProteinSnpDetail("NP_653088",1);
+		for(NcbiSnpDetail nsd : pd.getNcbiSnpDetailContainer()){
+			System.out.println("Snpid: "+nsd.getSnpid());
+			System.out.println("Mutation: "+nsd.getMutation());
+			System.out.println("Position: "+nsd.getPosition());
+			System.out.println("Effect: "+nsd.getEffect());
+			for(OmimEntry oe:nsd.getOmimEntries()){
+				System.out.println("Omimid: "+oe.getLinkId());
+			}
+		}
 //		assertEquals("NUP98", pd.getOfficialGenSymbol());
 //		assertEquals("11p15.5", pd.getGenLocation());
 //		assertEquals("Homo sapiens", pd.getOrganismName());

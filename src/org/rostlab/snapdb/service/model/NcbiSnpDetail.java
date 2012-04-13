@@ -1,5 +1,6 @@
 package org.rostlab.snapdb.service.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -9,11 +10,11 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement
 @XmlType(propOrder = { "snpid", "position", "mutation", "effect", "omimEntries" })
 public class NcbiSnpDetail {
-	private Integer snpid;
-	private Integer position;
-	private Character mutation;
-	private Boolean effect;
-	private List<OmimEntry> omimEntries;
+	private Integer snpid = null;
+	private Integer position = null;
+	private Character mutation = null;
+	private Boolean effect = null;
+	private List<OmimEntry> omimEntries=new ArrayList<OmimEntry>();
 
 	@XmlElement(name = "snpid")
 	public Integer getSnpid() {
@@ -58,6 +59,14 @@ public class NcbiSnpDetail {
 
 	public void addOmimEntry(final OmimEntry omimEntry) {
 		omimEntries.add(omimEntry);
+	}
+
+	public boolean isComplete() {
+		if (effect != null && position != null && mutation != null
+				&& snpid != null)
+			return true;
+		else
+			return false;
 	}
 
 }
