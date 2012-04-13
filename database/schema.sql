@@ -61,6 +61,8 @@ CREATE TABLE mutation (
 	 lreliability_v TINYINT UNSIGNED NOT NULL,
 	 leffect_w BIT NOT NULL,
 	 lreliability_w TINYINT UNSIGNED NOT NULL,
+	 leffect_x BIT NOT NULL,
+	 lreliability_x TINYINT UNSIGNED NOT NULL,
 	 leffect_y BIT NOT NULL,
 	 lreliability_y TINYINT UNSIGNED NOT NULL,
 	 PRIMARY KEY(lsequenceid,lpos,ltype)

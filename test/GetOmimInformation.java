@@ -62,7 +62,7 @@ public class GetOmimInformation {
 			EUtilsServiceStub service = new EUtilsServiceStub();
 
 			EUtilsServiceStub.ESearchRequest req = new EUtilsServiceStub.ESearchRequest();
-			req.setTerm("NP_653088.1 AND protein_snp");
+			req.setTerm("NP_653088.1");
 			req.setDb("snp");
 			EUtilsServiceStub.ESearchResult res = service.run_eSearch(req);
 			// results output

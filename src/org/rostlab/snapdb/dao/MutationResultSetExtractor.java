@@ -34,7 +34,8 @@ public class MutationResultSetExtractor implements ResultSetExtractor<Mutation> 
 		mut.getMutEffect()[16]=(rs.getInt("leffect_t") != 0);
 		mut.getMutEffect()[17]=(rs.getInt("leffect_v") != 0);
 		mut.getMutEffect()[18]=(rs.getInt("leffect_w") != 0);
-		mut.getMutEffect()[19]=(rs.getInt("leffect_y") != 0);
+		mut.getMutEffect()[19]=(rs.getInt("leffect_x") != 0);
+		mut.getMutEffect()[20]=(rs.getInt("leffect_y") != 0);
 		mut.getMutReliability()[0]=rs.getInt("lreliability_a");
 		mut.getMutReliability()[1]=rs.getInt("lreliability_c");
 		mut.getMutReliability()[2]=rs.getInt("lreliability_d");
@@ -54,7 +55,8 @@ public class MutationResultSetExtractor implements ResultSetExtractor<Mutation> 
 		mut.getMutReliability()[16]=rs.getInt("lreliability_t");
 		mut.getMutReliability()[17]=rs.getInt("lreliability_v");
 		mut.getMutReliability()[18]=rs.getInt("lreliability_w");
-		mut.getMutReliability()[19]=rs.getInt("lreliability_y");
+		mut.getMutReliability()[19]=rs.getInt("lreliability_x");
+		mut.getMutReliability()[20]=rs.getInt("lreliability_y");
 		return mut;
 	}
 
