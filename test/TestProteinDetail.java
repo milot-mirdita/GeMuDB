@@ -3,10 +3,10 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.rostlab.snapdb.service.ProteinDetailService;
-import org.rostlab.snapdb.service.model.NcbiSnpDetailContainer;
+import org.rostlab.snapdb.service.model.ExternalSnpDetailContainer;
 import org.rostlab.snapdb.service.model.OmimEntry;
 import org.rostlab.snapdb.service.model.ProteinDetail;
-import org.rostlab.snapdb.service.model.NcbiSnpDetail;
+import org.rostlab.snapdb.service.model.ExternalSnpDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -29,8 +29,8 @@ public class TestProteinDetail {
 
 	@Test
 	public void testSnp() {
-		NcbiSnpDetailContainer pd = proteinDetailService.getProteinSnpDetail("NP_001073592",1);
-		for(NcbiSnpDetail nsd : pd.getNcbiSnpDetailContainer()){
+		ExternalSnpDetailContainer pd = proteinDetailService.getProteinSnpDetail("NP_001073592",1);
+		for(ExternalSnpDetail nsd : pd.getNcbiSnpDetailContainer()){
 			System.out.println("Snpid: "+nsd.getSnpid());
 			System.out.println("Mutation: "+nsd.getMutation());
 			System.out.println("Position: "+nsd.getPosition());
@@ -47,8 +47,8 @@ public class TestProteinDetail {
 	
 	@Test
 	public void testSnpNoResult() {
-		NcbiSnpDetailContainer pd = proteinDetailService.getProteinSnpDetail("NP_005378",0);
-		for(NcbiSnpDetail nsd : pd.getNcbiSnpDetailContainer()){
+		ExternalSnpDetailContainer pd = proteinDetailService.getProteinSnpDetail("NP_005378",0);
+		for(ExternalSnpDetail nsd : pd.getNcbiSnpDetailContainer()){
 			System.out.println("Snpid: "+nsd.getSnpid());
 			System.out.println("Mutation: "+nsd.getMutation());
 			System.out.println("Position: "+nsd.getPosition());
@@ -65,8 +65,8 @@ public class TestProteinDetail {
 	
 	@Test
 	public void testSnpNoOmim() {
-		NcbiSnpDetailContainer pd = proteinDetailService.getProteinSnpDetail("NP_653088",1);
-		for(NcbiSnpDetail nsd : pd.getNcbiSnpDetailContainer()){
+		ExternalSnpDetailContainer pd = proteinDetailService.getProteinSnpDetail("NP_653088",1);
+		for(ExternalSnpDetail nsd : pd.getNcbiSnpDetailContainer()){
 			System.out.println("Snpid: "+nsd.getSnpid());
 			System.out.println("Mutation: "+nsd.getMutation());
 			System.out.println("Position: "+nsd.getPosition());

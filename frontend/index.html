@@ -74,7 +74,9 @@
 		</div>
 		<div id="protein_detail_container" >
 			<div class="progress" data-bind="visible : !proteinDetail()"></div>
-			<div data-bind="template: { name: 'protein_detail_template', data: proteinDetail },visible : proteinDetail()"></div>
+			<div data-bind="if : proteinDetail()">
+			<div data-bind="template: { name: 'protein_detail_template', data: proteinDetail }"></div>
+			</div>
 		</div>
 		<div class="row">
 			<div id="functional_effect_list_container" class="result span7" style="height: 300px">

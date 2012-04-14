@@ -241,8 +241,8 @@ var Protein = function() {
 			self.proteinDetail(proteinDetail);
 		};
 		
-		self.updateByNcbiSnpContainer = function(ncbiSnpContainer) {
-		
+		self.updateByExternalSnpContainer = function(externalSnpContainer) {
+			
 		};
 
 		self.updateGraphs = function(normal, scliced, types) {
@@ -305,11 +305,11 @@ var Protein = function() {
 					self.updateByProteinDetail(proteinDetail);
 					})
 					 .fail(this.ajaxErrorHandler);					
-					$.when($.getJSON(constants.baseUrl + "protein/ncbisnp/" 
+					$.when($.getJSON(constants.baseUrl + "protein/externalsnp/" 
 							 + reference))
-						.done(function (ncbiSnpContainer) {
+						.done(function (externalSnpContainer) {
 							
-					self.updateByNcbiSnpContainer(ncbiSnpContainer);
+					self.updateByExternalSnpContainer(ExternalSnpContainer);
 					})
 					 .fail(this.ajaxErrorHandler);
 				}

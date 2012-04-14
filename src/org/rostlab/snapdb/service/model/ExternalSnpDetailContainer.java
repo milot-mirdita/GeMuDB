@@ -10,26 +10,26 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 @XmlAccessorOrder(XmlAccessOrder.UNDEFINED)
-public class NcbiSnpDetailContainer {
-	private List<NcbiSnpDetail> ncbiSnpDetail;
+public class ExternalSnpDetailContainer {
+	private List<ExternalSnpDetail> ncbiSnpDetail;
 
-	public NcbiSnpDetailContainer() {
+	public ExternalSnpDetailContainer() {
 	}
 
-	public NcbiSnpDetailContainer(int size) {
-		ncbiSnpDetail = new ArrayList<NcbiSnpDetail>(size);
+	public ExternalSnpDetailContainer(int size) {
+		ncbiSnpDetail = new ArrayList<ExternalSnpDetail>(size);
 	}
 
 	@XmlElement
-	public List<NcbiSnpDetail> getNcbiSnpDetailContainer() {
+	public List<ExternalSnpDetail> getNcbiSnpDetailContainer() {
 		return ncbiSnpDetail;
 	}
 
-	public void addNcbiSnpDetail(final NcbiSnpDetail nsd) {
+	public void addNcbiSnpDetail(final ExternalSnpDetail nsd) {
 		ncbiSnpDetail.add(nsd);
 	}
 
-	public void setNcbiSnpDetailContainer(List<NcbiSnpDetail> ncbiSnpDetail) {
+	public void setNcbiSnpDetailContainer(List<ExternalSnpDetail> ncbiSnpDetail) {
 		this.ncbiSnpDetail = ncbiSnpDetail;
 	}
 }

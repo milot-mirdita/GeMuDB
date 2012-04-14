@@ -23,8 +23,8 @@ import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.rostlab.snapdb.dao.SequenceDao;
 import org.rostlab.snapdb.dom.Sequence;
-import org.rostlab.snapdb.service.model.NcbiSnpDetail;
-import org.rostlab.snapdb.service.model.NcbiSnpDetailContainer;
+import org.rostlab.snapdb.service.model.ExternalSnpDetail;
+import org.rostlab.snapdb.service.model.ExternalSnpDetailContainer;
 import org.rostlab.snapdb.service.model.OmimEntry;
 import org.rostlab.snapdb.service.model.ProteinDetail;
 
@@ -120,7 +120,7 @@ public class ProteinDetailServiceImpl implements ProteinDetailService {
 	}
 
 	@Override
-	public NcbiSnpDetailContainer getProteinSnpDetail(String refid) {
+	public ExternalSnpDetailContainer getProteinSnpDetail(String refid) {
 		final Sequence seq = sequenceDao.selectByRefId(refid);
 		if (seq == null)
 			return null;
@@ -131,21 +131,21 @@ public class ProteinDetailServiceImpl implements ProteinDetailService {
 			+ "entrez/eutils/efetch.fcgi?db=snp&id=%s&retmode=xml";
 
 	@Override
-	public NcbiSnpDetailContainer getProteinSnpDetail(final String refid,
+	public ExternalSnpDetailContainer getProteinSnpDetail(final String refid,
 			final Integer version) {
 
 		final HttpClient client = new HttpClient();
-		NcbiSnpDetailContainer ncbiContainer;
+		ExternalSnpDetailContainer ncbiContainer;
 		final String refIdWithOutVersion = refid;
-		final Map<Integer, NcbiSnpDetail> snpMap = new HashMap<Integer, NcbiSnpDetail>();
+		final Map<Integer, ExternalSnpDetail> snpMap = new HashMap<Integer, ExternalSnpDetail>();
 		try {
 			// Search for PROTEINID in SNP
 			final String[] id_array = queryDataBaseForTerm(refIdWithOutVersion
 					+ "." + version + " AND \"missense\"[FXN_CLASS]", "snp");
 			final String ids = creatIdsString(id_array);
 			if (ids == null)
-				return new NcbiSnpDetailContainer(0);
-			ncbiContainer = new NcbiSnpDetailContainer(id_array.length);
+				return new ExternalSnpDetailContainer(0);
+			ncbiContainer = new ExternalSnpDetailContainer(id_array.length);
 			if (ids != null) {
 
 				// DBSNP
@@ -169,9 +169,9 @@ public class ProteinDetailServiceImpl implements ProteinDetailService {
 				ResultArray: for (int i = 0; i < exchangeDoc.getExchangeSet()
 						.getRsArray().length; i++) {
 					Rs result = exchangeDoc.getExchangeSet().getRsArray()[i];
-					NcbiSnpDetail currentDetail = null;
+					ExternalSnpDetail currentDetail = null;
 					if ((currentDetail = snpMap.get(result.getRsId())) == null) {
-						currentDetail = new NcbiSnpDetail();
+						currentDetail = new ExternalSnpDetail();
 						snpMap.put(result.getRsId(), currentDetail);
 						currentDetail.setSnpid(result.getRsId());
 					}
@@ -246,7 +246,7 @@ public class ProteinDetailServiceImpl implements ProteinDetailService {
 						.run_eLink(reqOmim);
 				for (int i = 0; i < resOmim.getLinkSet().length; i++) {
 					LinkSetType links = resOmim.getLinkSet()[i];
-					NcbiSnpDetail currentDetail = null;
+					ExternalSnpDetail currentDetail = null;
 					for (int k = 0; k < links.getIdList().getId().length; k++) {
 						Integer key = Integer.parseInt(links.getIdList()
 								.getId()[k].toString());

@@ -8,14 +8,24 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement
-@XmlType(propOrder = { "snpid", "position", "mutation", "effect", "hasOmim",
-		"omimEntries" })
-public class NcbiSnpDetail {
+@XmlType(propOrder = { "snpid", "source", "position", "mutation", "effect",
+		"hasOmim", "omimEntries" })
+public class ExternalSnpDetail {
 	private Integer snpid = null;
 	private Integer position = null;
 	private Character mutation = null;
 	private Boolean effect = null;
+	private String source = null;
 	private List<OmimEntry> omimEntries = new ArrayList<OmimEntry>();
+
+	@XmlElement(name = "source")
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
+	}
 
 	@XmlElement(name = "snpid")
 	public Integer getSnpid() {
