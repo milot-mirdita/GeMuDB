@@ -228,7 +228,7 @@ var Protein = function() {
 		};
 		
 		self.updateByExternalSnpContainer = function(externalSnpContainer) {
-			
+			self.externalMutationListResult(externalSnpContainer.externalSnpDetailContainer)
 		};
 
 		self.updateGraphs = function(normal, scliced, types) {

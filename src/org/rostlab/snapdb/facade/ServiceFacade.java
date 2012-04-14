@@ -1,7 +1,7 @@
 package org.rostlab.snapdb.facade;
 
 import org.rostlab.snapdb.service.model.MutationPosContainer;
-import org.rostlab.snapdb.service.model.ExternalSnpDetailContainer;
+import org.rostlab.snapdb.service.model.ExternalMutationContainer;
 import org.rostlab.snapdb.service.model.ProteinDetail;
 import org.rostlab.snapdb.service.model.ProteinFunctionalEffectPrediction;
 import org.rostlab.snapdb.service.model.ProteinId;
@@ -20,5 +20,5 @@ public interface ServiceFacade {
 
 	public ProteinDetail getProteinDetail(final String id);
 
-	public ExternalSnpDetailContainer getProteinSnpDetail(String refid);
+	public ExternalMutationContainer getProteinSnpDetail(String refid);
 }

@@ -85,12 +85,12 @@
 
 				<ul class="positions" data-bind="visible : mutationListResult(), template: { name: 'prediction_list_entry_template', foreach: mutationListResult }, listclick: showDetailView"></ul>
 			</div>
-			<div id="snp_container" class="result span5" data-bind="if: snpDetails()">
-				<h1>Informations</h1>
-				<h2>SNAP2-Score</h2>
-				<span data-bind="text: snpDetails()[0].score"></span>
-				<h2>Sift-Score</h2>
-				<span data-bind="text: snpDetails()[1].score"></span>
+			<div id="external_functional_effect_list_container" class="result span5" style="height: 300px" >
+				<div class="progress" data-bind="visible : !externalMutationListResult()">
+				</div>
+
+				<ul class="positions" data-bind="visible : externalMutationListResult(), template: { name: 'externalsnp_list_entry_template', foreach: externalMutationListResult }"></ul>
+	
 			</div>
 		</div>
 	</div>

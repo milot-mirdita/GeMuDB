@@ -36,5 +36,4 @@ public class MutationsPos {
 		mutations.add(mutData);
 	}
 	
-	
 }

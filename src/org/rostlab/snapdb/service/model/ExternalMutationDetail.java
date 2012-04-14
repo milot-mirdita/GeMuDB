@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement
 @XmlType(propOrder = { "snpid", "source", "position", "mutation", "effect",
 		"hasOmim", "omimEntries" })
-public class ExternalSnpDetail {
+public class ExternalMutationDetail {
 	private Integer snpid = null;
 	private Integer position = null;
 	private Character mutation = null;

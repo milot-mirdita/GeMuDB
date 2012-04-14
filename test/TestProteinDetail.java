@@ -3,10 +3,11 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.rostlab.snapdb.service.ProteinDetailService;
-import org.rostlab.snapdb.service.model.ExternalSnpDetailContainer;
+import org.rostlab.snapdb.service.model.ExternalMutationContainer;
+import org.rostlab.snapdb.service.model.ExternalMutationPos;
 import org.rostlab.snapdb.service.model.OmimEntry;
 import org.rostlab.snapdb.service.model.ProteinDetail;
-import org.rostlab.snapdb.service.model.ExternalSnpDetail;
+import org.rostlab.snapdb.service.model.ExternalMutationDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -29,55 +30,64 @@ public class TestProteinDetail {
 
 	@Test
 	public void testSnp() {
-		ExternalSnpDetailContainer pd = proteinDetailService.getProteinExternalSnpDetail("NP_001073592",1);
-		for(ExternalSnpDetail nsd : pd.getExternalSnpDetailContainer()){
-			System.out.println("Snpid: "+nsd.getSnpid());
-			System.out.println("Mutation: "+nsd.getMutation());
-			System.out.println("Position: "+nsd.getPosition());
-			System.out.println("Effect: "+nsd.getEffect());
-			for(OmimEntry oe:nsd.getOmimEntries()){
-				System.out.println("Omimid: "+oe.getLinkId());
+		ExternalMutationContainer pd = proteinDetailService
+				.getProteinExternalSnpDetail("NP_001073592", 1);
+		for (ExternalMutationPos emp : pd.getExternalMutationPosition()) {
+			for (ExternalMutationDetail nsd : emp.getExternalMutations()) {
+				System.out.println("Snpid: " + nsd.getSnpid());
+				System.out.println("Mutation: " + nsd.getMutation());
+				System.out.println("Position: " + nsd.getPosition());
+				System.out.println("Effect: " + nsd.getEffect());
+				for (OmimEntry oe : nsd.getOmimEntries()) {
+					System.out.println("Omimid: " + oe.getLinkId());
+				}
 			}
 		}
-//		assertEquals("NUP98", pd.getOfficialGenSymbol());
-//		assertEquals("11p15.5", pd.getGenLocation());
-//		assertEquals("Homo sapiens", pd.getOrganismName());
-//		assertEquals("Homo sapiens (human)", pd.getSource());
+		// assertEquals("NUP98", pd.getOfficialGenSymbol());
+		// assertEquals("11p15.5", pd.getGenLocation());
+		// assertEquals("Homo sapiens", pd.getOrganismName());
+		// assertEquals("Homo sapiens (human)", pd.getSource());
 	}
-	
+
 	@Test
 	public void testSnpNoResult() {
-		ExternalSnpDetailContainer pd = proteinDetailService.getProteinExternalSnpDetail("NP_005378",0);
-		for(ExternalSnpDetail nsd : pd.getExternalSnpDetailContainer()){
-			System.out.println("Snpid: "+nsd.getSnpid());
-			System.out.println("Mutation: "+nsd.getMutation());
-			System.out.println("Position: "+nsd.getPosition());
-			System.out.println("Effect: "+nsd.getEffect());
-			for(OmimEntry oe:nsd.getOmimEntries()){
-				System.out.println("Omimid: "+oe.getLinkId());
+		ExternalMutationContainer pd = proteinDetailService
+				.getProteinExternalSnpDetail("NP_005378", 0);
+		for (ExternalMutationPos emp : pd.getExternalMutationPosition()) {
+			for (ExternalMutationDetail nsd : emp.getExternalMutations()) {
+				System.out.println("Snpid: " + nsd.getSnpid());
+				System.out.println("Mutation: " + nsd.getMutation());
+				System.out.println("Position: " + nsd.getPosition());
+				System.out.println("Effect: " + nsd.getEffect());
+				for (OmimEntry oe : nsd.getOmimEntries()) {
+					System.out.println("Omimid: " + oe.getLinkId());
+				}
 			}
 		}
-//		assertEquals("NUP98", pd.getOfficialGenSymbol());
-//		assertEquals("11p15.5", pd.getGenLocation());
-//		assertEquals("Homo sapiens", pd.getOrganismName());
-//		assertEquals("Homo sapiens (human)", pd.getSource());
+		// assertEquals("NUP98", pd.getOfficialGenSymbol());
+		// assertEquals("11p15.5", pd.getGenLocation());
+		// assertEquals("Homo sapiens", pd.getOrganismName());
+		// assertEquals("Homo sapiens (human)", pd.getSource());
 	}
-	
+
 	@Test
 	public void testSnpNoOmim() {
-		ExternalSnpDetailContainer pd = proteinDetailService.getProteinExternalSnpDetail("NP_653088",1);
-		for(ExternalSnpDetail nsd : pd.getExternalSnpDetailContainer()){
-			System.out.println("Snpid: "+nsd.getSnpid());
-			System.out.println("Mutation: "+nsd.getMutation());
-			System.out.println("Position: "+nsd.getPosition());
-			System.out.println("Effect: "+nsd.getEffect());
-			for(OmimEntry oe:nsd.getOmimEntries()){
-				System.out.println("Omimid: "+oe.getLinkId());
+		ExternalMutationContainer pd = proteinDetailService
+				.getProteinExternalSnpDetail("NP_653088", 1);
+		for (ExternalMutationPos emp : pd.getExternalMutationPosition()) {
+			for (ExternalMutationDetail nsd : emp.getExternalMutations()) {
+				System.out.println("Snpid: " + nsd.getSnpid());
+				System.out.println("Mutation: " + nsd.getMutation());
+				System.out.println("Position: " + nsd.getPosition());
+				System.out.println("Effect: " + nsd.getEffect());
+				for (OmimEntry oe : nsd.getOmimEntries()) {
+					System.out.println("Omimid: " + oe.getLinkId());
+				}
 			}
 		}
-//		assertEquals("NUP98", pd.getOfficialGenSymbol());
-//		assertEquals("11p15.5", pd.getGenLocation());
-//		assertEquals("Homo sapiens", pd.getOrganismName());
-//		assertEquals("Homo sapiens (human)", pd.getSource());
+		// assertEquals("NUP98", pd.getOfficialGenSymbol());
+		// assertEquals("11p15.5", pd.getGenLocation());
+		// assertEquals("Homo sapiens", pd.getOrganismName());
+		// assertEquals("Homo sapiens (human)", pd.getSource());
 	}
 }

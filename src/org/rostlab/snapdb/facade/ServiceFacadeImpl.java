@@ -15,7 +15,7 @@ import org.rostlab.snapdb.service.ProteinFunctionalEffectService;
 import org.rostlab.snapdb.service.SearchProteinService;
 import org.rostlab.snapdb.service.model.BadRequestException;
 import org.rostlab.snapdb.service.model.MutationPosContainer;
-import org.rostlab.snapdb.service.model.ExternalSnpDetailContainer;
+import org.rostlab.snapdb.service.model.ExternalMutationContainer;
 import org.rostlab.snapdb.service.model.ProteinDetail;
 import org.rostlab.snapdb.service.model.ProteinFunctionalEffectPrediction;
 import org.rostlab.snapdb.service.model.ProteinId;
@@ -112,8 +112,8 @@ public class ServiceFacadeImpl implements ServiceFacade {
 	@Override
 	@GET
 	@Path("/externalsnp/{id}")
-	public ExternalSnpDetailContainer getProteinSnpDetail(@PathParam("id") String refid) {
-		ExternalSnpDetailContainer nsdc= proteinDetailService.getProteinExternalSnpDetail(refid);
+	public ExternalMutationContainer getProteinSnpDetail(@PathParam("id") String refid) {
+		ExternalMutationContainer nsdc= proteinDetailService.getProteinExternalSnpDetail(refid);
 		if (nsdc == null) {
 			throw new BadRequestException();
 		} else {

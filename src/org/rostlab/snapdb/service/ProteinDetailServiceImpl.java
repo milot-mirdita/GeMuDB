@@ -15,16 +15,21 @@ import gov.nih.nlm.ncbi.www.soap.eutils.EUtilsServiceStub.LinkSetDbType;
 import gov.nih.nlm.ncbi.www.soap.eutils.EUtilsServiceStub.LinkSetType;
 import gov.nih.nlm.ncbi.www.soap.eutils.EUtilsServiceStub.LinkTypeE;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.rostlab.snapdb.dao.SequenceDao;
 import org.rostlab.snapdb.dom.Sequence;
-import org.rostlab.snapdb.service.model.ExternalSnpDetail;
-import org.rostlab.snapdb.service.model.ExternalSnpDetailContainer;
+import org.rostlab.snapdb.service.model.ExternalMutationContainer;
+import org.rostlab.snapdb.service.model.ExternalMutationDetail;
+import org.rostlab.snapdb.service.model.ExternalMutationPos;
 import org.rostlab.snapdb.service.model.OmimEntry;
 import org.rostlab.snapdb.service.model.ProteinDetail;
 
@@ -120,37 +125,39 @@ public class ProteinDetailServiceImpl implements ProteinDetailService {
 	}
 
 	@Override
-	public ExternalSnpDetailContainer getProteinExternalSnpDetail(String refid) {
+	public ExternalMutationContainer getProteinExternalSnpDetail(String refid) {
 		final Sequence seq = sequenceDao.selectByRefId(refid);
 		if (seq == null)
 			return null;
 		return getProteinExternalSnpDetail(seq.getRefId(), seq.getVersion());
 	}
 
-	final String snpServiceUrl = "http://eutils.ncbi.nlm.nih.gov/"
+	final private String snpServiceUrl = "http://eutils.ncbi.nlm.nih.gov/"
 			+ "entrez/eutils/efetch.fcgi?db=snp&id=%s&retmode=xml";
+	final private MultiThreadedHttpConnectionManager connectionManager = new MultiThreadedHttpConnectionManager();
+	final HttpClient client = new HttpClient(connectionManager);
 
 	@Override
-	public ExternalSnpDetailContainer getProteinExternalSnpDetail(final String refid,
+	public ExternalMutationContainer getProteinExternalSnpDetail(final String refid,
 			final Integer version) {
 
-		final HttpClient client = new HttpClient();
-		ExternalSnpDetailContainer externalContainer;
+		GetMethod method = null;
+		ExternalMutationContainer externalContainer;
 		final String refIdWithOutVersion = refid;
-		final Map<Integer, ExternalSnpDetail> snpMap = new HashMap<Integer, ExternalSnpDetail>();
+		final Map<Integer, ExternalMutationDetail> snpMap = new HashMap<Integer, ExternalMutationDetail>();
 		try {
 			// Search for PROTEINID in SNP
 			final String[] id_array = queryDataBaseForTerm(refIdWithOutVersion
 					+ "." + version + " AND \"missense\"[FXN_CLASS]", "snp");
 			final String ids = creatIdsString(id_array);
 			if (ids == null)
-				return new ExternalSnpDetailContainer(0);
-			externalContainer = new ExternalSnpDetailContainer(id_array.length);
+				return new ExternalMutationContainer(0);
+			externalContainer = new ExternalMutationContainer(id_array.length);
 			if (ids != null) {
 
 				// DBSNP
 				final String snpUrl = String.format(snpServiceUrl, ids);
-				GetMethod method = new GetMethod(snpUrl);
+				method=new GetMethod(snpUrl);
 				int statusCode = client.executeMethod(method);
 
 				if (statusCode != HttpStatus.SC_OK) {
@@ -162,16 +169,14 @@ public class ProteinDetailServiceImpl implements ProteinDetailService {
 				ExchangeSetDocument exchangeDoc;
 				exchangeDoc = ExchangeSetDocument.Factory.parse(method
 						.getResponseBodyAsString());
-				System.out
-						.println(exchangeDoc.getExchangeSet().getRsArray().length);
 				// Extract Pos data
 
 				ResultArray: for (int i = 0; i < exchangeDoc.getExchangeSet()
 						.getRsArray().length; i++) {
 					Rs result = exchangeDoc.getExchangeSet().getRsArray()[i];
-					ExternalSnpDetail currentDetail = null;
+					ExternalMutationDetail currentDetail = null;
 					if ((currentDetail = snpMap.get(result.getRsId())) == null) {
-						currentDetail = new ExternalSnpDetail();
+						currentDetail = new ExternalMutationDetail();
 						snpMap.put(result.getRsId(), currentDetail);
 						currentDetail.setSnpid(result.getRsId());
 						currentDetail.setSource("NCBI");
@@ -247,7 +252,7 @@ public class ProteinDetailServiceImpl implements ProteinDetailService {
 						.run_eLink(reqOmim);
 				for (int i = 0; i < resOmim.getLinkSet().length; i++) {
 					LinkSetType links = resOmim.getLinkSet()[i];
-					ExternalSnpDetail currentDetail = null;
+					ExternalMutationDetail currentDetail = null;
 					for (int k = 0; k < links.getIdList().getId().length; k++) {
 						Integer key = Integer.parseInt(links.getIdList()
 								.getId()[k].toString());
@@ -277,13 +282,25 @@ public class ProteinDetailServiceImpl implements ProteinDetailService {
 					}
 				}
 			}
+			TreeMap<Integer,List<ExternalMutationDetail>> posMap=new TreeMap<Integer, List<ExternalMutationDetail>>();
 			for (Integer key : snpMap.keySet()) {
-				externalContainer.addExternalSnpDetail(snpMap.get(key));
+				List<ExternalMutationDetail> mutList=null;
+				final ExternalMutationDetail md = snpMap.get(key);
+				if((mutList=posMap.get(md.getPosition()))==null){
+					mutList = new ArrayList<ExternalMutationDetail>();
+					posMap.put(md.getPosition(), mutList);
+				}
+				mutList.add(md);	
 			}
-
+			for (Integer key : posMap.keySet()) {
+				externalContainer.addExternalMutationPos(new ExternalMutationPos(key,posMap.get(key)));
+			}
 			return externalContainer;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
+		} finally {
+			// Release the connection.
+		      method.releaseConnection();
 		}
 	}
 }
