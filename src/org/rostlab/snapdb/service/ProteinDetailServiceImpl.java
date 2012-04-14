@@ -72,7 +72,7 @@ public class ProteinDetailServiceImpl implements ProteinDetailService {
 						.getGeneRef().getGeneRef_maploc());
 				break;
 			}
-
+			fetchGen.cleanup();
 			final String[] proteinids = queryDataBaseForTerm(seq.getRefId(),
 					"protein");
 			EFetchSequenceServiceStub fetchSequence = new EFetchSequenceServiceStub();
@@ -90,6 +90,7 @@ public class ProteinDetailServiceImpl implements ProteinDetailService {
 				proteinDetail.setDefinition(obj.getGBSeq_definition());
 				break;
 			}
+			fetchSequence.cleanup();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -105,6 +106,7 @@ public class ProteinDetailServiceImpl implements ProteinDetailService {
 			req.setTerm(term);
 			req.setDb(dbname);
 			EUtilsServiceStub.ESearchResult res = service.run_eSearch(req);
+			service.cleanup();
 			return res.getIdList().getId();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -138,8 +140,8 @@ public class ProteinDetailServiceImpl implements ProteinDetailService {
 	final HttpClient client = new HttpClient(connectionManager);
 
 	@Override
-	public ExternalMutationContainer getProteinExternalSnpDetail(final String refid,
-			final Integer version) {
+	public ExternalMutationContainer getProteinExternalSnpDetail(
+			final String refid, final Integer version) {
 
 		GetMethod method = null;
 		ExternalMutationContainer externalContainer;
@@ -157,7 +159,7 @@ public class ProteinDetailServiceImpl implements ProteinDetailService {
 
 				// DBSNP
 				final String snpUrl = String.format(snpServiceUrl, ids);
-				method=new GetMethod(snpUrl);
+				method = new GetMethod(snpUrl);
 				int statusCode = client.executeMethod(method);
 
 				if (statusCode != HttpStatus.SC_OK) {
@@ -281,26 +283,30 @@ public class ProteinDetailServiceImpl implements ProteinDetailService {
 						}
 					}
 				}
+				service.cleanup();
 			}
-			TreeMap<Integer,List<ExternalMutationDetail>> posMap=new TreeMap<Integer, List<ExternalMutationDetail>>();
+			TreeMap<Integer, List<ExternalMutationDetail>> posMap = new TreeMap<Integer, List<ExternalMutationDetail>>();
 			for (Integer key : snpMap.keySet()) {
-				List<ExternalMutationDetail> mutList=null;
+				List<ExternalMutationDetail> mutList = null;
 				final ExternalMutationDetail md = snpMap.get(key);
-				if((mutList=posMap.get(md.getPosition()))==null){
+				if ((mutList = posMap.get(md.getPosition())) == null) {
 					mutList = new ArrayList<ExternalMutationDetail>();
 					posMap.put(md.getPosition(), mutList);
 				}
-				mutList.add(md);	
+				mutList.add(md);
 			}
 			for (Integer key : posMap.keySet()) {
-				externalContainer.addExternalMutationPos(new ExternalMutationPos(key,posMap.get(key)));
+				externalContainer
+						.addExternalMutationPos(new ExternalMutationPos(key,
+								posMap.get(key)));
 			}
 			return externalContainer;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		} finally {
 			// Release the connection.
-		      method.releaseConnection();
+			if (method != null)
+				method.releaseConnection();
 		}
 	}
 }

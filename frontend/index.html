@@ -88,7 +88,7 @@
 				<div class="progress" data-bind="visible : !externalMutationListResult()">
 				</div>
 
-				<ul class="positions" data-bind="visible : externalMutationListResult(), template: { name: 'externalsnp_list_entry_template', foreach: externalMutationListResult }"></ul>
+				<ul class="positions" data-bind="visible : externalMutationListResult(), template: { name: 'external_mutation_list_entry_template', foreach: externalMutationListResult }"></ul>
 	
 			</div>
 		</div>
@@ -135,10 +135,10 @@
 		<button class="btn" data-bind="click: searchProtein">Go</button> 
 	</form>
 </script>
-<script type="text/html" id="externalsnp_list_entry_template">
+<script type="text/html" id="external_mutation_list_entry_template">
 	<li>
 		<span class="position" data-bind="text: position"></span>
-		<ul class="mutations" data-bind="attr: { id: 'externalmutation' + position }, foreach: { data: mutations }">
+		<ul class="mutations" data-bind="attr: { id: 'externalmutation' + position }, foreach: { data: externalMutations }">
 			<li class="section" data-bind="text: mutation"></li>
 		</ul>
 	</li>

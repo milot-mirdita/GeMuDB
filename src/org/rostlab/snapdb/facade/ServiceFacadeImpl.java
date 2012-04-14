@@ -99,9 +99,9 @@ public class ServiceFacadeImpl implements ServiceFacade {
 	@Override
 	@GET
 	@Path("/detail/{id}")
-	public ProteinDetail getProteinDetail(@PathParam("id") String id) {
-		System.out.println("Call getProteinDetail: " + id);
-		ProteinDetail pd = proteinDetailService.getProteinDetail(id);
+	public ProteinDetail getProteinDetail(@PathParam("id") String refid) {
+		System.out.println("Call getProteinDetail: " + refid);
+		ProteinDetail pd = proteinDetailService.getProteinDetail(refid);
 		if (pd == null) {
 			throw new BadRequestException();
 		} else {
@@ -113,6 +113,8 @@ public class ServiceFacadeImpl implements ServiceFacade {
 	@GET
 	@Path("/externalsnp/{id}")
 	public ExternalMutationContainer getProteinSnpDetail(@PathParam("id") String refid) {
+		System.out.println("Call getProteinSnpDetail: " + refid);
+		
 		ExternalMutationContainer nsdc= proteinDetailService.getProteinExternalSnpDetail(refid);
 		if (nsdc == null) {
 			throw new BadRequestException();
