@@ -83,7 +83,7 @@
 				<div class="progress" data-bind="visible : !listResult()">
 				</div>
 
-				<ul class="positions" data-bind="visible : listResult(), template: { name: 'list_entry_template', foreach: listResult }, listclick: showDetailView"></ul>
+				<ul class="positions" data-bind="visible : listResult(), template: { name: 'prediction_list_entry_template', foreach: listResult }, listclick: showDetailView"></ul>
 			</div>
 			<div id="snp_container" class="result span5" data-bind="if: snpDetails()">
 				<h1>Informations</h1>
@@ -137,7 +137,7 @@
 	</form>
 </script>
 
-<script type="text/html" id="list_entry_template">
+<script type="text/html" id="prediction_list_entry_template">
 	<li>
 		<span class="position" data-bind="text: position"></span>
 		<ul class="mutations" data-bind="attr: { id: 'mutation' + position }, foreach: { data: mutations, afterRender: $root.formatListResult }">
