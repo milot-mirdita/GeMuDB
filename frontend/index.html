@@ -72,7 +72,9 @@
 				</div>
 			</div>
 		</div>
-
+		<div id="protein_detail_container" data-bind="template: { name: 'protein_detail_template', data: proteinDetail },visible : proteinDetail()">
+			<div class="progress" data-bind="visible : !proteinDetail()"></div>
+		</div>
 		<div class="row">
 			<div id="functional_effect_list_container" class="result span7" style="height: 300px">
 				<div class="progress" data-bind="visible : !listResult()">
@@ -106,6 +108,25 @@
 	</div>
 </div>
 
+<script type="text/html" id="protein_detail_template">
+	<dt>Organism name: </dt>
+    <dd data-bind="text: organismName"></dd>
+ 
+    <dt>Definition: </dt>
+    <dd data-bind="text: definition"></dd>
+ 
+    <dt>Gen name: </dt>
+    <dd data-bind="text: officialGenFullName"></dd>
+ 
+    <dt>Gen Symbol:</dt>
+    <dd data-bind="text: officialGenSymbol"></dd>
+
+    <dt>Gen Location:</dt>
+    <dd data-bind="text: genLocation"></dd>
+
+    <dt>Source:</dt>
+    <dd data-bind="text: source"></dd>
+</script>
 <script type="text/html" id="search_template">
 	<form class="form-horizontal">
 		<input data-bind="value: protein, popover: { placement: 'bottom'}" data-original-title="test" data-content="test" />

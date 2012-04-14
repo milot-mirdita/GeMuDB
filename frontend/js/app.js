@@ -1,5 +1,5 @@
 ;
-var initProteinMixin = (function(out) {
+	var initProteinMixin = (function(out) {
 		var plotOptions = function () { return {
 			legend : { show : false }, 
 			xaxis : { show : false, min : 0, max : 115, minTickSize: 5, tickSize: 5 }, 
@@ -139,7 +139,7 @@ var Protein = function() {
 		var self = this;
 
 		self.protein = 'NP_005378';
-	
+		self.proteinDetail=ko.observable();
 		self.currentState = {
 			offset : 0,
 			types : [
@@ -235,6 +235,19 @@ var Protein = function() {
 
 			self.updateGraphs(proteinResult, slicedProtein, types);
 		};
+		
+		
+		self.updateByProteinDetail = function(proteinDetail) {
+			$("#protein_detail_container > .progress").css("visibility", "collapse");
+			
+			self.proteinDetail(proteinDetail);
+		};
+		
+		self.updateByNcbiSnpContainer = function(ncbiSnpContainer) {
+			$("#protein_detail_container > .progress").css("visibility", "collapse");
+			
+		
+		};
 
 		self.updateGraphs = function(normal, scliced, types) {
 			var clickHandler = function (item) {
@@ -289,6 +302,20 @@ var Protein = function() {
 
 						})
 						.fail(this.ajaxErrorHandler);
+					$.when($.getJSON(constants.baseUrl + "protein/detail/" 
+							 + reference))
+						.done(function (proteinDetail) {
+							
+					self.updateByProteinDetail(proteinDetail);
+					})
+					 .fail(this.ajaxErrorHandler);					
+					$.when($.getJSON(constants.baseUrl + "protein/ncbisnp/" 
+							 + reference))
+						.done(function (ncbiSnpContainer) {
+							
+					self.updateByNcbiSnpContainer(ncbiSnpContainer);
+					})
+					 .fail(this.ajaxErrorHandler);
 				}
 			});
 			

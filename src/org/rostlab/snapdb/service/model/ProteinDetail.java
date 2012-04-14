@@ -12,32 +12,32 @@ public class ProteinDetail {
 	private String genLocation;
 	private String source;
 
-	@XmlElement(name = "OrganismName")
+	@XmlElement(name = "organismName")
 	public String getOrganismName() {
 		return organismName;
 	}
 
-	@XmlElement(name = "Definition")
+	@XmlElement(name = "definition")
 	public String getDefinition() {
 		return definition;
 	}
 
-	@XmlElement(name = "OfficialGenFullName")
+	@XmlElement(name = "officialGenFullName")
 	public String getOfficialGenFullName() {
 		return officialGenFullName;
 	}
 
-	@XmlElement(name = "OfficialGenSymbol")
+	@XmlElement(name = "officialGenSymbol")
 	public String getOfficialGenSymbol() {
 		return officialGenSymbol;
 	}
 
-	@XmlElement(name = "GenLocation")
+	@XmlElement(name = "genLocation")
 	public String getGenLocation() {
 		return genLocation;
 	}
 
-	@XmlElement(name = "Source")
+	@XmlElement(name = "source")
 	public String getSource() {
 		return source;
 	}

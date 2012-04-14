@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = "NcbiSnpDetail")
+@XmlRootElement
 @XmlType(propOrder = { "snpid", "position", "mutation", "effect", "hasOmim",
 		"omimEntries" })
 public class NcbiSnpDetail {
@@ -27,9 +27,9 @@ public class NcbiSnpDetail {
 		return position;
 	}
 
-	@XmlElement(name = "position")
-	public Character getMutation() {
-		return mutation;
+	@XmlElement(name = "mutation")
+	public String getMutation() {
+		return mutation.toString();
 	}
 
 	@XmlElement(name = "effect")
@@ -43,7 +43,7 @@ public class NcbiSnpDetail {
 	}
 
 	@XmlElement(name = "hasOmim")
-	public Boolean hasOmim() {
+	public Boolean getHasOmim() {
 		return omimEntries.size() == 0 ? false : true;
 	}
 
