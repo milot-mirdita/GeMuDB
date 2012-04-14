@@ -238,14 +238,10 @@ var Protein = function() {
 		
 		
 		self.updateByProteinDetail = function(proteinDetail) {
-			$("#protein_detail_container > .progress").css("visibility", "collapse");
-			
 			self.proteinDetail(proteinDetail);
 		};
 		
 		self.updateByNcbiSnpContainer = function(ncbiSnpContainer) {
-			$("#protein_detail_container > .progress").css("visibility", "collapse");
-			
 		
 		};
 
