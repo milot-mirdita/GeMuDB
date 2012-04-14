@@ -80,10 +80,10 @@
 		</div>
 		<div class="row">
 			<div id="functional_effect_list_container" class="result span7" style="height: 300px">
-				<div class="progress" data-bind="visible : !listResult()">
+				<div class="progress" data-bind="visible : !mutationListResult()">
 				</div>
 
-				<ul class="positions" data-bind="visible : listResult(), template: { name: 'prediction_list_entry_template', foreach: listResult }, listclick: showDetailView"></ul>
+				<ul class="positions" data-bind="visible : mutationListResult(), template: { name: 'prediction_list_entry_template', foreach: mutationListResult }, listclick: showDetailView"></ul>
 			</div>
 			<div id="snp_container" class="result span5" data-bind="if: snpDetails()">
 				<h1>Informations</h1>
@@ -136,7 +136,14 @@
 		<button class="btn" data-bind="click: searchProtein">Go</button> 
 	</form>
 </script>
-
+<script type="text/html" id="externalsnp_list_entry_template">
+	<li>
+		<span class="position" data-bind="text: position"></span>
+		<ul class="mutations" data-bind="attr: { id: 'externalmutation' + position }, foreach: { data: mutations }">
+			<li class="section" data-bind="text: mutation"></li>
+		</ul>
+	</li>
+</script>
 <script type="text/html" id="prediction_list_entry_template">
 	<li>
 		<span class="position" data-bind="text: position"></span>

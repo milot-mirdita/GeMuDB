@@ -161,24 +161,22 @@ var Protein = function() {
 		/**
 		 * @arg length of detail graph
 		 */
-		self.listResult = ko.observable();
+		self.mutationListResult = ko.observable();
+		
+	
+		self.externalMutationListResult = ko.observable();
 
 		/**
 		 * @arg 
 		 */
 		self.snpDetails = ko.observable();
 		
-		self.formatListResult = function(elements, data) {
-			//console.log(elements);
-			//console.log(data);
-
-		}
-
+	
 		self.showDetailView = function(index, mutation) {
 			self.selectedIndex(index);
 			self.selectedMutation(mutation);
 
-			var snps = self.listResult();
+			var snps = self.mutationListResult();
 
 			for(var i in snps) {
 				if(snps[i].position == index) {
@@ -254,7 +252,7 @@ var Protein = function() {
 
 			$.when($.getJSON(constants.baseUrl + 'protein/mutations/' + id + '/' + offset + '/' + length))
 			 .done(function (result) {
-		 		self.listResult(result.mutationsPos);
+		 		self.mutationListResult(result.mutationsPos);
 			 })
 			 .fail(self.ajaxErrorHandler);
 		};
