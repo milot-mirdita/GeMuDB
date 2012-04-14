@@ -120,22 +120,22 @@ public class ProteinDetailServiceImpl implements ProteinDetailService {
 	}
 
 	@Override
-	public ExternalSnpDetailContainer getProteinSnpDetail(String refid) {
+	public ExternalSnpDetailContainer getProteinExternalSnpDetail(String refid) {
 		final Sequence seq = sequenceDao.selectByRefId(refid);
 		if (seq == null)
 			return null;
-		return getProteinSnpDetail(seq.getRefId(), seq.getVersion());
+		return getProteinExternalSnpDetail(seq.getRefId(), seq.getVersion());
 	}
 
 	final String snpServiceUrl = "http://eutils.ncbi.nlm.nih.gov/"
 			+ "entrez/eutils/efetch.fcgi?db=snp&id=%s&retmode=xml";
 
 	@Override
-	public ExternalSnpDetailContainer getProteinSnpDetail(final String refid,
+	public ExternalSnpDetailContainer getProteinExternalSnpDetail(final String refid,
 			final Integer version) {
 
 		final HttpClient client = new HttpClient();
-		ExternalSnpDetailContainer ncbiContainer;
+		ExternalSnpDetailContainer externalContainer;
 		final String refIdWithOutVersion = refid;
 		final Map<Integer, ExternalSnpDetail> snpMap = new HashMap<Integer, ExternalSnpDetail>();
 		try {
@@ -145,7 +145,7 @@ public class ProteinDetailServiceImpl implements ProteinDetailService {
 			final String ids = creatIdsString(id_array);
 			if (ids == null)
 				return new ExternalSnpDetailContainer(0);
-			ncbiContainer = new ExternalSnpDetailContainer(id_array.length);
+			externalContainer = new ExternalSnpDetailContainer(id_array.length);
 			if (ids != null) {
 
 				// DBSNP
@@ -174,6 +174,7 @@ public class ProteinDetailServiceImpl implements ProteinDetailService {
 						currentDetail = new ExternalSnpDetail();
 						snpMap.put(result.getRsId(), currentDetail);
 						currentDetail.setSnpid(result.getRsId());
+						currentDetail.setSource("NCBI");
 					}
 					if (result.getAssemblyArray() != null)
 						for (int assid = 0; assid < result.getAssemblyArray().length; assid++) {
@@ -277,10 +278,10 @@ public class ProteinDetailServiceImpl implements ProteinDetailService {
 				}
 			}
 			for (Integer key : snpMap.keySet()) {
-				ncbiContainer.addNcbiSnpDetail(snpMap.get(key));
+				externalContainer.addExternalSnpDetail(snpMap.get(key));
 			}
 
-			return ncbiContainer;
+			return externalContainer;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

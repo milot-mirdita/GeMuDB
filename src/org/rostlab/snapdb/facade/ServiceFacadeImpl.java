@@ -111,9 +111,9 @@ public class ServiceFacadeImpl implements ServiceFacade {
 	
 	@Override
 	@GET
-	@Path("/ncbisnp/{id}")
+	@Path("/externalsnp/{id}")
 	public ExternalSnpDetailContainer getProteinSnpDetail(@PathParam("id") String refid) {
-		ExternalSnpDetailContainer nsdc= proteinDetailService.getProteinSnpDetail(refid);
+		ExternalSnpDetailContainer nsdc= proteinDetailService.getProteinExternalSnpDetail(refid);
 		if (nsdc == null) {
 			throw new BadRequestException();
 		} else {

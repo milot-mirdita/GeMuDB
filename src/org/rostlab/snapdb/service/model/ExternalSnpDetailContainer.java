@@ -11,25 +11,26 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @XmlAccessorOrder(XmlAccessOrder.UNDEFINED)
 public class ExternalSnpDetailContainer {
-	private List<ExternalSnpDetail> ncbiSnpDetail;
+	private List<ExternalSnpDetail> externalSnpDetail;
 
 	public ExternalSnpDetailContainer() {
 	}
 
 	public ExternalSnpDetailContainer(int size) {
-		ncbiSnpDetail = new ArrayList<ExternalSnpDetail>(size);
+		externalSnpDetail = new ArrayList<ExternalSnpDetail>(size);
 	}
 
 	@XmlElement
-	public List<ExternalSnpDetail> getNcbiSnpDetailContainer() {
-		return ncbiSnpDetail;
+	public List<ExternalSnpDetail> getExternalSnpDetailContainer() {
+		return externalSnpDetail;
 	}
 
-	public void addNcbiSnpDetail(final ExternalSnpDetail nsd) {
-		ncbiSnpDetail.add(nsd);
+	public void addExternalSnpDetail(final ExternalSnpDetail nsd) {
+		externalSnpDetail.add(nsd);
 	}
 
-	public void setNcbiSnpDetailContainer(List<ExternalSnpDetail> ncbiSnpDetail) {
-		this.ncbiSnpDetail = ncbiSnpDetail;
+	public void setExternalSnpDetailContainer(
+			List<ExternalSnpDetail> ncbiSnpDetail) {
+		this.externalSnpDetail = ncbiSnpDetail;
 	}
 }

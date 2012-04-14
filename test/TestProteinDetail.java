@@ -29,8 +29,8 @@ public class TestProteinDetail {
 
 	@Test
 	public void testSnp() {
-		ExternalSnpDetailContainer pd = proteinDetailService.getProteinSnpDetail("NP_001073592",1);
-		for(ExternalSnpDetail nsd : pd.getNcbiSnpDetailContainer()){
+		ExternalSnpDetailContainer pd = proteinDetailService.getProteinExternalSnpDetail("NP_001073592",1);
+		for(ExternalSnpDetail nsd : pd.getExternalSnpDetailContainer()){
 			System.out.println("Snpid: "+nsd.getSnpid());
 			System.out.println("Mutation: "+nsd.getMutation());
 			System.out.println("Position: "+nsd.getPosition());
@@ -47,8 +47,8 @@ public class TestProteinDetail {
 	
 	@Test
 	public void testSnpNoResult() {
-		ExternalSnpDetailContainer pd = proteinDetailService.getProteinSnpDetail("NP_005378",0);
-		for(ExternalSnpDetail nsd : pd.getNcbiSnpDetailContainer()){
+		ExternalSnpDetailContainer pd = proteinDetailService.getProteinExternalSnpDetail("NP_005378",0);
+		for(ExternalSnpDetail nsd : pd.getExternalSnpDetailContainer()){
 			System.out.println("Snpid: "+nsd.getSnpid());
 			System.out.println("Mutation: "+nsd.getMutation());
 			System.out.println("Position: "+nsd.getPosition());
@@ -65,8 +65,8 @@ public class TestProteinDetail {
 	
 	@Test
 	public void testSnpNoOmim() {
-		ExternalSnpDetailContainer pd = proteinDetailService.getProteinSnpDetail("NP_653088",1);
-		for(ExternalSnpDetail nsd : pd.getNcbiSnpDetailContainer()){
+		ExternalSnpDetailContainer pd = proteinDetailService.getProteinExternalSnpDetail("NP_653088",1);
+		for(ExternalSnpDetail nsd : pd.getExternalSnpDetailContainer()){
 			System.out.println("Snpid: "+nsd.getSnpid());
 			System.out.println("Mutation: "+nsd.getMutation());
 			System.out.println("Position: "+nsd.getPosition());

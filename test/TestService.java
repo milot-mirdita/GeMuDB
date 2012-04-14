@@ -40,8 +40,7 @@ public class TestService {
 //				.post(String.class, formData);
 //		System.out.println(resp);
 
-		System.out
-		.println(service.path("protein").path("ncbisnp").path("NP_005378")
+		System.out.println(service.path("protein").path("externalsnp").path("NP_005378")
 				.accept(MediaType.APPLICATION_JSON).get(String.class));
 
 
