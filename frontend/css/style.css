@@ -98,8 +98,8 @@ html, body {
 }
 
 .positions li.section {
-	-moz-border-radius: 0.75em;
-     border-radius: 0.40em; 
+	-moz-border-radius: 4px;
+	border-radius: 4px; 
 	background: #ff0000; /* Old browsers */
 	background: -moz-linear-gradient(top, #ff0000 0%, #ff0000 50%, #00ff00 50%, #00ff00 100%); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ff0000), color-stop(50%,#ff0000), color-stop(50%,#00ff00), color-stop(100%,#00ff00)); /* Chrome,Safari4+ */
@@ -136,14 +136,31 @@ html, body {
 .mutations li {
 	display: inline-block;
 	list-style-type: none;
-	width: 20px;
-	height: 20px;
 	border: 1px solid black;
 	margin: 5px;
-	padding: 5px;
 	text-align: center;
 	vertical-align: middle;
 	cursor: pointer;
+}
+
+.section .dropdown-toggle {
+	width: 20px;
+	height: 20px;
+	display: block;
+	padding: 5px;
+}
+
+.section .dropdown.open .dropdown-toggle {
+	color: #eee;
+	font-weight: bold;
+}
+
+.section .dropdown-menu {
+	margin: 0 0 0 35px;
+	position: absolute;
+	top: 0;
+	font-size: 14px;
+	font-style: normal;
 }
 
 #top_bar_container .search {
