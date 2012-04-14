@@ -172,24 +172,27 @@ var Protein = function() {
 		self.snpDetails = ko.observable();
 		
 	
-		self.showDetailView = function(index, mutation) {
-			self.selectedIndex(index);
-			self.selectedMutation(mutation);
+		self.showDetailView = function(element, index, mutation) {
+			var detailElement = $(element);
 
 			var snps = self.mutationListResult();
+
+			var data = null;
 
 			for(var i in snps) {
 				if(snps[i].position == index) {
 					for(var j in snps[i].mutations) {
 						if(snps[i].mutations[j].aa == mutation) {
-							self.snpDetails(snps[i].mutations[j].data);
-							return;
+							data = snps[i].mutations[j].data;
 						}
 					}
 				}
 			}
 
-			self.snpDetails(null);
+			if(data) {
+				ko.applyBindingsToNode(detailElement.parent().find('.dropdown-menu')[0], 
+					{ template: { name: 'snp_details', data: data } });
+			}
 		}
 
 		self.searchProtein = function() {
@@ -385,10 +388,10 @@ var Protein = function() {
 		init: function(element, valueAccessor, allBindingsAccessor, viewModel) {
 			$(element).on("click", ".mutations li", function(event) {
 				// Hack, dont want to add data binding to each element
-				var index = $(event.target).parent().parent().find('span').text();
+				var index = $(event.target).parent().parent().parent().find('.position').text();
 				var mutation = $(event.target).text();
 				var callback = valueAccessor();
-				callback(index, mutation);
+				callback(event.target, index, mutation);
 			});
 		}
 	};
@@ -434,3 +437,8 @@ var Protein = function() {
 	
 	return ko.applyBindings(new SearchViewModel());
 })();
+
+$('#functional_effect_list_container').on('click', '.dropdown-menu', function(event) {
+	event.stopPropagation();
+	event.preventDefault();
+});
