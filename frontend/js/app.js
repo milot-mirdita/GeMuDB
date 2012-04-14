@@ -135,8 +135,12 @@ var Protein = function() {
 		initProteinMixin(hidden);
 		initNumberMixin(hidden);
 		initStateMixin(hidden);
-		
+
 		var self = this;
+
+		self.ajaxErrorHandler = function (error) {
+			console.log(error);
+		};
 
 		self.protein = 'NP_005378';
 		self.proteinDetail=ko.observable();
@@ -163,23 +167,7 @@ var Protein = function() {
 		 * @arg 
 		 */
 		self.snpDetails = ko.observable();
-
-		// ko.computed(function () {
-		// 	if(self.proteinResult.refid) {
-		// 		var id = self.proteinResult.refid;
-		// 		var offset = ((self.sequenceOffset() - 0) + 1);
-		// 		var length = self.lineLength;
-
-		// 		$.when($.getJSON(constants.baseUrl + 'protein/mutations/' + id + '/' + offset + '/' + length))
-		// 		 .done(function (result) {
-		// 	 		self.listResult(result.mutationsPos);
-		// 		 })
-		// 		 .fail(function (error) {
-		// 		 	console.warn(error);
-		// 		 });
-		// 	}
-		// }).extend({ throttle: 500 });
-			
+		
 		self.formatListResult = function(elements, data) {
 			//console.log(elements);
 			//console.log(data);
@@ -259,6 +247,18 @@ var Protein = function() {
 			hidden.addGraph($('#flot_overview'), normal, types, true);
 		}
 
+		self.updateList = function (data, offset) {
+			var id = data.refid;
+			var offset = ((offset - 0) + 1);
+			var length = constants.lineLength;
+
+			$.when($.getJSON(constants.baseUrl + 'protein/mutations/' + id + '/' + offset + '/' + length))
+			 .done(function (result) {
+		 		self.listResult(result.mutationsPos);
+			 })
+			 .fail(self.ajaxErrorHandler);
+		};
+
 		self.sequenceOffsetCallback = _.throttle(function (value) {
 			self.currentState.offset = value;
 			var slicedProtein = hidden.subProtein(self.currentState.protein, value, constants.lineLength);
@@ -266,13 +266,10 @@ var Protein = function() {
 			self.slicedProtein.sequence(slicedProtein.sequence);
 			self.slicedProtein.predictions(slicedProtein.predictions);
 			self.updateGraphs(self.currentState.protein, slicedProtein, self.currentState.types);
+			self.updateList(self.currentState.protein, self.currentState.offset);
 		}, 32);
 
 		Sammy(function() {
-			this.ajaxErrorHandler = function (error) {
-				console.log(error);
-			};
-
 			this.get("#!/search/:protein", function(context) {
 				var protein = this.params["protein"];
 				
@@ -281,7 +278,7 @@ var Protein = function() {
 					.done(function(searchResult) {
 						context.redirect("#!", "show", searchResult.refid);
 					})
-					.fail(this.ajaxErrorHandler);
+					.fail(self.ajaxErrorHandler);
 			});
 
 			this.get("#!/show/:refid", function() {
@@ -297,21 +294,21 @@ var Protein = function() {
 							hideSearch();
 
 						})
-						.fail(this.ajaxErrorHandler);
+						.fail(self.ajaxErrorHandler);
 					$.when($.getJSON(constants.baseUrl + "protein/detail/" 
 							 + reference))
 						.done(function (proteinDetail) {
 							
 					self.updateByProteinDetail(proteinDetail);
 					})
-					 .fail(this.ajaxErrorHandler);					
+					 .fail(self.ajaxErrorHandler);					
 					$.when($.getJSON(constants.baseUrl + "protein/externalsnp/" 
 							 + reference))
 						.done(function (externalSnpContainer) {
 							
 					self.updateByExternalSnpContainer(ExternalSnpContainer);
 					})
-					 .fail(this.ajaxErrorHandler);
+					 .fail(self.ajaxErrorHandler);
 				}
 			});
 			
