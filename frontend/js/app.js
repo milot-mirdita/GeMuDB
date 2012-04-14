@@ -190,8 +190,12 @@ var Protein = function() {
 			}
 
 			if(data) {
+				var result = {};
+				for(var i in data) {
+					result[data[i].type] = data[i];
+				}
 				ko.applyBindingsToNode(detailElement.parent().find('.dropdown-menu')[0], 
-					{ template: { name: 'snp_details', data: data } });
+					{ template: { name: 'snp_details', data: result } });
 			}
 		}
 
@@ -249,7 +253,7 @@ var Protein = function() {
 			hidden.addGraph($('#flot_overview'), normal, types, true);
 		}
 
-		self.updateList = function (data, offset) {
+		self.updateList = _.debounce(function (data, offset) {
 			var id = data.refid;
 			var offset = ((offset - 0) + 1);
 			var length = constants.lineLength;
@@ -259,7 +263,7 @@ var Protein = function() {
 		 		self.mutationListResult(result.mutationsPos);
 			 })
 			 .fail(self.ajaxErrorHandler);
-		};
+		}, 500);
 
 		self.sequenceOffsetCallback = _.throttle(function (value) {
 			self.currentState.offset = value;
