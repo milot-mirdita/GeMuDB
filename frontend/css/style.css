@@ -34,12 +34,14 @@ html, body {
 	cursor: pointer;
 }
 
-#functional_effect_list_container {
+#functional_effect_list_container, 
+#external_functional_effect_list_container{
 	height: 300px;
 	overflow: auto;
 }
 
-#functional_effect_list_container .progress {
+#functional_effect_list_container .progress, 
+#external_functional_effect_list_container .progress {
 	background:url(spinner.gif) no-repeat;
 	width:128px;
 	height: 128px;
