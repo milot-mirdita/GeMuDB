@@ -306,7 +306,7 @@ var Protein = function() {
 							 + reference))
 						.done(function (externalSnpContainer) {
 							
-					self.updateByExternalSnpContainer(ExternalSnpContainer);
+					self.updateByExternalSnpContainer(externalSnpContainer);
 					})
 					 .fail(self.ajaxErrorHandler);
 				}
