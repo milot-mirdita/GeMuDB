@@ -220,6 +220,7 @@ var Protein = function() {
 			self.slicedProtein.predictions(slicedProtein.predictions);
 
 			self.updateGraphs(proteinResult, slicedProtein, types);
+			self.updateList(proteinResult, offset);
 		};
 		
 		

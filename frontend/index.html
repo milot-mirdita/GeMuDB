@@ -82,7 +82,6 @@
 			<div id="functional_effect_list_container" class="result span7" style="height: 300px">
 				<div class="progress" data-bind="visible : !mutationListResult()">
 				</div>
-
 				<ul class="positions" data-bind="visible : mutationListResult(), template: { name: 'prediction_list_entry_template', foreach: mutationListResult }, listclick: showDetailView"></ul>
 			</div>
 			<div id="snp_container" class="result span5" data-bind="if: snpDetails()">
