@@ -36,6 +36,9 @@ public class SearchProteinServiceImpl implements SearchProteinService {
 					databases.toArray());
 
 		} else { // ID
+			Sequence tmpSeq = sequenceDao.selectByRefId(searchString);
+			if (tmpSeq != null)
+				return new ProteinId(tmpSeq.getRefId());
 			entries = client.performAccessionMapping(searchString,
 					databases.toArray());
 

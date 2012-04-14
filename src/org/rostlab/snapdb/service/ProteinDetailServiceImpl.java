@@ -56,7 +56,7 @@ public class ProteinDetailServiceImpl implements ProteinDetailService {
 			EFetchGeneServiceStub.EFetchResult fetchGenRes = fetchGen
 					.run_eFetch(fetchGenReq);
 			for (int i = 0; i < fetchGenRes.getEntrezgeneSet()
-					.getEntrezgeneSetSequence().length; i++) {
+					.getEntrezgeneSetSequence().length;) {
 				Entrezgene_type0 obj = fetchGenRes.getEntrezgeneSet()
 						.getEntrezgeneSetSequence()[i].getEntrezgene();
 				proteinDetail.setOfficialGenFullName(obj.getEntrezgene_gene()
@@ -77,7 +77,7 @@ public class ProteinDetailServiceImpl implements ProteinDetailService {
 			EFetchSequenceServiceStub.EFetchResult seqRes = fetchSequence
 					.run_eFetch(seqReq);
 			// results output
-			for (int i = 0; i < seqRes.getGBSet().getGBSetSequence().length; i++) {
+			for (int i = 0; i < seqRes.getGBSet().getGBSetSequence().length;) {
 				EFetchSequenceServiceStub.GBSeq_type0 obj = seqRes.getGBSet()
 						.getGBSetSequence()[i].getGBSeq();
 				proteinDetail.setOrganismName(obj.getGBSeq_organism());
@@ -107,7 +107,7 @@ public class ProteinDetailServiceImpl implements ProteinDetailService {
 	}
 
 	public String creatIdsString(final String[] ids) {
-		if(ids==null)
+		if (ids == null)
 			return null;
 		int N = ids.length;
 		String retId = null;
@@ -126,13 +126,13 @@ public class ProteinDetailServiceImpl implements ProteinDetailService {
 			return null;
 		return getProteinSnpDetail(seq.getRefId(), seq.getVersion());
 	}
-	
+
 	final String snpServiceUrl = "http://eutils.ncbi.nlm.nih.gov/"
 			+ "entrez/eutils/efetch.fcgi?db=snp&id=%s&retmode=xml";
 
 	@Override
-	public NcbiSnpDetailContainer getProteinSnpDetail(final String refid,final Integer version) {
-
+	public NcbiSnpDetailContainer getProteinSnpDetail(final String refid,
+			final Integer version) {
 
 		final HttpClient client = new HttpClient();
 		NcbiSnpDetailContainer ncbiContainer;
@@ -140,14 +140,14 @@ public class ProteinDetailServiceImpl implements ProteinDetailService {
 		final Map<Integer, NcbiSnpDetail> snpMap = new HashMap<Integer, NcbiSnpDetail>();
 		try {
 			// Search for PROTEINID in SNP
-			final String[] id_array = queryDataBaseForTerm(refIdWithOutVersion+"."+version
-					+ " AND \"missense\"[FXN_CLASS]", "snp");
+			final String[] id_array = queryDataBaseForTerm(refIdWithOutVersion
+					+ "." + version + " AND \"missense\"[FXN_CLASS]", "snp");
 			final String ids = creatIdsString(id_array);
-			if(ids==null)
+			if (ids == null)
 				return new NcbiSnpDetailContainer(0);
 			ncbiContainer = new NcbiSnpDetailContainer(id_array.length);
 			if (ids != null) {
-				
+
 				// DBSNP
 				final String snpUrl = String.format(snpServiceUrl, ids);
 				GetMethod method = new GetMethod(snpUrl);
@@ -165,9 +165,9 @@ public class ProteinDetailServiceImpl implements ProteinDetailService {
 				System.out
 						.println(exchangeDoc.getExchangeSet().getRsArray().length);
 				// Extract Pos data
-			
-				ResultArray:
-				for (int i = 0; i < exchangeDoc.getExchangeSet().getRsArray().length; i++) {
+
+				ResultArray: for (int i = 0; i < exchangeDoc.getExchangeSet()
+						.getRsArray().length; i++) {
 					Rs result = exchangeDoc.getExchangeSet().getRsArray()[i];
 					NcbiSnpDetail currentDetail = null;
 					if ((currentDetail = snpMap.get(result.getRsId())) == null) {
@@ -175,45 +175,65 @@ public class ProteinDetailServiceImpl implements ProteinDetailService {
 						snpMap.put(result.getRsId(), currentDetail);
 						currentDetail.setSnpid(result.getRsId());
 					}
-					if(result.getAssemblyArray()!=null)
-					for (int assid = 0; assid < result.getAssemblyArray().length; assid++) {
-						Assembly ass = result.getAssemblyArray()[assid];
-						if(ass.getComponentArray()!=null)
-						for (int compid = 0; compid < ass.getComponentArray().length; compid++) {
-							Component comp = ass.getComponentArray()[compid];
-							if(comp.getMapLocArray()!=null)
-							for (int mapid = 0; mapid < comp.getMapLocArray().length; mapid++) {
-								MapLoc mapLoc = comp.getMapLocArray()[mapid];
-								if(mapLoc.getFxnSetArray()!=null)
-								for (int fxnid = 0; fxnid < mapLoc.getFxnSetArray().length; fxnid++) {
-									FxnSet set = mapLoc.getFxnSetArray()[fxnid];
-									if(set.isSetProtAcc()==true)
-									if(set.getProtAcc().equals(refIdWithOutVersion)==true){
-										if(set.isSetFxnClass()){
-										
-											Boolean effectValue = false;
-											switch(set.getFxnClass().intValue()){
-											case FxnClass.INT_REFERENCE:
-												continue;
-											case FxnClass.INT_MISSENSE:
-											case FxnClass.INT_NON_SYNONYMOUS_CODON:
-												effectValue=true;
-												break;
-											}
-											currentDetail.setEffect(effectValue);
+					if (result.getAssemblyArray() != null)
+						for (int assid = 0; assid < result.getAssemblyArray().length; assid++) {
+							Assembly ass = result.getAssemblyArray()[assid];
+							if (ass.getComponentArray() != null)
+								for (int compid = 0; compid < ass
+										.getComponentArray().length; compid++) {
+									Component comp = ass.getComponentArray()[compid];
+									if (comp.getMapLocArray() != null)
+										for (int mapid = 0; mapid < comp
+												.getMapLocArray().length; mapid++) {
+											MapLoc mapLoc = comp
+													.getMapLocArray()[mapid];
+											if (mapLoc.getFxnSetArray() != null)
+												for (int fxnid = 0; fxnid < mapLoc
+														.getFxnSetArray().length; fxnid++) {
+													FxnSet set = mapLoc
+															.getFxnSetArray()[fxnid];
+													if (set.isSetProtAcc() == true)
+														if (set.getProtAcc()
+																.equals(refIdWithOutVersion) == true) {
+															if (set.isSetFxnClass()) {
+
+																Boolean effectValue = false;
+																switch (set
+																		.getFxnClass()
+																		.intValue()) {
+																case FxnClass.INT_REFERENCE:
+																	continue;
+																case FxnClass.INT_MISSENSE:
+																case FxnClass.INT_NON_SYNONYMOUS_CODON:
+																	effectValue = true;
+																	break;
+																}
+																currentDetail
+																		.setEffect(effectValue);
+															}
+															if (set.isSetAaPosition())
+																currentDetail
+																		.setPosition(set
+																				.getAaPosition() + 1);// because
+																										// ncbi
+																										// is
+																										// a
+																										// null
+																										// index
+															if (set.isSetResidue())
+																currentDetail
+																		.setMutation(set
+																				.getResidue()
+																				.charAt(0));
+															if (currentDetail
+																	.isComplete()) {
+																continue ResultArray;
+															}
+														}
+												}
 										}
-										if(set.isSetAaPosition())
-											currentDetail.setPosition(set.getAaPosition()+1);// because ncbi is a null index
-										if(set.isSetResidue())
-											currentDetail.setMutation(set.getResidue().charAt(0));
-										if(currentDetail.isComplete()){
-											continue ResultArray;
-										}
-									}
 								}
-							}
 						}
-					}
 
 				}
 				// OMIIM
@@ -228,25 +248,27 @@ public class ProteinDetailServiceImpl implements ProteinDetailService {
 					LinkSetType links = resOmim.getLinkSet()[i];
 					NcbiSnpDetail currentDetail = null;
 					for (int k = 0; k < links.getIdList().getId().length; k++) {
-						Integer key=Integer.parseInt(links.getIdList().getId()[k].toString());
-						
+						Integer key = Integer.parseInt(links.getIdList()
+								.getId()[k].toString());
+
 						if ((currentDetail = snpMap.get(key)) != null) {
 							break;
 						}
-						
-						
-						
+
 					}
-					if(currentDetail!=null){
+					if (currentDetail != null) {
 						// check if there is a link
 						if (links.getLinkSetDb() != null
 								&& links.getLinkSetDb().length > 0) {
 							for (int omimid = 0; omimid < links.getLinkSetDb().length; omimid++) {
-								LinkSetDbType omimlink=links.getLinkSetDb()[omimid];
-								if(omimlink.getLink()!=null){
-									for(int omimLinkId =0; omimLinkId < omimlink.getLink().length;omimLinkId++){
-										LinkTypeE link=omimlink.getLink()[omimLinkId];
-										currentDetail.addOmimEntry(new OmimEntry(link.getId().toString()));
+								LinkSetDbType omimlink = links.getLinkSetDb()[omimid];
+								if (omimlink.getLink() != null) {
+									for (int omimLinkId = 0; omimLinkId < omimlink
+											.getLink().length; omimLinkId++) {
+										LinkTypeE link = omimlink.getLink()[omimLinkId];
+										currentDetail
+												.addOmimEntry(new OmimEntry(
+														link.getId().toString()));
 									}
 								}
 							}
@@ -254,10 +276,10 @@ public class ProteinDetailServiceImpl implements ProteinDetailService {
 					}
 				}
 			}
-			for(Integer key : snpMap.keySet()){
+			for (Integer key : snpMap.keySet()) {
 				ncbiContainer.addNcbiSnpDetail(snpMap.get(key));
 			}
-			
+
 			return ncbiContainer;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
