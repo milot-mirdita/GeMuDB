@@ -47,7 +47,7 @@
 		class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
 		<property name="beanNames">
 			<list>
-				<value>org.de.lmu.*</value>
+				<value>org.rostlab.snapdb.*</value>
 			</list>
 		</property>
 		<property name="interceptorNames">

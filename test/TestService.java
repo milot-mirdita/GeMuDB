@@ -40,14 +40,14 @@ public class TestService {
 //				.post(String.class, formData);
 //		System.out.println(resp);
 
-		System.out.println(service.path("protein").path("externalsnp").path("NP_005378")
-				.accept(MediaType.APPLICATION_JSON).get(String.class));
+//		System.out.println(service.path("protein").path("externalsnp").path("NP_005378")
+//				.accept(MediaType.APPLICATION_JSON).get(String.class));
 
 
 		
-//		System.out
-//				.println(service.path("protein").path("mutations").path("NP_005378").path("17").path("20").
-//						accept(MediaType.APPLICATION_JSON).get(String.class));
+		System.out
+				.println(service.path("protein").path("mutations").path("NP_005378").path("198").path("115").
+						accept(MediaType.APPLICATION_JSON).get(String.class));
 //
 //		System.out
 //				.println(service.path("protein").path("mutations").path("NP_005378").path("17").path("20").
