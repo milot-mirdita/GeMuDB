@@ -139,7 +139,13 @@
 	<li>
 		<span class="position" data-bind="text: position"></span>
 		<ul class="mutations" data-bind="attr: { id: 'externalmutation' + position }, foreach: { data: externalMutations }">
-			<li class="section" data-bind="text: mutation"></li>
+
+			<li class="section" >
+			<!-- ko: if: source=="NCBI"-->
+			<a data-bind="attr:{ href:'http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs='+snpid },text: mutation"></a>
+			<!-- /ko -->
+			</li>
+			
 		</ul>
 	</li>
 </script>
