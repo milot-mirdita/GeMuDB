@@ -172,7 +172,14 @@ public class ProteinFunctionalEffectServiceImpl implements
 			}
 
 		}
+		if (map != null) {
+			final List<MutationData> mutList = currentMutationPos
+					.getMutations();
 
+			for (Character key : map.keySet()) {
+				mutList.add(map.get(key));
+			}
+		}
 		return mutationPosContainer;
 	}
 
