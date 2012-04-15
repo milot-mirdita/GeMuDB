@@ -63,10 +63,17 @@ public class ProteinFunctionalEffectServiceImpl implements
 					}
 					reli.append(calcReliability(mut.getMutReliability(),
 							aaToPredict));
-					cons.append(calcConservation(mut.getMutEffect(),
-							aaToPredict));
+					
+					Long conservation =calcConservation(mut.getMutEffect(),
+							aaToPredict);
+					String consString = conservation.toString();
+					if(conservation< 10){
+						consString = "0"+consString;
+					}
+					cons.append(consString);
 					currPos++;
 				}
+				
 				prediction.setConservation(cons.toString());
 				prediction.setReliability(reli.toString());
 				pfep.addPrediction(prediction);
@@ -77,15 +84,13 @@ public class ProteinFunctionalEffectServiceImpl implements
 	}
 
 	private long calcConservation(Boolean[] effects, Boolean[] aaToPredict) {
-		float sumEffect = 0;
-		int counter = 0;
+		long sumEffect = 0;
 		for (int i = 0; i < effects.length; i++)
 			if (aaToPredict[i] == true) {
-				counter++;
 				sumEffect += (effects[i]) ? 1 : 0;
 			}
 
-		return Math.round(sumEffect / counter * 9);
+		return sumEffect ;
 	}
 
 	private long calcReliability(Integer[] reliability, Boolean[] aaToPredict) {
