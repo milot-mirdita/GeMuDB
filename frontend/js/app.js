@@ -70,7 +70,8 @@ var initProteinMixin = (function(out) {
 
 		if(fill)
 			options.xaxis.max = data.sequence.length;
-		debugger;
+		options.yaxis.max = $("#active_alphabet .active").size() - 1;
+
 		var plot = $.plot(target, graphs, options);
 		
 		if(!fill) {
@@ -272,6 +273,7 @@ var Protein = function() {
 
 			};
 
+			$("#slider").slider("option", "max", $("#active_alphabet .active").size());
 			hidden.addGraph($('#flot_details'), scliced, types, self.currentState.threshold, false, clickHandler);
 			hidden.addGraph($('#flot_overview'), normal, types, self.currentState.threshold, true);
 			self.updateUrl();
