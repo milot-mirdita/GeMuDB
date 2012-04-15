@@ -3,7 +3,7 @@ var initProteinMixin = (function(out) {
 	var plotOptions = function () { return {
 		legend : { show : false }, 
 		xaxis : { show : false, min : 0, max : 115, minTickSize: 5, tickSize: 5 }, 
-		yaxis : { show : false, min : 1, max : 8, position : 'right', ticks : [1, 8] }, 
+		yaxis : { show : false, min : 1, max : 18, position : 'right', ticks : [1, 18] }, 
 		grid : { borderWidth : 1, borderColor : '#aaa', clickable : true }, 
 		series : { 
 			lines : { show : false, steps : false}, 
@@ -18,10 +18,11 @@ var initProteinMixin = (function(out) {
 		var predictions = [];
 
 		$.each(data.predictions, function(index, prediction) {
+			console.log(prediction.conservation.slice(offset * 2, (offset + lineLength) * 2));
 			predictions.push({
 				type : prediction.type,
 				reliability : prediction.reliability.slice(offset, offset + lineLength),
-				conservation : prediction.conservation.slice(offset, offset + lineLength)
+				conservation : prediction.conservation.slice(offset * 2, (offset + lineLength) * 2)
 			});
 		});
 				
@@ -33,10 +34,12 @@ var initProteinMixin = (function(out) {
 	
 	var probsToData = function (probs) {
 		var data = []; 
-		for(var i = 0; i < probs.length; i++) { 
+		var counter = 0;
+		for(var i = 0; i < probs.length; i+=2) { 
 			if ( probs[i] != "-") { 
-				data.push([i, probs[i] * 1]); 
+				data.push([counter, probs.toString().substr(i, 2) * 1]); 
 			} 
+			counter++;
 		}
 		return data;
 	}
@@ -60,7 +63,6 @@ var initProteinMixin = (function(out) {
 				if(data.predictions[i].type == types[j]) {
 					var graphData = probsToData(data.predictions[j].conservation);
 					graphData = filterData(graphData, threshold);
-					debugger;
 					graphs.push(graphData);
 				}
 			}
@@ -68,7 +70,7 @@ var initProteinMixin = (function(out) {
 
 		if(fill)
 			options.xaxis.max = data.sequence.length;
-		
+		debugger;
 		var plot = $.plot(target, graphs, options);
 		
 		if(!fill) {
@@ -157,6 +159,7 @@ var Protein = function() {
 		self.protein = 'NP_005378';
 		self.proteinDetail=ko.observable();
 		self.currentState = {
+			threshold : 0,
 			offset : 0,
 			types : [
 				'SNAP'
@@ -269,8 +272,8 @@ var Protein = function() {
 
 			};
 
-			hidden.addGraph($('#flot_details'), scliced, types, 8, false, clickHandler);
-			hidden.addGraph($('#flot_overview'), normal, types, 8, true);
+			hidden.addGraph($('#flot_details'), scliced, types, self.currentState.threshold, false, clickHandler);
+			hidden.addGraph($('#flot_overview'), normal, types, self.currentState.threshold, true);
 			self.updateUrl();
 		}
 
@@ -320,6 +323,24 @@ var Protein = function() {
 			//debugger;
 			//location.hash = hidden.serializeState(self.currentState);
 		};
+
+		$(document).ready(function() {
+			$('#functional_effect_list_container').on('click', '.dropdown-menu', function(event) {
+				event.stopPropagation();
+				event.preventDefault();
+			});
+
+			$("#slider").slider({
+				value:0,
+				min: 0,
+				max: 19,
+				step: 1,
+				slide: function( event, ui ) {
+					self.currentState.threshold = (ui.value - 0);
+					self.updateTypes();
+				}
+			});
+		});
 
 		Sammy(function() {
 			this.initialized = false;
@@ -506,8 +527,3 @@ var Protein = function() {
 	
 	return ko.applyBindings(new SearchViewModel());
 })();
-
-$('#functional_effect_list_container').on('click', '.dropdown-menu', function(event) {
-	event.stopPropagation();
-	event.preventDefault();
-});

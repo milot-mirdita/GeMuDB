@@ -3,6 +3,7 @@
 <head>
 	<title>SNPdbe 2.0</title>
 	<link href='http://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="css/ui-lightness/jquery-ui-1.8.18.custom.css" />
 	<link rel="stylesheet" href="css/bootstrap.min.css" />
 	<link rel="stylesheet" href="css/style.css" />
 	<link rel="icon" href="img/favicon.ico" type="image/x-icon" /> 
@@ -28,14 +29,14 @@
 		</div>
 		
 		<div id="functional_effect_container" class="result">
-			<div class="row">
+			<div class="row-fluid">
 				<div id="active_types" class="btn-group span2" data-toggle="buttons-checkbox">
 					  <button class="btn active"
 		data-bind="typeclick: 'SNAP'">SNAP2</button>
 					  <button class="btn"
 		data-bind="typeclick: 'SIFT'">SIFT</button>
 				</div>
-				<div id="active_alphabet" class="btn-group span9" data-toggle="buttons-checkbox" data-bind="alphabetclick: updateAlphabet">
+				<div id="active_alphabet" class="btn-group span8" data-toggle="buttons-checkbox" data-bind="alphabetclick: updateAlphabet">
 			  		<button class="btn active a">A</button>
 			  		<button class="btn active c">C</button>
 			  		<button class="btn active d">D</button>
@@ -57,6 +58,7 @@
 			  		<button class="btn active w">W</button>
 			  		<button class="btn active y">Y</button>
 				</div>
+				<div id="slider" class="span2"></div>
 			</div>
 			<div class="row">
 				<div class="span12">
@@ -173,6 +175,7 @@
 <script src="js/jquery.flot.min.js"></script>
 <script src="js/jquery.event.drag-2.0.min.js"></script>
 <script src="js/jquery.scrollTo-1.4.2-min.js"></script>
+<script src="js/jquery-ui-1.8.18.custom.min.js"></script>
 <script src="js/underscore-min.js"></script>
 <script src="js/knockout-2.1.0beta.debug.js"></script>
 <!--<script src="js/knockout.mapping-latest.js"></script>-->
