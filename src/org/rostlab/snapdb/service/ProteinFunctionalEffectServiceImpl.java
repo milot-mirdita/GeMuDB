@@ -57,7 +57,7 @@ public class ProteinFunctionalEffectServiceImpl implements
 					if (mut.getPos() != currPos) {
 						while (currPos != mut.getPos()) {
 							reli.append("-");
-							cons.append("-");
+							cons.append("--"); //needed because of two digits
 							currPos++;
 						}
 					}
