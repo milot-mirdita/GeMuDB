@@ -116,8 +116,11 @@ public class ServiceFacadeImpl implements ServiceFacade {
 		System.out.println("Call getProteinSnpDetail: " + refid);
 		
 		ExternalMutationContainer nsdc= proteinDetailService.getProteinExternalSnpDetail(refid);
+		
 		if (nsdc == null) {
 			throw new BadRequestException();
+		} else if(nsdc.getExternalMutationPosition().size() == 0) {
+			throw new NotFoundException();
 		} else {
 			return nsdc;
 		}

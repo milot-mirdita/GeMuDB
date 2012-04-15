@@ -57,8 +57,8 @@ html, body {
 	font-size: 160px;
 	z-index: -1;
 	top: -55px;
-	color: grey;
-	text-shadow: 0 0 15px grey;
+	color: gray;
+	text-shadow: 0 0 15px gray;
 }
 
 #search_container .search {
@@ -117,17 +117,13 @@ html, body {
 }
 
 .positions > li {
-	font-size: 2em;
-	font-style: italic;
 	position: relative;
-	height: 55px;
-	padding-top: 35px;
+	margin-bottom: 10px;
 }
 
 .positions li ul {
 	padding: 0;
-	margin: 0 0 0 45px;
-	position: absolute;
+	margin: 0;
 	top: 0;
 	font-size: 14px;
 	font-style: normal;
@@ -137,7 +133,7 @@ html, body {
 	display: inline-block;
 	list-style-type: none;
 	border: 1px solid black;
-	margin: 5px;
+	margin: 2px 0px;
 	text-align: center;
 	vertical-align: middle;
 	cursor: pointer;
@@ -147,7 +143,7 @@ html, body {
 	width: 20px;
 	height: 20px;
 	display: block;
-	padding: 5px;
+	padding: 12px;
 }
 
 .section .dropdown.open .dropdown-toggle {
@@ -156,12 +152,26 @@ html, body {
 }
 
 .section .dropdown-menu {
-	margin: 0 0 0 35px;
+	margin: 0 0 0 55px;
 	position: absolute;
 	top: 0;
 	font-size: 14px;
 	font-style: normal;
 }
+
+.section .dropdown-menu.index6,
+.section .dropdown-menu.index7,
+.section .dropdown-menu.index8,
+.section .dropdown-menu.index9,
+.section .dropdown-menu.index16,
+.section .dropdown-menu.index17,
+.section .dropdown-menu.index18,
+.section .dropdown-menu.index19
+{
+	margin: 0 0 0 -190px;
+}
+
+
 
 #top_bar_container .search {
 	height:47px;

@@ -35,7 +35,7 @@
 					  <button class="btn"
 		data-bind="typeclick: 'SIFT'">SIFT</button>
 				</div>
-				<div id="active_alphabet" class="btn-group span9" data-toggle="buttons-checkbox" data-bind="alphabetclick: true">
+				<div id="active_alphabet" class="btn-group span9" data-toggle="buttons-checkbox" data-bind="alphabetclick: updateAlphabet">
 			  		<button class="btn active a">A</button>
 			  		<button class="btn active c">C</button>
 			  		<button class="btn active d">D</button>
@@ -150,7 +150,7 @@
 			<li class="section dropdown" data-bind="attr: { id: 'menu' + $parent.position + aa }">
 				<span class="dropdown-toggle" data-toggle="dropdown" href="#menu1" data-bind="text: aa, attr: { href: '#menu' + $parent.position + aa }">
 				</span>
-				<span class="dropdown-menu">
+				<span class="dropdown-menu" data-bind="class: 'index' + $index()">
 				</span>
 			</li>
 		</ul>
@@ -168,8 +168,8 @@
 <script src="js/jquery.event.drag-2.0.min.js"></script>
 <script src="js/jquery.scrollTo-1.4.2-min.js"></script>
 <script src="js/underscore-min.js"></script>
-<script src="js/knockout-2.0.0.debug.js"></script>
-<script src="js/knockout.mapping-latest.js"></script>
+<script src="js/knockout-2.1.0beta.debug.js"></script>
+<!--<script src="js/knockout.mapping-latest.js"></script>-->
 <script src="js/sammy-latest.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/app.js"></script>
