@@ -136,6 +136,13 @@ public class ProteinFunctionalEffectServiceImpl implements
 				currentMutationPos = new MutationsPos();
 				currentMutationPos.setPosition(mutationDb.getPos());
 				retList.add(currPos, currentMutationPos);
+				if(map!=null){
+					final List<MutationData> mutList=	currentMutationPos.getMutations();
+					
+					for(Character key : map.keySet()){
+						mutList.add(map.get(key));
+					}
+				}
 				map = new TreeMap<Character, MutationData>();
 				
 			}
@@ -163,10 +170,7 @@ public class ProteinFunctionalEffectServiceImpl implements
 							.getMutEffect()[aaindex]));
 				}
 			}
-			final List<MutationData> mutList=	currentMutationPos.getMutations();
-			for(Character key : map.keySet()){
-				mutList.add(map.get(key));
-			}
+	
 			
 		}
 		return mutationPosContainer;

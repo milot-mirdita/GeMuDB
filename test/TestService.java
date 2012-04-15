@@ -23,9 +23,10 @@ public class TestService {
 //		System.out.println(service.path("protein").path("prediction")
 //				.path("35").accept(MediaType.APPLICATION_JSON)
 //				.get(String.class));
-//		System.out
-//				.println(service.path("protein").path("prediction").path("35")
-//						.accept(MediaType.APPLICATION_XML).get(String.class));
+		System.out
+				.println(service.path("protein").path("prediction").path("NP_005378")
+						.path("ACD")
+						.accept(MediaType.APPLICATION_XML).get(String.class));
 //		MultivaluedMap formData = new MultivaluedMapImpl();
 //		formData.add("q", "NP_005378");
 ////
@@ -45,10 +46,10 @@ public class TestService {
 
 
 		
-		System.out
-				.println(service.path("protein").path("mutations").path("NP_005378").path("198").path("115").
-						accept(MediaType.APPLICATION_JSON).get(String.class));
-//
+//		System.out
+//				.println(service.path("protein").path("mutations").path("NP_005378").path("198").path("115").
+//						accept(MediaType.APPLICATION_JSON).get(String.class));
+////
 //		System.out
 //				.println(service.path("protein").path("mutations").path("NP_005378").path("17").path("20").
 //						accept(MediaType.APPLICATION_XML).get(String.class));
