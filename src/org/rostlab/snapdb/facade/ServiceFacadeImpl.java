@@ -61,7 +61,7 @@ public class ServiceFacadeImpl implements ServiceFacade {
 		}
 		;
 		ProteinFunctionalEffectPrediction pfep = proteinFunctionalEffectService
-				.getFunctionalEffectPrediction(id);
+				.getFunctionalEffectPrediction(id,alphabet);
 		if (pfep != null) {
 			return pfep;
 		} else {
