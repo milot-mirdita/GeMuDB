@@ -128,50 +128,56 @@ public class ProteinFunctionalEffectServiceImpl implements
 		final MutationPosContainer mutationPosContainer = new MutationPosContainer(
 				size);
 		List<MutationsPos> retList = mutationPosContainer.getMutationsPos();
-		MutationsPos currentMutationPos;
-		Map<Character,MutationData> map=null;
+		MutationsPos currentMutationPos = null;
+		Map<Character, MutationData> map = null;
 		for (Mutation mutationDb : mutationList) {
 			final int currPos = mutationDb.getPos() - from;
 			if (indexExists(retList, currPos) == false) {
 				currentMutationPos = new MutationsPos();
 				currentMutationPos.setPosition(mutationDb.getPos());
 				retList.add(currPos, currentMutationPos);
-				if(map!=null){
-					final List<MutationData> mutList=	currentMutationPos.getMutations();
-					
-					for(Character key : map.keySet()){
+				if (map != null) {
+					final List<MutationData> mutList = currentMutationPos
+							.getMutations();
+
+					for (Character key : map.keySet()) {
 						mutList.add(map.get(key));
 					}
 				}
 				map = new TreeMap<Character, MutationData>();
-				
+
 			}
 			currentMutationPos = retList.get(currPos);
 
-			
 			final Character wildTypeAA = sequenceString.charAt(mutationDb
 					.getPos() - 1);
 			currentMutationPos.setWildType(wildTypeAA.toString());
 			for (int aaindex = 0; aaindex < 21; aaindex++) {
-				Character currAa=AminoLookup.reversLookup(aaindex);
+				Character currAa = AminoLookup.reversLookup(aaindex);
 				if (currAa.charValue() == 'X'
-						|| currAa.charValue() == wildTypeAA
-								.charValue())
+						|| currAa.charValue() == wildTypeAA.charValue())
 					continue;
-				MutationData mutData =null;
-				if((mutData=map.get(currAa))==null){
-					mutData=generateMutationData(mutationDb,
+				MutationData mutData = null;
+				if ((mutData = map.get(currAa)) == null) {
+					mutData = generateMutationData(mutationDb,
 							AminoLookup.reversLookup(aaindex));
-					map.put(currAa,mutData);
-				}else{
+					map.put(currAa, mutData);
+				} else {
 					mutData.addData(new MutationPredictionData(mutationDb
 							.getType().toString(), mutationDb
 							.getMutReliability()[aaindex], mutationDb
 							.getMutEffect()[aaindex]));
 				}
 			}
-	
-			
+
+		}
+		if (map != null && currentMutationPos != null) {
+			final List<MutationData> mutList = currentMutationPos
+					.getMutations();
+
+			for (Character key : map.keySet()) {
+				mutList.add(map.get(key));
+			}
 		}
 		return mutationPosContainer;
 	}
