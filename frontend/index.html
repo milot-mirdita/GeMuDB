@@ -78,11 +78,13 @@
 		
 		<div class="row">
 			<div id="functional_effect_list_container" class="result span7" style="height: 300px">
+				<h1>Mutations</h1>
 				<div class="progress" data-bind="visible : !mutationListResult()">
 				</div>
 				<ul class="positions" data-bind="visible : mutationListResult(), template: { name: 'prediction_list_entry_template', foreach: mutationListResult }, listclick: showDetailView"></ul>
 			</div>
 			<div id="external_functional_effect_list_container" class="result span5" style="height: 300px" >
+				<h1>External Mutations</h1>
 				<div class="progress" data-bind="visible : !externalMutationListResult()">
 				</div>
 
@@ -157,6 +159,8 @@
 <script type="text/html" id="prediction_list_entry_template">
 	<li>
 		<span class="position" data-bind="text: position"></span>
+		<span class="position" data-bind="text: wildType"></span>
+		
 		<ul class="mutations" data-bind="attr: { id: 'mutation' + position }, foreach: { data: mutations, afterRender: $root.formatListResult }">
 			<li class="section dropdown" data-bind="attr: { id: 'menu' + $parent.position + aa }, css: {sift: (data[1].effect=='true'), snap: (data[0].effect=='true')}">
 				<span class="dropdown-toggle" data-toggle="dropdown" href="#menu1" data-bind="text: aa, attr: { href: '#menu' + $parent.position + aa }">

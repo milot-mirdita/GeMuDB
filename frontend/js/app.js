@@ -265,7 +265,7 @@ var Protein = function() {
 
 		self.updateGraphs = function(normal, scliced, types) {
 			var clickHandler = function (item) {
-				var index = self.sequenceOffset + item.dataIndex + 1;
+				var index = self.currentState.offset + item.dataIndex + 1;
 				$(".mutations").parent().css('background-color', 'inherit');
 				$("#mutation" + index).parent().css('background-color', 'red');
 				$('#functional_effect_list_container').scrollTo("#mutation" + index, 
