@@ -1,13 +1,40 @@
 ;
 var initProteinMixin = (function(out) {
-	var plotOptions = function () { return {
+	var overviewPlotOptions = function () { return {
 		legend : { show : false }, 
 		xaxis : { show : false, min : 0, max : 115, minTickSize: 5, tickSize: 5 }, 
-		yaxis : { show : false, min : 1, max : 18, position : 'right', ticks : [1, 18] }, 
-		grid : { borderWidth : 1, borderColor : '#aaa', clickable : true }, 
+		yaxis : { show : false, min : 0, max : 19, position : 'right', ticks : [0, 19] }, 
+		grid : { borderWidth : 1, borderColor : '#555', clickable : true }, 
 		series : { 
 			lines : { show : false, steps : false}, 
-			bars : { show : true, steps : true }, 
+			bars : { 
+				show : true, 
+				steps : true, 
+				lineWidth: 0,
+      			fillColor: { 
+      				colors: [ 
+      					{ 
+      						opacity: 0.8 
+      					}, 
+      					{ 
+      						opacity: 0.8 
+      					} 
+      				] 
+      			} 
+      		}, 
+			shadowSize : 1} 
+		}};
+
+	var detailPlotOptions = function () { return {
+		legend : { show : false }, 
+		xaxis : { show : false, min : 0, max : 115, minTickSize: 5, tickSize: 5 }, 
+		yaxis : { show : false, min : 0, max : 19, position : 'right', ticks : [0, 19] }, 
+		grid : { borderWidth : 1, borderColor : '#ccc', clickable : true }, 
+		series : { 
+			lines : { show : false, steps : false}, 
+			bars : { show : true, steps : true, lineWidth: 1,
+    		 fill: true,
+      		fillColor: { colors: [ { opacity: 0.0 }, { opacity: 1 } ] } }, 
 			shadowSize : 1} 
 		}};
 	
@@ -18,7 +45,6 @@ var initProteinMixin = (function(out) {
 		var predictions = [];
 
 		$.each(data.predictions, function(index, prediction) {
-			console.log(prediction.conservation.slice(offset * 2, (offset + lineLength) * 2));
 			predictions.push({
 				type : prediction.type,
 				reliability : prediction.reliability.slice(offset, offset + lineLength),
@@ -55,22 +81,25 @@ var initProteinMixin = (function(out) {
 	
 	out.addGraph = function(target, data, types, threshold, fill, callback) {
 		var fill = fill || false;
-		var options = plotOptions();
-
 		var graphs = [];
 		for(var i in data.predictions) {
-			for(var j in types) {
-				if(data.predictions[i].type == types[j]) {
-					var graphData = probsToData(data.predictions[j].conservation);
-					graphData = filterData(graphData, threshold);
-					graphs.push(graphData);
-				}
+			var index = _.indexOf(types, data.predictions[i].type);
+			if(index != -1) {
+				var graphData = probsToData(data.predictions[index].conservation);
+				graphData = filterData(graphData, threshold);
+				graphs.push(graphData);
+			} else {
+				graphs.push([]);
 			}
 		}
 
-		if(fill)
+		var options = detailPlotOptions();
+		if(fill) {
+			options = overviewPlotOptions();
 			options.xaxis.max = data.sequence.length;
-		options.yaxis.max = $("#active_alphabet .active").size() - 1;
+		}
+		options.yaxis.max = $("#active_alphabet .active").size();
+		$("#slider").slider("option", "max", $("#active_alphabet .active").size() - 1);
 
 		var plot = $.plot(target, graphs, options);
 		
@@ -153,6 +182,8 @@ var Protein = function() {
 
 		var self = this;
 
+		self.constants = constants;
+
 		self.ajaxErrorHandler = function (error) {
 			console.log(error);
 		};
@@ -161,7 +192,7 @@ var Protein = function() {
 		self.proteinDetail=ko.observable();
 		self.currentState = {
 			threshold : 0,
-			offset : 0,
+			offset : ko.observable(0),
 			types : [
 				'SNAP'
 			],
@@ -228,16 +259,18 @@ var Protein = function() {
 		var showSearch = function() {
 			$("#search_container").show();
 			$("#result_container").hide();
+			$(window).resize();
 		};
 
 		var hideSearch = function() {
 			$("#search_container").hide();
 			$("#result_container").show();
+			$(window).resize();
 		};
 
 		self.slicedProtein = new Protein();
 		self.updateByProteinResult = function(proteinResult) {
-			var offset = self.currentState.offset;
+			var offset = self.currentState.offset();
 			var types = self.currentState.types;
 			
 			self.currentState.protein = proteinResult;
@@ -256,6 +289,7 @@ var Protein = function() {
 		self.updateByProteinDetail = function(proteinDetail) {
 			self.proteinDetail(proteinDetail);
 			self.updateUrl();
+			hideSearch();
 		};
 		
 		self.updateByExternalSnpContainer = function(externalSnpContainer) {
@@ -265,34 +299,30 @@ var Protein = function() {
 
 		self.updateGraphs = function(normal, scliced, types) {
 			var clickHandler = function (item) {
-				var index = self.currentState.offset + item.dataIndex + 1;
+				var index = self.currentState.offset() + item.dataIndex + 1;
 				$(".mutations").parent().css('background-color', 'inherit');
 				$("#mutation" + index).parent().css('background-color', 'red');
-				background-color: #CCC;
-				padding: 10px;
-				-moz-border-radius: 15px;
-				border-radius: 15px;
-				padding-bottom: 10px;
+
 				$('#functional_effect_list_container').scrollTo("#mutation" + index, 
 					{ duration: 500, margin : true });
 
 			};
 
-			$("#slider").slider("option", "max", $("#active_alphabet .active").size());
+			$("#slider").slider("option", "max", $("#active_alphabet .active").size() - 1);
 			hidden.addGraph($('#flot_details'), scliced, types, self.currentState.threshold, false, clickHandler);
 			hidden.addGraph($('#flot_overview'), normal, types, self.currentState.threshold, true);
 			self.updateUrl();
 		}
 
 		self.updateTypes = function() {
-			var slicedProtein = hidden.subProtein(self.currentState.protein, self.currentState.offset, constants.lineLength);
+			var slicedProtein = hidden.subProtein(self.currentState.protein, self.currentState.offset(), constants.lineLength);
 			self.updateGraphs(self.currentState.protein, slicedProtein, self.currentState.types);
 			self.updateUrl();
 		};
 
 		self.updateList = _.debounce(function () {
 			var id = self.currentState.protein.refid;
-			var offset = ((self.currentState.offset - 0) + 1);
+			var offset = ((self.currentState.offset() - 0) + 1);
 			var length = constants.lineLength;
 			self.mutationListResult(null);
 
@@ -316,7 +346,7 @@ var Protein = function() {
 		}, 500);
 
 		self.sequenceOffsetCallback = _.throttle(function (value) {
-			self.currentState.offset = value;
+			self.currentState.offset(value);
 			var slicedProtein = hidden.subProtein(self.currentState.protein, value, constants.lineLength);
 			self.slicedProtein.refid(slicedProtein.refid);
 			self.slicedProtein.sequence(slicedProtein.sequence);
@@ -343,9 +373,17 @@ var Protein = function() {
 				max: 19,
 				step: 1,
 				slide: function( event, ui ) {
+					$('.ui-slider-handle', '#slider').text(ui.value);
 					self.currentState.threshold = (ui.value - 0);
 					self.updateTypes();
 				}
+			});
+			$('.ui-slider-handle', '#slider').text(0);
+
+			$(window).resize(function () {
+				(_.debounce(function() {
+					$('#functional_effect_list_container, #external_functional_effect_list_container').height($('#footer_content').offset().top - ($('#functional_effect_container').offset().top + $('#functional_effect_container').height()) - 30);
+				}, 64))();
 			});
 		});
 

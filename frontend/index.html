@@ -23,7 +23,12 @@
 		<div id="top_bar_container" class="row">
 			<div class="search span3" data-bind="template: { name: 'search_template' }"></div>
 			<div id="flot_overview_container" class="span9">
-				<div class="seeker" data-bind="drag: sequenceOffsetCallback"></div>
+				<div class="seeker" data-bind="drag: sequenceOffsetCallback">
+					<div class="detail">
+						<span class="left" data-bind="text: currentState.offset()"></span>
+						<span class="right" data-bind="text: currentState.offset() + constants.lineLength"></span>
+					</div>
+				</div>
 				<div id="flot_overview"  style="width:715px; height:40px"></div>
 			</div>
 		</div>
@@ -31,9 +36,9 @@
 		<div id="functional_effect_container" class="result">
 			<div class="row-fluid">
 				<div id="active_types" class="btn-group span2" data-toggle="buttons-checkbox">
-					  <button class="btn active"
+					  <button class="btn btn-warning active"
 		data-bind="typeclick: 'SNAP'">SNAP2</button>
-					  <button class="btn"
+					  <button class="btn btn-info"
 		data-bind="typeclick: 'SIFT'">SIFT</button>
 				</div>
 				<div id="active_alphabet" class="btn-group span8" data-toggle="buttons-checkbox" data-bind="alphabetclick: updateAlphabet">
@@ -67,7 +72,7 @@
 					<span class="sequence monospace" data-bind="text: slicedProtein.sequence()"></span>
 					
 					<div id="protein_detail_container" >
-						<div class="progress" data-bind="visible : !proteinDetail()"></div>
+						<div class="spinner" data-bind="visible : !proteinDetail()"></div>
 						<div data-bind="if : proteinDetail()">
 							<div data-bind="template: { name: 'protein_detail_template', data: proteinDetail }"></div>
 						</div>
@@ -79,13 +84,13 @@
 		<div class="row">
 			<div id="functional_effect_list_container" class="result span7" style="height: 300px">
 				<h1>Mutations</h1>
-				<div class="progress" data-bind="visible : !mutationListResult()">
+				<div class="spinner" data-bind="visible : !mutationListResult()">
 				</div>
 				<ul class="positions" data-bind="visible : mutationListResult(), template: { name: 'prediction_list_entry_template', foreach: mutationListResult }, listclick: showDetailView"></ul>
 			</div>
 			<div id="external_functional_effect_list_container" class="result span5" style="height: 300px" >
 				<h1>External Mutations</h1>
-				<div class="progress" data-bind="visible : !externalMutationListResult()">
+				<div class="spinner" data-bind="visible : !externalMutationListResult()">
 				</div>
 
 				<ul class="positions" data-bind="visible : externalMutationListResult(), template: { name: 'external_mutation_list_entry_template', foreach: externalMutationListResult }"></ul>
@@ -93,7 +98,6 @@
 			</div>
 		</div>
 	</div>
-	<div class="push"></div>
 </div>
 
 <div id="footer_container">
@@ -103,8 +107,7 @@
 				<img src="img/rost_small.png" />
 			</div>
 			<div class="span10">
-				<span>Api</span>
-				<span>Database<span>
+				<span>Code</span> | <span>API</span> | <span>Database<span>
 			</div>
 		</div>
 	</div>
@@ -137,7 +140,7 @@
 <script type="text/html" id="search_template">
 	<form class="form-horizontal">
 		<input data-bind="value: protein, popover: { placement: 'bottom'}" data-original-title="test" data-content="test" />
-		<button class="btn" data-bind="click: searchProtein">Go</button> 
+		<button class="btn btn-primary" data-bind="click: searchProtein">Go</button> 
 	</form>
 </script>
 <script type="text/html" id="external_mutation_list_entry_template">
@@ -159,9 +162,9 @@
 <script type="text/html" id="prediction_list_entry_template">
 	<li>
 		<span class="position" data-bind="text: position"></span>
-		<span class="position" data-bind="text: wildType"></span>
+		<span class="wildtype" data-bind="text: wildType"></span>
 		
-		<ul class="mutations" data-bind="attr: { id: 'mutation' + position }, foreach: { data: mutations, afterRender: $root.formatListResult }">
+		<ul class="mutations" data-bind="attr: { id: 'mutation' + position }, foreach: { data: mutations }">
 			<li class="section dropdown" data-bind="attr: { id: 'menu' + $parent.position + aa }, css: {sift: (data[1].effect=='true'), snap: (data[0].effect=='true')}">
 				<span class="dropdown-toggle" data-toggle="dropdown" href="#menu1" data-bind="text: aa, attr: { href: '#menu' + $parent.position + aa }">
 				</span>
