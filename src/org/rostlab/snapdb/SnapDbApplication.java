@@ -14,12 +14,12 @@ public class SnapDbApplication extends Application {
 		this.facade = facade;
 	}
 
-//	@Override
-//	public Set<Class<?>> getClasses() {
-//		Set<Class<?>> s = new HashSet<Class<?>>();
-//		s.add(this.facade.getClass());
-//		return s;
-//	}
+	@Override
+	public Set<Class<?>> getClasses() {
+		Set<Class<?>> s = new HashSet<Class<?>>();
+		s.add(this.facade.getClass());
+		return s;
+	}
 	
 	
 	@Override

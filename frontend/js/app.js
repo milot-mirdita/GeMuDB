@@ -268,6 +268,11 @@ var Protein = function() {
 				var index = self.currentState.offset + item.dataIndex + 1;
 				$(".mutations").parent().css('background-color', 'inherit');
 				$("#mutation" + index).parent().css('background-color', 'red');
+				background-color: #CCC;
+				padding: 10px;
+				-moz-border-radius: 15px;
+				border-radius: 15px;
+				padding-bottom: 10px;
 				$('#functional_effect_list_container').scrollTo("#mutation" + index, 
 					{ duration: 500, margin : true });
 
