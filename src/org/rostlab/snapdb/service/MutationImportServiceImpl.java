@@ -38,7 +38,7 @@ public class MutationImportServiceImpl implements MutationImportService {
 	public void importMutation(File pathToDir) {
 		if (pathToDir.exists() == false || pathToDir.isDirectory() == false) {
 			new IllegalArgumentException(
-					"File dosn«t exist or is not a Directory");
+					"File dosn't exist or is not a Directory");
 		} else {
 			for (File file : pathToDir.listFiles(new ExtentionFilenameFilter(
 					new String[] { "tar.gz", "tar" }))) {
@@ -49,7 +49,7 @@ public class MutationImportServiceImpl implements MutationImportService {
 				final File pathToFasta = new File(pathToDir.getAbsoluteFile(),
 						"/fasta/" + archiveName + ".fasta");
 				if (pathToFasta.exists() == false) {
-					System.err.println("File dosn«t exist: "
+					System.err.println("File dosn't exist: "
 							+ pathToFasta.getAbsolutePath());
 				}
 				final Sequence sequence = parseFastaFile(pathToFasta);
