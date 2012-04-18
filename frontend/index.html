@@ -139,7 +139,7 @@
 </script>
 <script type="text/html" id="search_template">
 	<form class="form-horizontal">
-		<input data-bind="value: protein, popover: { placement: 'bottom'}" data-original-title="test" data-content="test" />
+		<input data-bind="value: protein, popover: { placement: 'bottom'}" data-original-title="Search Instructions" data-content="You can search by accessor id or by entering a full sequence." />
 		<button class="btn btn-primary" data-bind="click: searchProtein">Go</button> 
 	</form>
 </script>
@@ -175,11 +175,13 @@
 	</li>
 </script>
 <script type="text/html" id="snp_details">
-	<h1>Informations</h1>
-	<h2>SNAP2-Score</h2>
-	<span data-bind="text: SNAP.score"></span>
-	<h2>Sift-Score</h2>
-	<span data-bind="text: SIFT.score"></span>
+	<h1>Details</h1>
+	<dl>
+	<dt>SNAP2 Score</dt>
+	<dd data-bind="text: SNAP.score"></dd>
+	<dt>Sift Score</dt>
+	<dd data-bind="text: SIFT.score"></dd>
+	</dd>
 </script>
 <script src="js/jquery-1.7.2.min.js"></script>
 <script src="js/jquery.flot.min.js"></script>
