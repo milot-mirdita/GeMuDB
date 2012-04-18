@@ -25,8 +25,8 @@
 			<div id="flot_overview_container" class="span9">
 				<div class="seeker" data-bind="drag: sequenceOffsetCallback">
 					<div class="detail">
-						<span class="left" data-bind="text: currentState.offset()"></span>
-						<span class="right" data-bind="text: currentState.offset() + constants.lineLength"></span>
+						<span class="left" data-bind="text: currentState.offset() + 1"></span>
+						<span class="right" data-bind="text: currentState.offset() + constants.lineLength + 1"></span>
 					</div>
 				</div>
 				<div id="flot_overview"  style="width:715px; height:40px"></div>
