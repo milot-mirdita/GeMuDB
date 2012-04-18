@@ -76,6 +76,7 @@ h2 {
 #external_functional_effect_list_container{
 	height: 300px;
 	overflow: auto;
+	overflow-x:hidden;
 	border-top:0;
 }
 
