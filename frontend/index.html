@@ -89,7 +89,7 @@
 				<ul class="positions" data-bind="visible : mutationListResult(), template: { name: 'prediction_list_entry_template', foreach: mutationListResult }, listclick: showDetailView"></ul>
 			</div>
 			<div id="external_functional_effect_list_container" class="result span5" style="height: 300px" >
-				<h1>External Mutations</h1>
+				<h1>Verified Mutations</h1>
 				<div class="spinner" data-bind="visible : !externalMutationListResult()">
 				</div>
 
@@ -116,20 +116,20 @@
 <script type="text/html" id="protein_detail_template">
 <div class="row">
 <dl class="span6">
-	<dt>Organism name: </dt>
+	<dt>Organism Name: </dt>
     <dd data-bind="text: organismName"></dd>
  
     <dt>Definition: </dt>
     <dd data-bind="text: definition"></dd>
  
-    <dt>Gen name: </dt>
+    <dt>Gene name: </dt>
     <dd data-bind="text: officialGenFullName"></dd>
 </dl>
 <dl class="span6"> 
-    <dt>Gen Symbol:</dt>
+    <dt>Gene Symbol:</dt>
     <dd data-bind="text: officialGenSymbol"></dd>
 
-    <dt>Gen Location:</dt>
+    <dt>Gene Location:</dt>
     <dd data-bind="text: genLocation"></dd>
 
     <dt>Source:</dt>
