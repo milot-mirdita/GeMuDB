@@ -148,7 +148,7 @@
 		<span class="position" data-bind="text: position"></span>
 		<ul class="mutations" data-bind="attr: { id: 'externalmutation' + position }, foreach: { data: externalMutations }">
 
-			<li class="section dropdown sift snap" >
+			<li class="section dropdown" >
 			<span class="dropdown-toggle">
 			<!-- ko: if: source=="NCBI"-->
 			<a target="_blank" data-bind="attr:{ href:'http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs='+snpid },text: mutation"></a>
