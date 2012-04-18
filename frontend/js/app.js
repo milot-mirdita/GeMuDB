@@ -300,8 +300,8 @@ var Protein = function() {
 		self.updateGraphs = function(normal, scliced, types) {
 			var clickHandler = function (item) {
 				var index = self.currentState.offset() + item.dataIndex + 1;
-				$(".mutations").parent().css('background-color', 'inherit');
-				$("#mutation" + index).parent().css('background-color', 'red');
+				$(".mutations").parent().removeClass('active');
+				$("#mutation" + index).parent().addClass('active');
 
 				$('#functional_effect_list_container').scrollTo("#mutation" + index, 
 					{ duration: 500, margin : true });
