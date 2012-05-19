@@ -21,8 +21,10 @@ import org.rostlab.snapdb.service.model.ProteinFunctionalEffectPrediction;
 import org.rostlab.snapdb.service.model.ProteinId;
 
 import com.sun.jersey.api.NotFoundException;
+import com.sun.jersey.spi.resource.Singleton;
 
 @Provider
+@Singleton
 @Path("/protein")
 @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 public class ServiceFacadeImpl implements ServiceFacade {
@@ -33,6 +35,7 @@ public class ServiceFacadeImpl implements ServiceFacade {
 	@Override
 	@GET
 	@Path("/prediction/{id}")
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public ProteinFunctionalEffectPrediction getFunctionalEffectPrediction(
 			@PathParam("id") String id) {
 		System.out.println("Call getFunctionalEffectPredcition: " + id);
@@ -48,6 +51,7 @@ public class ServiceFacadeImpl implements ServiceFacade {
 	@Override
 	@GET
 	@Path("/prediction/{id}/{alphabet}")
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public ProteinFunctionalEffectPrediction getFunctionalEffectPrediction(
 			@PathParam("id") String id, @PathParam("alphabet") String alphabet) {
 		System.out.println("Call getFunctionalEffectPredcition: " + id
@@ -73,6 +77,7 @@ public class ServiceFacadeImpl implements ServiceFacade {
 	@POST
 	@Path("/search")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public ProteinId searchProtein(@FormParam("q") String searchString) {
 		System.out.println("Search protein: " + searchString);
 		ProteinId retId = searchProteinService.searchProtein(searchString);
@@ -85,11 +90,14 @@ public class ServiceFacadeImpl implements ServiceFacade {
 	@Override
 	@GET
 	@Path("/mutations/{id}/{from}/{size}")
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public MutationPosContainer getMutationList(@PathParam("id") String id,
 			@PathParam("from") Integer from, @PathParam("size") Integer size) {
 		System.out.println("Call getMutationList: " + id);
+		System.out.println(proteinFunctionalEffectService);
 		MutationPosContainer posContainer = proteinFunctionalEffectService
 				.getMutationList(id, from, size);
+		System.out.println(posContainer);
 		if (posContainer == null)
 			throw new BadRequestException();
 		else
@@ -99,6 +107,7 @@ public class ServiceFacadeImpl implements ServiceFacade {
 	@Override
 	@GET
 	@Path("/detail/{id}")
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public ProteinDetail getProteinDetail(@PathParam("id") String refid) {
 		System.out.println("Call getProteinDetail: " + refid);
 		ProteinDetail pd = proteinDetailService.getProteinDetail(refid);
@@ -112,6 +121,7 @@ public class ServiceFacadeImpl implements ServiceFacade {
 	@Override
 	@GET
 	@Path("/externalsnp/{id}")
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public ExternalMutationContainer getProteinSnpDetail(@PathParam("id") String refid) {
 		System.out.println("Call getProteinSnpDetail: " + refid);
 		
