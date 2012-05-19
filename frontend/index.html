@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-	<title>SNPdbe 2.0</title>
+	<title>GeMuDB</title>
 	<link href='http://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="css/ui-lightness/jquery-ui-1.8.18.custom.css" />
 	<link rel="stylesheet" href="css/bootstrap.min.css" />
@@ -13,7 +13,7 @@
 	<div class="row">
 		<div id="search_container" class="span8 offset2">
 			<div class="header">
-				SNPdbe
+				GeMuDB
 			</div>
 			<div class="search" data-bind="template: { name: 'search_template' }"></div>
 		</div>
@@ -25,8 +25,8 @@
 			<div id="flot_overview_container" class="span9">
 				<div class="seeker" data-bind="drag: sequenceOffsetCallback">
 					<div class="detail">
-						<span class="left" data-bind="text: currentState.offset()"></span>
-						<span class="right" data-bind="text: currentState.offset() + constants.lineLength"></span>
+						<span class="left" data-bind="text: currentState.offset() + 1"></span>
+						<span class="right" data-bind="text: currentState.offset() + constants.lineLength + 1"></span>
 					</div>
 				</div>
 				<div id="flot_overview"  style="width:715px; height:40px"></div>
@@ -83,13 +83,13 @@
 		
 		<div class="row">
 			<div id="functional_effect_list_container" class="result span7" style="height: 300px">
-				<h1>Mutations</h1>
+				<h1>Predicted Mutations</h1>
 				<div class="spinner" data-bind="visible : !mutationListResult()">
 				</div>
 				<ul class="positions" data-bind="visible : mutationListResult(), template: { name: 'prediction_list_entry_template', foreach: mutationListResult }, listclick: showDetailView"></ul>
 			</div>
 			<div id="external_functional_effect_list_container" class="result span5" style="height: 300px" >
-				<h1>External Mutations</h1>
+				<h1>Verified Mutations</h1>
 				<div class="spinner" data-bind="visible : !externalMutationListResult()">
 				</div>
 
@@ -116,20 +116,20 @@
 <script type="text/html" id="protein_detail_template">
 <div class="row">
 <dl class="span6">
-	<dt>Organism name: </dt>
+	<dt>Organism Name: </dt>
     <dd data-bind="text: organismName"></dd>
  
     <dt>Definition: </dt>
     <dd data-bind="text: definition"></dd>
  
-    <dt>Gen name: </dt>
+    <dt>Gene name: </dt>
     <dd data-bind="text: officialGenFullName"></dd>
 </dl>
 <dl class="span6"> 
-    <dt>Gen Symbol:</dt>
+    <dt>Gene Symbol:</dt>
     <dd data-bind="text: officialGenSymbol"></dd>
 
-    <dt>Gen Location:</dt>
+    <dt>Gene Location:</dt>
     <dd data-bind="text: genLocation"></dd>
 
     <dt>Source:</dt>
@@ -139,7 +139,7 @@
 </script>
 <script type="text/html" id="search_template">
 	<form class="form-horizontal">
-		<input data-bind="value: protein, popover: { placement: 'bottom'}" data-original-title="test" data-content="test" />
+		<input data-bind="value: protein, popover: { placement: 'bottom'}" data-original-title="Search Instructions" data-content="You can search by accessor id or by entering a full sequence." />
 		<button class="btn btn-primary" data-bind="click: searchProtein">Go</button> 
 	</form>
 </script>
@@ -148,7 +148,7 @@
 		<span class="position" data-bind="text: position"></span>
 		<ul class="mutations" data-bind="attr: { id: 'externalmutation' + position }, foreach: { data: externalMutations }">
 
-			<li class="section dropdown sift snap" >
+			<li class="section dropdown" >
 			<span class="dropdown-toggle">
 			<!-- ko: if: source=="NCBI"-->
 			<a target="_blank" data-bind="attr:{ href:'http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs='+snpid },text: mutation"></a>
@@ -161,8 +161,8 @@
 </script>
 <script type="text/html" id="prediction_list_entry_template">
 	<li>
-		<span class="position" data-bind="text: position"></span>
-		<span class="wildtype" data-bind="text: wildType"></span>
+		Position: <span class="position" data-bind="text: position"></span>
+		Wildtype: <span class="wildtype" data-bind="text: wildType"></span>
 		
 		<ul class="mutations" data-bind="attr: { id: 'mutation' + position }, foreach: { data: mutations }">
 			<li class="section dropdown" data-bind="attr: { id: 'menu' + $parent.position + aa }, css: {sift: (data[1].effect=='true'), snap: (data[0].effect=='true')}">
@@ -175,11 +175,13 @@
 	</li>
 </script>
 <script type="text/html" id="snp_details">
-	<h1>Informations</h1>
-	<h2>SNAP2-Score</h2>
-	<span data-bind="text: SNAP.score"></span>
-	<h2>Sift-Score</h2>
-	<span data-bind="text: SIFT.score"></span>
+	<h1>Details</h1>
+	<dl>
+	<dt>SNAP2 Score</dt>
+	<dd data-bind="text: SNAP.score"></dd>
+	<dt>Sift Score</dt>
+	<dd data-bind="text: SIFT.score"></dd>
+	</dd>
 </script>
 <script src="js/jquery-1.7.2.min.js"></script>
 <script src="js/jquery.flot.min.js"></script>
