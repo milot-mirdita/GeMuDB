@@ -65,7 +65,7 @@ public class ServiceFacadeImpl implements ServiceFacade {
 		}
 		;
 		ProteinFunctionalEffectPrediction pfep = proteinFunctionalEffectService
-				.getFunctionalEffectPrediction(id,alphabet);
+				.getFunctionalEffectPrediction(id, alphabet);
 		if (pfep != null) {
 			return pfep;
 		} else {
@@ -106,6 +106,30 @@ public class ServiceFacadeImpl implements ServiceFacade {
 
 	@Override
 	@GET
+	@Path("/mutations/{id}/{from}/{size}/{alphabet}")
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	public MutationPosContainer getMutationList(@PathParam("id") String id,
+			@PathParam("from") Integer from, @PathParam("size") Integer size,
+			@PathParam("alphabet") String alphabet) {
+		System.out.println("Call getFunctionalEffectPredcition: " + id
+				+ " alphabet: " + alphabet);
+		alphabet = alphabet.toUpperCase();
+		for (int i = 0; i < alphabet.length(); i++) {
+			if ("ACDEFGHIKLMNPQRSTVWY".contains(String.valueOf(alphabet
+					.charAt(i))) == false) {
+				throw new BadRequestException();
+			}
+		}
+		MutationPosContainer posContainer = proteinFunctionalEffectService
+				.getMutationList(id, from, size,alphabet);
+		if (posContainer == null)
+			throw new BadRequestException();
+		else
+			return posContainer;
+	}
+
+	@Override
+	@GET
 	@Path("/detail/{id}")
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public ProteinDetail getProteinDetail(@PathParam("id") String refid) {
@@ -117,19 +141,21 @@ public class ServiceFacadeImpl implements ServiceFacade {
 			return pd;
 		}
 	}
-	
+
 	@Override
 	@GET
 	@Path("/externalsnp/{id}")
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	public ExternalMutationContainer getProteinSnpDetail(@PathParam("id") String refid) {
+	public ExternalMutationContainer getProteinSnpDetail(
+			@PathParam("id") String refid) {
 		System.out.println("Call getProteinSnpDetail: " + refid);
-		
-		ExternalMutationContainer nsdc= proteinDetailService.getProteinExternalSnpDetail(refid);
-		
+
+		ExternalMutationContainer nsdc = proteinDetailService
+				.getProteinExternalSnpDetail(refid);
+
 		if (nsdc == null) {
 			throw new BadRequestException();
-		} else if(nsdc.getExternalMutationPosition().size() == 0) {
+		} else if (nsdc.getExternalMutationPosition().size() == 0) {
 			throw new NotFoundException();
 		} else {
 			return nsdc;

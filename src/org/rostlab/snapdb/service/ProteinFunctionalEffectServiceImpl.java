@@ -20,13 +20,14 @@ import org.rostlab.snapdb.util.AminoLookup;
 
 public class ProteinFunctionalEffectServiceImpl implements
 		ProteinFunctionalEffectService {
+	private static final String ALL_AMINO_ACIDS = "ACDEFGHIKLMNPQRSTVWY";
 	private MutationDao mutationDao;
 	private SequenceDao sequenceDao;
 
 	@Override
 	public ProteinFunctionalEffectPrediction getFunctionalEffectPrediction(
 			final String id) {
-		return getFunctionalEffectPrediction(id, "ACDEFGHIKLMNPQRSTVWY");
+		return getFunctionalEffectPrediction(id, ALL_AMINO_ACIDS);
 		// return getFunctionalEffectPrediction(id, "AY");
 	}
 
@@ -57,23 +58,23 @@ public class ProteinFunctionalEffectServiceImpl implements
 					if (mut.getPos() != currPos) {
 						while (currPos != mut.getPos()) {
 							reli.append("-");
-							cons.append("--"); //needed because of two digits	
+							cons.append("--"); // needed because of two digits
 							currPos++;
 						}
 					}
 					reli.append(calcReliability(mut.getMutReliability(),
 							aaToPredict));
-					
-					Long conservation =calcConservation(mut.getMutEffect(),
+
+					Long conservation = calcConservation(mut.getMutEffect(),
 							aaToPredict);
 					String consString = conservation.toString();
-					if(conservation< 10){
-						consString = "0"+consString;
+					if (conservation < 10) {
+						consString = "0" + consString;
 					}
 					cons.append(consString);
 					currPos++;
 				}
-				
+
 				prediction.setConservation(cons.toString());
 				prediction.setReliability(reli.toString());
 				pfep.addPrediction(prediction);
@@ -90,7 +91,7 @@ public class ProteinFunctionalEffectServiceImpl implements
 				sumEffect += (effects[i]) ? 1 : 0;
 			}
 
-		return sumEffect ;
+		return sumEffect;
 	}
 
 	private long calcReliability(Integer[] reliability, Boolean[] aaToPredict) {
@@ -123,69 +124,7 @@ public class ProteinFunctionalEffectServiceImpl implements
 	@Override
 	public MutationPosContainer getMutationList(final String refId,
 			final int from, final int size) {
-
-		Sequence sequence = sequenceDao.selectByRefId(refId);
-		if (sequence == null)
-			return null;
-		List<Mutation> mutationList = mutationDao.selectByIdAndLimit(
-				sequence.getId(), from, size);
-		final String sequenceString = sequence.getSequence();
-		final MutationPosContainer mutationPosContainer = new MutationPosContainer(
-				size);
-		List<MutationsPos> retList = mutationPosContainer.getMutationsPos();
-		MutationsPos currentMutationPos = null;
-		Map<Character, MutationData> map = null;
-		for (Mutation mutationDb : mutationList) {
-			final int currPos = mutationDb.getPos() - from;
-			if (indexExists(retList, currPos) == false) {
-
-				if (map != null) {
-					final List<MutationData> mutList = currentMutationPos
-							.getMutations();
-
-					for (Character key : map.keySet()) {
-						mutList.add(map.get(key));
-					}
-				}
-				currentMutationPos = new MutationsPos();
-				currentMutationPos.setPosition(mutationDb.getPos());
-				retList.add(currPos, currentMutationPos);
-				map = new TreeMap<Character, MutationData>();
-
-			}
-			currentMutationPos = retList.get(currPos);
-
-			final Character wildTypeAA = sequenceString.charAt(mutationDb
-					.getPos() - 1);
-			currentMutationPos.setWildType(wildTypeAA.toString());
-			for (int aaindex = 0; aaindex < 21; aaindex++) {
-				Character currAa = AminoLookup.reversLookup(aaindex);
-				if (currAa.charValue() == 'X'
-						|| currAa.charValue() == wildTypeAA.charValue())
-					continue;
-				MutationData mutData = null;
-				if ((mutData = map.get(currAa)) == null) {
-					mutData = generateMutationData(mutationDb,
-							AminoLookup.reversLookup(aaindex));
-					map.put(currAa, mutData);
-				} else {
-					mutData.addData(new MutationPredictionData(mutationDb
-							.getType().toString(), mutationDb
-							.getMutReliability()[aaindex], mutationDb
-							.getMutEffect()[aaindex]));
-				}
-			}
-
-		}
-		if (map != null) {
-			final List<MutationData> mutList = currentMutationPos
-					.getMutations();
-
-			for (Character key : map.keySet()) {
-				mutList.add(map.get(key));
-			}
-		}
-		return mutationPosContainer;
+		return getMutationList(refId, from, size, ALL_AMINO_ACIDS);
 	}
 
 	private MutationData generateMutationData(Mutation mutationDb, Character aa) {
@@ -201,6 +140,73 @@ public class ProteinFunctionalEffectServiceImpl implements
 	public boolean indexExists(@SuppressWarnings("rawtypes") final List list,
 			final int index) {
 		return index >= 0 && index < list.size();
+	}
+
+	@Override
+	public MutationPosContainer getMutationList(final String refId,
+			final Integer from, final Integer size, final String alphabet) {
+		final Sequence sequence = sequenceDao.selectByRefId(refId);
+		if (sequence == null)
+			return null;
+		final List<Mutation> mutationList = mutationDao.selectByIdAndLimit(
+				sequence.getId(), from, size);
+		final String sequenceString = sequence.getSequence();
+		final MutationPosContainer mutationPosContainer = new MutationPosContainer(size);
+		final List<MutationsPos> retList = mutationPosContainer.getMutationsPos();
+		MutationsPos currentMutationPos = null;
+		Map<Character, MutationData> aa_data_map = null;
+		for (Mutation mutationDb : mutationList) {
+			final int currPos = mutationDb.getPos() - from;
+			if (indexExists(retList, currPos) == false) {
+
+				if (aa_data_map != null) {
+					final List<MutationData> mutList = currentMutationPos
+							.getMutations();
+
+					for (Character key : aa_data_map.keySet()) {
+						mutList.add(aa_data_map.get(key));
+					}
+				}
+				currentMutationPos = new MutationsPos();
+				currentMutationPos.setPosition(mutationDb.getPos());
+				retList.add(currPos, currentMutationPos);
+				aa_data_map = new TreeMap<Character, MutationData>();
+
+			}
+			currentMutationPos = retList.get(currPos);
+
+			final Character wildTypeAA = sequenceString.charAt(mutationDb
+					.getPos() - 1);
+			currentMutationPos.setWildType(wildTypeAA.toString());
+			for (int aaindex = 0; aaindex < 21; aaindex++) {
+				Character currAa = AminoLookup.reversLookup(aaindex);
+				if (currAa.charValue() == 'X'
+						|| currAa.charValue() == wildTypeAA.charValue())
+					continue;
+				MutationData mutData = null;
+				if ((mutData = aa_data_map.get(currAa)) == null) {
+					mutData = generateMutationData(mutationDb,
+							AminoLookup.reversLookup(aaindex));
+					aa_data_map.put(currAa, mutData);
+				} else {
+					mutData.addData(new MutationPredictionData(mutationDb
+							.getType().toString(), mutationDb
+							.getMutReliability()[aaindex], mutationDb
+							.getMutEffect()[aaindex]));
+				}
+			}
+
+		}
+		if (aa_data_map != null) {
+			final List<MutationData> mutDataList = currentMutationPos
+					.getMutations();
+
+			for (Character key : aa_data_map.keySet()) {
+				if(alphabet.contains(key.toString())==true)
+					mutDataList.add(aa_data_map.get(key));
+			}
+		}
+		return mutationPosContainer;
 	}
 
 }
