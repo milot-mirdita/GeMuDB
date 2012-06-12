@@ -170,7 +170,7 @@ var Protein = function() {
 	"use strict";
 	var constants = {
 		lineLength : 115,
-		baseUrl : "http://localhost/api/resources/"
+		baseUrl : "/api/resources/"
 	};
 
 	function SearchViewModel() {
