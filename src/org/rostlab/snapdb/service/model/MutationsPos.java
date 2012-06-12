@@ -10,16 +10,16 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement
 @XmlAccessorOrder(XmlAccessOrder.UNDEFINED)
-@XmlType(propOrder={"position","wildType", "mutations"})
+@XmlType(propOrder = { "position", "wildType", "mutations" })
 public class MutationsPos {
-	private int position; 
+	private int position;
 	private String wildType;
 	private List<MutationData> mutations;
-	
+
 	public MutationsPos() {
 		mutations = new ArrayList<MutationData>();
 	}
-	
+
 	public String getWildType() {
 		return wildType;
 	}
@@ -31,18 +31,21 @@ public class MutationsPos {
 	public int getPosition() {
 		return position;
 	}
+
 	public List<MutationData> getMutations() {
 		return mutations;
 	}
+
 	public void setPosition(final int position) {
 		this.position = position;
 	}
+
 	public void setMutations(final List<MutationData> mutations) {
 		this.mutations = mutations;
 	}
-	
-	public void addMutationData(final MutationData mutData ){
+
+	public void addMutationData(final MutationData mutData) {
 		mutations.add(mutData);
 	}
-	
+
 }

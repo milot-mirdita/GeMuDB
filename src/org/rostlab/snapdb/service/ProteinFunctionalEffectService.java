@@ -8,5 +8,8 @@ public interface ProteinFunctionalEffectService {
 	public MutationPosContainer getMutationList(final String id,final int from,final int size);
 	public ProteinFunctionalEffectPrediction getFunctionalEffectPrediction(final String lid,
 			final String alphabet);
+
+	public MutationPosContainer getMutationList(String id, Integer from,
+			Integer size, String alphabet);
 }
 

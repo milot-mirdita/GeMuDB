@@ -21,4 +21,7 @@ public interface ServiceFacade {
 	public ProteinDetail getProteinDetail(final String id);
 
 	public ExternalMutationContainer getProteinSnpDetail(String refid);
+
+	public MutationPosContainer getMutationList(String id, Integer from, Integer size,
+			String alphabet);
 }
