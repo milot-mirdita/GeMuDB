@@ -78,6 +78,7 @@ h2 {
 	overflow: auto;
 	overflow-x:hidden;
 	border-top:0;
+	-moz-box-sizing:border-box;
 }
 
 #external_functional_effect_list_container {
@@ -310,9 +311,11 @@ h2 {
 	position: fixed;
 }
 
+/*
 #footer_content, .push {
 	height: 50px;
 }
+*/
 
 #footer_content .menu {
 	display: inline-block;
