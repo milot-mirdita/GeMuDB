@@ -1,6 +1,5 @@
 DROP TABLE IF EXISTS `mutation`;
 DROP TABLE IF EXISTS `sequence`;
-DROP TABLE IF EXISTS `organism`;
 
 CREATE TABLE sequence (
 	 lid INTEGER UNSIGNED auto_increment,
