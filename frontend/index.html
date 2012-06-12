@@ -5,7 +5,7 @@
 	<link href='http://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="http://cdn1.gemudb.com/css/ui-lightness/jquery-ui-1.8.18.custom.css" />
 	<link rel="stylesheet" href="http://cdn1.gemudb.com/css/bootstrap.min.css" />
-	<link rel="stylesheet" href="http://cdn1.gemudb.com/css/style.css" />
+	<link rel="stylesheet" href="css/style.css" />
 	<link rel="icon" href="http://cdn2.gemudb.com/img/favicon.ico" type="image/x-icon" /> 
 </head>
 <body>
@@ -82,20 +82,19 @@
 		</div>
 		
 		<div class="row">
-			<div id="functional_effect_list_container" class="result span7" style="height: 300px">
+			<div id="functional_effect_list_container" class="result span12" style="height: 300px">
 				<h1>Predicted Mutations</h1>
 				<div class="spinner" data-bind="visible : !mutationListResult()">
 				</div>
 				<ul class="positions" data-bind="visible : mutationListResult(), template: { name: 'prediction_list_entry_template', foreach: mutationListResult }, listclick: showDetailView"></ul>
 			</div>
-			<div id="external_functional_effect_list_container" class="result span5" style="height: 300px" >
+			<!--<div id="external_functional_effect_list_container" class="result span5" style="height: 300px" >
 				<h1>Verified Mutations</h1>
 				<div class="spinner" data-bind="visible : !externalMutationListResult()">
 				</div>
 
 				<ul class="positions" data-bind="visible : externalMutationListResult(), template: { name: 'external_mutation_list_entry_template', foreach: externalMutationListResult }"></ul>
-	
-			</div>
+			</div>-->
 		</div>
 	</div>
 </div>

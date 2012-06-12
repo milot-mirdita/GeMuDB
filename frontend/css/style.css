@@ -189,7 +189,7 @@ h2 {
 .positions > li {
 	position: relative;
 	margin-bottom: 10px;
-	width: 507px;
+	/* width: 507px; */
 	padding: 7px;
 	margin-left: -12px
 }
@@ -220,7 +220,7 @@ h2 {
 	width: 20px;
 	height: 20px;
 	display: block;
-	padding: 12px;
+	padding: 10px;
 }
 
 .section .dropdown-toggle a {
