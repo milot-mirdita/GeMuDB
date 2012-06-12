@@ -1,8 +1,8 @@
 ;
 var initProteinMixin = (function(out) {
-	var overviewPlotOptions = function () { return {
+	var overviewPlotOptions = function (xaxis_maxlength) { return {
 		legend : { show : false }, 
-		xaxis : { show : false, min : 0, max : 115, minTickSize: 5, tickSize: 5 }, 
+		xaxis : { show : false, min : 0, max : xaxis_maxlength, minTickSize: 5, tickSize: 5 }, 
 		yaxis : { show : false, min : 0, max : 19, position : 'right', ticks : [0, 19] }, 
 		grid : { borderWidth : 1, borderColor : '#555', clickable : true }, 
 		series : { 
@@ -79,31 +79,39 @@ var initProteinMixin = (function(out) {
 		return probs;
 	};
 	
-	out.addGraph = function(target, data, types, threshold, fill, callback) {
+	out.createGraphDataFromPredictionObject = function(data){
+		Ê Ê Ê Êvar graphdata = [];
+		 Ê Ê Ê Êfor(var i in data.predictions) {
+		 Ê Ê Ê Ê Ê Êvar index = _.indexOf(types, data.predictions[i].type);
+		 Ê Ê Ê Ê Ê Êif(index != -1) {
+		 Ê Ê Ê Ê Ê Ê Ê Êvar graphData = probsToData(data.predictions[index].conservation);
+		 Ê Ê Ê Ê Ê Ê Ê ÊgraphData = filterData(graphData, threshold);
+		 Ê Ê Ê Ê Ê Ê Ê Êgraphdata.push(graphData);
+		 Ê Ê Ê Ê Ê Ê} else {
+		 Ê Ê Ê Ê Ê Ê Ê Êgraphdata.push([]);
+		 Ê Ê Ê Ê Ê Ê}
+		 Ê Ê Ê Ê}
+		return graphdata;
+	}
+	
+	out.createGraphDataFromExternalSnp = function(data){
+		var graphdata = [];
+		for(var mutpos in data.externalMutationPos) {
+			graphdata.push([mutpos.position,constants.externalSnpGraphHeight]);
+		}
+		return graphdata;
+	}
+	
+	out.addGraph = function(target, data, types, threshold, options, callback) {
 		var fill = fill || false;
-		var graphs = [];
-		for(var i in data.predictions) {
-			var index = _.indexOf(types, data.predictions[i].type);
-			if(index != -1) {
-				var graphData = probsToData(data.predictions[index].conservation);
-				graphData = filterData(graphData, threshold);
-				graphs.push(graphData);
-			} else {
-				graphs.push([]);
-			}
-		}
 
-		var options = detailPlotOptions();
-		if(fill) {
-			options = overviewPlotOptions();
-			options.xaxis.max = data.sequence.length;
-		}
+
 		options.yaxis.max = $("#active_alphabet .active").size();
 		$("#slider").slider("option", "max", $("#active_alphabet .active").size() - 1);
 
-		var plot = $.plot(target, graphs, options);
+		var plot = $.plot(target, data, options);
 		
-		if(!fill) {
+		if(target == "#flot_details") {
 			$(target).bind("plotclick", function (event, pos, item) {
 				if (item && callback) {
 					callback(item);
@@ -170,6 +178,7 @@ var Protein = function() {
 	"use strict";
 	var constants = {
 		lineLength : 115,
+		externalSnpGraphHeight: 3,
 		baseUrl : "/api/resources/"
 	};
 
@@ -309,8 +318,16 @@ var Protein = function() {
 			};
 
 			$("#slider").slider("option", "max", $("#active_alphabet .active").size() - 1);
-			hidden.addGraph($('#flot_details'), scliced, types, self.currentState.threshold, false, clickHandler);
-			hidden.addGraph($('#flot_overview'), normal, types, self.currentState.threshold, true);
+			
+			var normal_predict_graphdata  = hidden.createGraphDataFromPredictionObject(normal);
+			var snp_graphdata     = hidden.createGraphDataFromExternalSnp();
+			var normal_graphdata = normal_predict_graphdata.concat(snp_graphdata);
+			
+			hidden.addGraph($('#flot_overview'), normal_graphdata, types, self.currentState.threshold, overviewPlotOptions(normal.sequence.length));
+			
+			var scliced_graphdata = hidden.createGraphDataFromPredictionObject(scliced);
+			hidden.addGraph($('#flot_details'), scliced_graphdata, types, self.currentState.threshold, detailPlotOptions(), clickHandler);
+			
 			self.updateUrl();
 		}
 
