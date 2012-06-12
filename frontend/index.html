@@ -117,60 +117,59 @@
 <div class="row">
 <dl class="span6">
 	<dt>Organism Name: </dt>
-    <dd data-bind="text: organismName"></dd>
+    <dd>${organismName}</dd>
  
     <dt>Definition: </dt>
-    <dd data-bind="text: definition"></dd>
+    <dd>${definition}</dd>
  
     <dt>Gene name: </dt>
-    <dd data-bind="text: officialGenFullName"></dd>
+    <dd>${officialGenFullName}</dd>
 </dl>
 <dl class="span6"> 
     <dt>Gene Symbol:</dt>
-    <dd data-bind="text: officialGenSymbol"></dd>
+    <dd>${officialGenSymbol}</dd>
 
     <dt>Gene Location:</dt>
-    <dd data-bind="text: genLocation"></dd>
+    <dd>${genLocation}</dd>
 
     <dt>Source:</dt>
-    <dd data-bind="text: source"></dd>
+    <dd>${source}</dd>
 </dl>
 </div>
 </script>
 <script type="text/html" id="search_template">
 	<form class="form-horizontal">
-		<input data-bind="value: protein, popover: { placement: 'bottom'}" data-original-title="Search Instructions" data-content="You can search by accessor id or by entering a full sequence." />
+		<input data-bind="popover: { placement: 'bottom'}" data-original-title="Search Instructions" data-content="You can search by accessor id or by entering a full sequence." value="${protein}" />
 		<button class="btn btn-primary" data-bind="click: searchProtein">Go</button> 
 	</form>
 </script>
 <script type="text/html" id="external_mutation_list_entry_template">
 	<li>
-		<span class="position" data-bind="text: position"></span>
-		<ul class="mutations" data-bind="attr: { id: 'externalmutation' + position }, foreach: { data: externalMutations }">
+		<span class="position">${position}</span>
+		<ul class="mutations" id="${'externalmutation' + position}">
+				<li class="section dropdown">
+					<span class="dropdown-toggle">
+						{{if externalMutations.source == "NCBI"}}
+							<a target="_blank" href="${'http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs=' + externalMutations.snpid}">${externalMutations.mutation}</a>
+						{{/if}}
+					</span>
+				</li>
 
-			<li class="section dropdown" >
-			<span class="dropdown-toggle">
-			<!-- ko: if: source=="NCBI"-->
-			<a target="_blank" data-bind="attr:{ href:'http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs='+snpid },text: mutation"></a>
-			<!-- /ko -->
-			</span>
-			</li>
-			
 		</ul>
 	</li>
 </script>
 <script type="text/html" id="prediction_list_entry_template">
-	<li>
-		Position: <span class="position" data-bind="text: position"></span>
-		Wildtype: <span class="wildtype" data-bind="text: wildType"></span>
-		
-		<ul class="mutations" data-bind="attr: { id: 'mutation' + position }, foreach: { data: mutations }">
-			<li class="section dropdown" data-bind="attr: { id: 'menu' + $parent.position + aa }, css: {sift: (data[1].effect=='true'), snap: (data[0].effect=='true')}">
-				<span class="dropdown-toggle" data-toggle="dropdown" href="#menu1" data-bind="text: aa, attr: { href: '#menu' + $parent.position + aa }">
-				</span>
-				<span class="dropdown-menu" data-bind="class: 'index' + $index()">
-				</span>
+	<li id="${'mutation' + position}">		
+
+		Position: <span class="position">${position}</span>
+		Wildtype: <span class="wildtype">${wildType}</span>
+		<ul class="mutations">
+			{{each(i, mutation) mutations}}
+			<li class="section dropdown {{if mutation.data[1].effect == 'true'}}sift{{/if}} {{if mutation.data[0].effect=='true'}}snap{{/if}}" id="${'menu' + position + mutation.aa}">
+				<span class="dropdown-toggle" data-toggle="dropdown" href="${'#menu' + position + mutation.aa}">${mutation.aa}</span>
+				<span class="dropdown-menu ${'index' + i}"></span>
 			</li>
+			{{/each}}
 		</ul>
 	</li>
 </script>
@@ -178,9 +177,9 @@
 	<h1>Details</h1>
 	<dl>
 	<dt>SNAP2 Score</dt>
-	<dd data-bind="text: SNAP.score"></dd>
+	<dd>${SNAP.score}</dd>
 	<dt>Sift Score</dt>
-	<dd data-bind="text: SIFT.score"></dd>
+	<dd>${SIFT.score}</dd>
 	</dd>
 </script>
 <script src="http://cdn1.gemudb.com/js/jquery-1.7.2.min.js"></script>
@@ -189,6 +188,7 @@
 <script src="http://cdn1.gemudb.com/js/jquery.scrollTo-1.4.2-min.js"></script>
 <script src="http://cdn2.gemudb.com/js/jquery-ui-1.8.18.custom.min.js"></script>
 <script src="http://cdn3.gemudb.com/js/underscore-min.js"></script>
+<script src="js/jquery.tmpl.js"></script>
 <script src="http://cdn1.gemudb.com/js/knockout-2.1.0.js"></script>
 <script src="http://cdn2.gemudb.com/js/sammy-latest.min.js"></script>
 <script src="http://cdn3.gemudb.com/js/bootstrap.min.js"></script>
