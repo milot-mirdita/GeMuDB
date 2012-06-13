@@ -320,7 +320,7 @@ var Protein = function() {
 			$("#slider").slider("option", "max", $("#active_alphabet .active").size() - 1);
 			
 			var normal_predict_graphdata  = hidden.createGraphDataFromPredictionObject(normal);
-			var snp_graphdata     = hidden.createGraphDataFromExternalSnp();
+			var snp_graphdata     = hidden.createGraphDataFromExternalSnp(externalSnpContainer);
 			var normal_graphdata = normal_predict_graphdata.concat(snp_graphdata);
 			
 			hidden.addGraph($('#flot_overview'), normal_graphdata, types, self.currentState.threshold, overviewPlotOptions(normal.sequence.length));
