@@ -79,20 +79,20 @@ var initProteinMixin = (function(out) {
 		return probs;
 	};
 	
-	out.createGraphDataFromPredictionObject = function(data){
-		Ê Ê Ê Êvar graphdata = [];
-		 Ê Ê Ê Êfor(var i in data.predictions) {
-		 Ê Ê Ê Ê Ê Êvar index = _.indexOf(types, data.predictions[i].type);
-		 Ê Ê Ê Ê Ê Êif(index != -1) {
-		 Ê Ê Ê Ê Ê Ê Ê Êvar graphData = probsToData(data.predictions[index].conservation);
-		 Ê Ê Ê Ê Ê Ê Ê ÊgraphData = filterData(graphData, threshold);
-		 Ê Ê Ê Ê Ê Ê Ê Êgraphdata.push(graphData);
-		 Ê Ê Ê Ê Ê Ê} else {
-		 Ê Ê Ê Ê Ê Ê Ê Êgraphdata.push([]);
-		 Ê Ê Ê Ê Ê Ê}
-		 Ê Ê Ê Ê}
-		return graphdata;
-	}
+	out.createGraphDataFromPredictionObject = function(data,types,threshold){
+	  var graphdata = [];
+          for(var i in data.predictions) {
+             var index = _.indexOf(types, data.predictions[i].type);
+             if(index != -1) {
+                var graphData = probsToData(data.predictions[index].conservation);
+                graphData = filterData(graphData, threshold);
+                graphdata.push(graphData);
+             } else {
+                graphdata.push([]);
+             }
+          }
+	  return graphdata;
+	};
 	
 	out.createGraphDataFromExternalSnp = function(data){
 		var graphdata = [];
@@ -100,9 +100,9 @@ var initProteinMixin = (function(out) {
 			graphdata.push([mutpos.position,constants.externalSnpGraphHeight]);
 		}
 		return graphdata;
-	}
+	};
 	
-	out.addGraph = function(target, data, types, threshold, options, callback) {
+	out.addGraph = function(target, data, options, callback) {
 		var fill = fill || false;
 
 
@@ -319,14 +319,15 @@ var Protein = function() {
 
 			$("#slider").slider("option", "max", $("#active_alphabet .active").size() - 1);
 			
-			var normal_predict_graphdata  = hidden.createGraphDataFromPredictionObject(normal);
-			var snp_graphdata     = hidden.createGraphDataFromExternalSnp(externalSnpContainer);
+			var normal_predict_graphdata  = hidden.createGraphDataFromPredictionObject(normal,types,self.currentState.threshold);
+			//var snp_graphdata     = hidden.createGraphDataFromExternalSnp(externalSnpContainer);
+			var snp_graphdata = [];
 			var normal_graphdata = normal_predict_graphdata.concat(snp_graphdata);
 			
-			hidden.addGraph($('#flot_overview'), normal_graphdata, types, self.currentState.threshold, overviewPlotOptions(normal.sequence.length));
+			hidden.addGraph($('#flot_overview'), normal_graphdata, overviewPlotOptions(normal.sequence.length));
 			
-			var scliced_graphdata = hidden.createGraphDataFromPredictionObject(scliced);
-			hidden.addGraph($('#flot_details'), scliced_graphdata, types, self.currentState.threshold, detailPlotOptions(), clickHandler);
+			var scliced_graphdata = hidden.createGraphDataFromPredictionObject(scliced,types,self.currentState.threshold);
+			hidden.addGraph($('#flot_details'), scliced_graphdata, detailPlotOptions(), clickHandler);
 			
 			self.updateUrl();
 		}
@@ -589,3 +590,4 @@ var Protein = function() {
 	
 	return ko.applyBindings(new SearchViewModel());
 })();
+
