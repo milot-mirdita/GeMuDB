@@ -2,10 +2,10 @@ import java.io.File;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.rostlab.snapdb.dao.MutationDao;
-import org.rostlab.snapdb.dao.SequenceDao;
-import org.rostlab.snapdb.dom.Sequence;
-import org.rostlab.snapdb.service.MutationImportServiceImpl;
+import org.rostlab.gemudb.dao.MutationDao;
+import org.rostlab.gemudb.dao.SequenceDao;
+import org.rostlab.gemudb.dom.Sequence;
+import org.rostlab.gemudb.service.MutationImportServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;

@@ -2,12 +2,12 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.rostlab.snapdb.service.ProteinDetailService;
-import org.rostlab.snapdb.service.model.ExternalMutationContainer;
-import org.rostlab.snapdb.service.model.ExternalMutationPos;
-import org.rostlab.snapdb.service.model.OmimEntry;
-import org.rostlab.snapdb.service.model.ProteinDetail;
-import org.rostlab.snapdb.service.model.ExternalMutationDetail;
+import org.rostlab.gemudb.service.ProteinDetailService;
+import org.rostlab.gemudb.service.model.ExternalMutationContainer;
+import org.rostlab.gemudb.service.model.ExternalMutationDetail;
+import org.rostlab.gemudb.service.model.ExternalMutationPos;
+import org.rostlab.gemudb.service.model.OmimEntry;
+import org.rostlab.gemudb.service.model.ProteinDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;

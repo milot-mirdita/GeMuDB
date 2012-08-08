@@ -9,45 +9,45 @@
 
 	<context:annotation-config />
 
-	<bean id="serviceFacade" class="org.rostlab.snapdb.facade.ServiceFacadeImpl">
+	<bean id="serviceFacade" class="org.rostlab.gemudb.facade.ServiceFacadeImpl">
 		<property name="searchProteinService" ref="searchProteinService" />
-		<property name="proteinFunctionalEffectService" ref="proteinFunctionalEffectService" />
+		<property name="functionalEffectService" ref="functionalEffectService" />
 		<property name="proteinDetailService" ref="proteinDetailService" />
 	</bean>
 
-	<bean id="proteinDetailService" class="org.rostlab.snapdb.service.ProteinDetailServiceImpl">
+	<bean id="proteinDetailService" class="org.rostlab.gemudb.service.ProteinDetailServiceImpl">
 		<property name="sequenceDao" ref="sequenceDao" />
 	</bean>
-	<bean id="searchProteinService" class="org.rostlab.snapdb.service.SearchProteinServiceImpl">
+	<bean id="searchProteinService" class="org.rostlab.gemudb.service.SearchProteinServiceImpl">
 		<property name="sequenceDao" ref="sequenceDao" />
 	</bean>
-	<bean id="proteinFunctionalEffectService"
-		class="org.rostlab.snapdb.service.ProteinFunctionalEffectServiceImpl">
+	<bean id="functionalEffectService"
+		class="org.rostlab.gemudb.service.FunctionalEffectServiceImpl">
 		<property name="sequenceDao" ref="sequenceDao" />
 		<property name="mutationDao" ref="mutationDao" />
 	</bean>
-	<bean id="mutationImportService" class="org.rostlab.snapdb.service.MutationImportServiceImpl">
+	<bean id="mutationImportService" class="org.rostlab.gemudb.service.MutationImportServiceImpl">
 		<property name="sequenceDao" ref="sequenceDao" />
 		<property name="mutationDao" ref="mutationDao" />
 	</bean>
 
 
-	<bean id="sequenceDao" class="org.rostlab.snapdb.dao.SequenceDaoImpl">
+	<bean id="sequenceDao" class="org.rostlab.gemudb.dao.SequenceDaoImpl">
 		<property name="jdbcTemplate" ref="jdbcTemplate" />
 	</bean>
-	<bean id="mutationDao" class="org.rostlab.snapdb.dao.MutationDaoImpl">
+	<bean id="mutationDao" class="org.rostlab.gemudb.dao.MutationDaoImpl">
 	
 		<property name="jdbcTemplate" ref="jdbcTemplate" />
 	</bean>
 
 
-	<bean id="loggingInterceptor" class="org.rostlab.snapdb.util.LoggingInterceptor" />
+	<bean id="loggingInterceptor" class="org.rostlab.gemudb.util.LoggingInterceptor" />
 	<!-- Proxy Factory for logging -->
 	<bean name="proxyCreator"
 		class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
 		<property name="beanNames">
 			<list>
-				<value>org.rostlab.snapdb.*</value>
+				<value>org.rostlab.gemudb.*</value>
 			</list>
 		</property>
 		<property name="interceptorNames">

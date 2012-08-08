@@ -47,7 +47,8 @@ public class TestService {
 
 		
 		System.out
-				.println(service.path("protein").path("mutations").path("NP_005378").path("198").path("115").
+				.println(service.path("v1").path("NP_005378").path("functionaleffect")
+						.path("detail").path("SIFT").path("1").
 						accept(MediaType.APPLICATION_JSON).get(String.class));
 //
 //		System.out
