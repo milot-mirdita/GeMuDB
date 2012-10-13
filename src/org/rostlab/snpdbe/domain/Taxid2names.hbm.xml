@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 21.08.2012 14:34:27 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="Taxid2names" table="taxid2names" catalog="snpdbe">
+        <id name="taxid" type="int">
+            <column name="taxid" />
+            <generator class="assigned" />
+        </id>
+        <property name="misspelling" type="string">
+            <column name="misspelling" />
+        </property>
+        <property name="genbankAnamorph" type="string">
+            <column name="genbank_anamorph" />
+        </property>
+        <property name="scientificName" type="string">
+            <column name="scientific_name" />
+        </property>
+        <property name="synonym" type="string">
+            <column name="synonym" />
+        </property>
+        <property name="blastName" type="string">
+            <column name="blast_name" />
+        </property>
+        <property name="unpublishedName" type="string">
+            <column name="unpublished_name" />
+        </property>
+        <property name="genbankSynonym" type="string">
+            <column name="genbank_synonym" />
+        </property>
+        <property name="equivalentName" type="string">
+            <column name="equivalent_name" />
+        </property>
+        <property name="includes" type="string">
+            <column name="includes" />
+        </property>
+        <property name="acronym" type="string">
+            <column name="acronym" />
+        </property>
+        <property name="inPart" type="string">
+            <column name="in_part" />
+        </property>
+        <property name="anamorph" type="string">
+            <column name="anamorph" />
+        </property>
+        <property name="authority" type="string">
+            <column name="authority" />
+        </property>
+        <property name="genbankCommonName" type="string">
+            <column name="genbank_common_name" />
+        </property>
+        <property name="genbankAcronym" type="string">
+            <column name="genbank_acronym" />
+        </property>
+        <property name="commonName" type="string">
+            <column name="common_name" />
+        </property>
+        <property name="misnomer" type="string">
+            <column name="misnomer" />
+        </property>
+        <property name="teleomorph" type="string">
+            <column name="teleomorph" />
+        </property>
+    </class>
+</hibernate-mapping>

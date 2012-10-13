@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 21.08.2012 14:34:27 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="SeqsSp" table="seqs_SP" catalog="snpdbe">
+        <id name="ac" type="string">
+            <column name="AC" length="10" />
+            <generator class="assigned" />
+        </id>
+        <property name="md5" type="string">
+            <column name="md5" length="32" not-null="true" />
+        </property>
+        <property name="seq" type="string">
+            <column name="seq" length="16777215" not-null="true" />
+        </property>
+        <property name="id" type="string">
+            <column name="ID" length="20" />
+        </property>
+        <property name="gene" type="string">
+            <column name="gene" length="20" />
+        </property>
+        <property name="taxid" type="int">
+            <column name="taxid" not-null="true" />
+        </property>
+        <property name="description" type="string">
+            <column name="description" length="16777215" />
+        </property>
+    </class>
+</hibernate-mapping>

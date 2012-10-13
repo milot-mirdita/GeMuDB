@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 21.08.2012 14:34:27 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="Omim2disease" table="OMIM2disease" catalog="snpdbe">
+        <composite-id name="id" class="Omim2diseaseId">
+            <key-property name="omimId" type="int">
+                <column name="omim_id" />
+            </key-property>
+            <key-property name="varId" type="string">
+                <column name="var_id" length="5" />
+            </key-property>
+        </composite-id>
+        <property name="phenotype" type="string">
+            <column name="phenotype" length="65535" />
+        </property>
+        <property name="gene" type="string">
+            <column name="gene" length="30" />
+        </property>
+        <property name="mutationRaw" type="string">
+            <column name="mutation_raw" length="65535" />
+        </property>
+        <property name="wt" type="java.lang.Character">
+            <column name="wt" length="1" />
+        </property>
+        <property name="pos" type="java.lang.Integer">
+            <column name="pos" />
+        </property>
+        <property name="mt" type="java.lang.Character">
+            <column name="mt" length="1" />
+        </property>
+    </class>
+</hibernate-mapping>

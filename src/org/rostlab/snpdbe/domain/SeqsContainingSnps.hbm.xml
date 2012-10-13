@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 21.08.2012 14:34:27 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="SeqsContainingSnps" table="seqs_containingSNPs" catalog="snpdbe">
+        <id name="md5" type="string">
+            <column name="md5" length="32" />
+            <generator class="assigned" />
+        </id>
+        <property name="seq" type="string">
+            <column name="seq" length="16777215" not-null="true" />
+        </property>
+        <property name="inDbSnp" type="string">
+            <column name="in_dbSNP" length="2" not-null="true" />
+        </property>
+        <property name="inSp" type="string">
+            <column name="in_SP" length="2" not-null="true" />
+        </property>
+        <property name="inPmd" type="string">
+            <column name="in_PMD" length="2" not-null="true" />
+        </property>
+        <property name="in1kg" type="string">
+            <column name="in_1KG" length="2" />
+        </property>
+    </class>
+</hibernate-mapping>

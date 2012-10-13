@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 21.08.2012 14:34:27 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="Geno2func" table="geno2func" catalog="snpdbe">
+        <composite-id name="id" class="Geno2funcId">
+            <key-property name="md5" type="string">
+                <column name="md5" length="32" />
+            </key-property>
+            <key-property name="pos" type="short">
+                <column name="pos" />
+            </key-property>
+            <key-property name="mt" type="char">
+                <column name="mt" length="1" />
+            </key-property>
+        </composite-id>
+        <property name="mutId" type="int">
+            <column name="mut_id" not-null="true" unique="true" />
+        </property>
+        <property name="wt" type="char">
+            <column name="wt" length="1" not-null="true" />
+        </property>
+        <property name="inDbSnp" type="string">
+            <column name="in_dbSNP" length="2" />
+        </property>
+        <property name="inSp" type="string">
+            <column name="in_SP" length="2" />
+        </property>
+        <property name="inPmd" type="string">
+            <column name="in_PMD" length="2" />
+        </property>
+        <property name="in1kg" type="string">
+            <column name="in_1KG" length="2" />
+        </property>
+        <property name="snapStatus" type="string">
+            <column name="SNAP_status" length="2" not-null="true" />
+        </property>
+        <property name="snapBin" type="string">
+            <column name="SNAP_bin" length="2" />
+        </property>
+        <property name="snapScore" type="java.lang.Byte">
+            <column name="SNAP_score" />
+        </property>
+        <property name="snapRi" type="java.lang.Boolean">
+            <column name="SNAP_ri" />
+        </property>
+        <property name="snapAcc" type="java.lang.Byte">
+            <column name="SNAP_acc" />
+        </property>
+        <property name="siftBin" type="string">
+            <column name="SIFT_bin" length="2" />
+        </property>
+        <property name="siftScore" type="java.lang.Float">
+            <column name="SIFT_score" precision="12" scale="0" />
+        </property>
+        <property name="percWt" type="java.lang.Byte">
+            <column name="PERC_wt" />
+        </property>
+        <property name="percMt" type="java.lang.Byte">
+            <column name="PERC_mt" />
+        </property>
+        <property name="pssmWt" type="java.lang.Byte">
+            <column name="PSSM_wt" />
+        </property>
+        <property name="pssmMt" type="java.lang.Byte">
+            <column name="PSSM_mt" />
+        </property>
+        <property name="psicWt" type="java.lang.Float">
+            <column name="PSIC_wt" precision="12" scale="0" />
+        </property>
+        <property name="psicMt" type="java.lang.Float">
+            <column name="PSIC_mt" precision="12" scale="0" />
+        </property>
+        <property name="pph2" type="string">
+            <column name="pph2" length="18" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 21.08.2012 14:34:27 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="Snps1kg" table="SNPs_1KG" catalog="snpdbe">
+        <composite-id name="id" class="Snps1kgId">
+            <key-property name="md5" type="string">
+                <column name="md5" length="32" />
+            </key-property>
+            <key-property name="pos" type="int">
+                <column name="pos" />
+            </key-property>
+            <key-property name="mt" type="char">
+                <column name="mt" length="1" />
+            </key-property>
+        </composite-id>
+        <property name="mutId" type="java.lang.Integer">
+            <column name="mut_id" />
+        </property>
+        <property name="proteinAcc" type="string">
+            <column name="protein_acc" length="32" />
+        </property>
+        <property name="proteinVer" type="java.lang.Integer">
+            <column name="protein_ver" />
+        </property>
+        <property name="mrnaAcc" type="string">
+            <column name="mrna_acc" length="32" />
+        </property>
+        <property name="exon" type="java.lang.Integer">
+            <column name="exon" />
+        </property>
+        <property name="locusSymbol" type="string">
+            <column name="locus_symbol" length="64" />
+        </property>
+        <property name="chromosome" type="java.lang.Integer">
+            <column name="chromosome" />
+        </property>
+        <property name="mrnaWt" type="java.lang.Character">
+            <column name="mrna_wt" length="1" />
+        </property>
+        <property name="mrnaPos" type="java.lang.Integer">
+            <column name="mrna_pos" />
+        </property>
+        <property name="mrnaMt" type="java.lang.Character">
+            <column name="mrna_mt" length="1" />
+        </property>
+        <property name="chromWt" type="java.lang.Character">
+            <column name="chrom_wt" length="1" />
+        </property>
+        <property name="chromPos" type="java.lang.Integer">
+            <column name="chrom_pos" />
+        </property>
+        <property name="chromMt" type="java.lang.Character">
+            <column name="chrom_mt" length="1" />
+        </property>
+        <property name="ldaf" type="java.lang.Float">
+            <column name="LDAF" precision="12" scale="0" />
+        </property>
+        <property name="ac" type="java.lang.Integer">
+            <column name="AC" />
+        </property>
+        <property name="an" type="java.lang.Integer">
+            <column name="AN" />
+        </property>
+        <property name="wt" type="java.lang.Character">
+            <column name="wt" length="1" />
+        </property>
+    </class>
+</hibernate-mapping>

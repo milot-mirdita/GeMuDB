@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 21.08.2012 14:34:27 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="DbSnpSnp" table="dbSNP_SNP" catalog="snpdbe">
+        <id name="snpId" type="int">
+            <column name="snp_id" />
+            <generator class="assigned" />
+        </id>
+        <property name="avgHeterozygosity" type="java.lang.Float">
+            <column name="avg_heterozygosity" precision="12" scale="0" />
+        </property>
+        <property name="hetSe" type="java.lang.Float">
+            <column name="het_se" precision="12" scale="0" />
+        </property>
+        <property name="createTime" type="string">
+            <column name="create_time" length="30" />
+        </property>
+        <property name="lastUpdatedTime" type="string">
+            <column name="last_updated_time" length="30" />
+        </property>
+        <property name="cpGCode" type="java.lang.Byte">
+            <column name="CpG_code" />
+        </property>
+        <property name="taxid" type="java.lang.Integer">
+            <column name="taxid" />
+        </property>
+        <property name="validationStatus" type="java.lang.Byte">
+            <column name="validation_status" />
+        </property>
+        <property name="exemplarSubsnpId" type="java.lang.Integer">
+            <column name="exemplar_subsnp_id" />
+        </property>
+        <property name="univarId" type="java.lang.Integer">
+            <column name="univar_id" />
+        </property>
+        <property name="cntSubsnp" type="java.lang.Byte">
+            <column name="cnt_subsnp" />
+        </property>
+        <property name="mapProperty" type="java.lang.Byte">
+            <column name="map_property" />
+        </property>
+    </class>
+</hibernate-mapping>
