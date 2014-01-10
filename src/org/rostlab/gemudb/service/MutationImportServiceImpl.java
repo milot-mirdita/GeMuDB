@@ -158,9 +158,8 @@ public class MutationImportServiceImpl implements MutationImportService {
 	public File unpackEntry(TarArchiveEntry entry, final File outputFile,
 			final TarArchiveInputStream tarFileIn) {
 
-		BufferedOutputStream outputStream;
 		try {
-			outputStream = new BufferedOutputStream(new FileOutputStream(
+			BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(
 					outputFile));
 
 			byte[] content = new byte[(int) entry.getSize()];
@@ -172,6 +171,7 @@ public class MutationImportServiceImpl implements MutationImportService {
 				IOUtils.closeQuietly(outputStream);
 				return outputFile;
 			}
+			outputStream.close();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

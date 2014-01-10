@@ -102,10 +102,7 @@ public class ServiceFacadeImpl implements ServiceFacade {
 		MutationPosContainer posContainer = functionalEffectService
 				.getFunctionalEffect(id, pos, MutationType.valueOf(type));
 		final MutationPos retPos = posContainer.getMutationsPos().get(0);
-		if (posContainer == null)
-			throw new BadRequestException();
-		else
-			return retPos;
+		return retPos;
 	}
 
 	@Override
@@ -127,11 +124,7 @@ public class ServiceFacadeImpl implements ServiceFacade {
 				.getFunctionalEffect(id, pos, MutationType.valueOf(type),
 						alphabet);
 		final MutationPos retPos = posContainer.getMutationsPos().get(0);
-
-		if (posContainer == null)
-			throw new BadRequestException();
-		else
-			return retPos;
+		return retPos;
 	}
 
 	@Override
