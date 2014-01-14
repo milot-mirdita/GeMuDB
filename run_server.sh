@@ -1,4 +1,5 @@
 #!/bin/sh
+cd "$( cd "$( dirname "$0" )" && pwd )" 
 libpath=
 for i in $(ls lib/*|grep ".jar"); do 
 	libpath=$( echo "$i:$libpath"); 
