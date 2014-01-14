@@ -66,7 +66,7 @@ public class ServiceFacadeImpl implements ServiceFacade {
 				throw new BadRequestException();
 			}
 		}
-		;
+		
 		FunctionalEffectPrediction fp = functionalEffectService
 				.getFunctionalEffectPrediction(id, MutationType.valueOf(type),
 						alphabet);
