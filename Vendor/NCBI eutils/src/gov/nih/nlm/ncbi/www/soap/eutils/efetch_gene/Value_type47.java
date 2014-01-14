@@ -106,7 +106,7 @@
                                 public static final Value_type47 mam =
                                     new Value_type47(_mam,true);
                             
-                                public static final Value_type47 org =
+                                public static final Value_type47 myorg =
                                     new Value_type47(_org,true);
                             
                                 public static final Value_type47 phg =
