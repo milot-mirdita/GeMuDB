@@ -99,5 +99,7 @@
 	<classpathentry kind="lib" path="lib/xbean_xpath.jar"/>
 	<classpathentry kind="lib" path="lib/xbean.jar"/>
 	<classpathentry kind="lib" path="lib/xmlbeans-qname.jar"/>
+	<classpathentry kind="lib" path="lib/qname.jar"/>
+	<classpathentry kind="lib" path="lib/wsdl4j.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
