@@ -7,10 +7,10 @@ import javax.ws.rs.core.Application;
 
 import org.rostlab.gemudb.facade.ServiceFacade;
 
-public class SnapDbApplication extends Application {
+public class GeMuDbApplication extends Application {
 	private ServiceFacade facade;
 
-	public SnapDbApplication(ServiceFacade facade) {
+	public GeMuDbApplication(ServiceFacade facade) {
 		this.facade = facade;
 	}
 
