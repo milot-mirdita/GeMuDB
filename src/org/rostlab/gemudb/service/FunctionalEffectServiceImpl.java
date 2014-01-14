@@ -69,6 +69,7 @@ public class FunctionalEffectServiceImpl implements FunctionalEffectService {
 				cons.append(consString);
 				currPos++;
 			}
+			prediction.setSequence(sequence.getSequence());
 			prediction.setConservation(cons.toString());
 			prediction.setReliability(reli.toString());
 			return prediction;

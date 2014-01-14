@@ -6,12 +6,12 @@ import javax.xml.bind.annotation.XmlType;
 import org.rostlab.gemudb.dom.MutationType;
 
 @XmlRootElement
-@XmlType(propOrder = {  "type", "reliability", "conservation" })
+@XmlType(propOrder = {  "type", "reliability", "conservation", "sequence" })
 public class FunctionalEffectPrediction {
 	private MutationType type;
 	private String reliability;
 	private String conservation;
-
+	private String sequence;
 
 	public MutationType getType() {
 		return type;
@@ -35,6 +35,14 @@ public class FunctionalEffectPrediction {
 
 	public void setConservation(String conservation) {
 		this.conservation = conservation;
+	}
+
+	public String getSequence() {
+		return sequence;
+	}
+
+	public void setSequence(String sequence) {
+		this.sequence = sequence;
 	}
 
 }
