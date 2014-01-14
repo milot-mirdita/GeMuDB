@@ -104,5 +104,7 @@
 	<classpathentry kind="lib" path="lib/XmlSchema-1.4.7.jar"/>
 	<classpathentry kind="lib" path="lib/neethi-3.0.2.jar"/>
 	<classpathentry kind="lib" path="lib/javax.mail.jar"/>
+	<classpathentry kind="lib" path="lib/org.apache.httpcomponents.httpclient_4.3.1.jar"/>
+	<classpathentry kind="lib" path="lib/org.apache.httpcomponents.httpcore_4.3.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
