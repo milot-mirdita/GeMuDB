@@ -56,7 +56,6 @@
 	<classpathentry kind="lib" path="lib/hibernate-jpa-2.0-api-1.0.1.Final.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/picr.jar"/>
-	<classpathentry kind="lib" path="lib/eutils_axis2.jar"/>
 	<classpathentry kind="lib" path="lib/activation-1.1.jar"/>
 	<classpathentry kind="lib" path="lib/snpxsd.jar"/>
 	<classpathentry kind="lib" path="lib/xmlpublic.jar"/>
@@ -106,5 +105,6 @@
 	<classpathentry kind="lib" path="lib/javax.mail.jar"/>
 	<classpathentry kind="lib" path="lib/org.apache.httpcomponents.httpclient_4.3.1.jar"/>
 	<classpathentry kind="lib" path="lib/org.apache.httpcomponents.httpcore_4.3.1.jar"/>
+	<classpathentry kind="lib" path="lib/eUtilsService.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
