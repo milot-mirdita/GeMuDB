@@ -1,8 +1,20 @@
 import gov.nih.nlm.ncbi.snp.docsum.ExchangeSetDocument;
 import gov.nih.nlm.ncbi.www.soap.eutils.EFetchGeneServiceStub;
-import gov.nih.nlm.ncbi.www.soap.eutils.EFetchGeneServiceStub.Entrezgene_type0;
-import gov.nih.nlm.ncbi.www.soap.eutils.EFetchSequenceServiceStub;
 import gov.nih.nlm.ncbi.www.soap.eutils.EUtilsServiceStub;
+import gov.nih.nlm.ncbi.www.soap.eutils.efetch_gene.EFetchRequest;
+import gov.nih.nlm.ncbi.www.soap.eutils.efetch_gene.EFetchResult;
+import gov.nih.nlm.ncbi.www.soap.eutils.egquery.EGqueryRequest;
+import gov.nih.nlm.ncbi.www.soap.eutils.egquery.Result;
+import gov.nih.nlm.ncbi.www.soap.eutils.einfo.EInfoRequest;
+import gov.nih.nlm.ncbi.www.soap.eutils.einfo.EInfoResult;
+import gov.nih.nlm.ncbi.www.soap.eutils.elink.ELinkRequest;
+import gov.nih.nlm.ncbi.www.soap.eutils.elink.ELinkResult;
+import gov.nih.nlm.ncbi.www.soap.eutils.esearch.ESearchRequest;
+import gov.nih.nlm.ncbi.www.soap.eutils.esearch.ESearchResult;
+import gov.nih.nlm.ncbi.www.soap.eutils.espell.ESpellRequest;
+import gov.nih.nlm.ncbi.www.soap.eutils.espell.ESpellResult;
+import gov.nih.nlm.ncbi.www.soap.eutils.esummary.ESummaryRequest;
+import gov.nih.nlm.ncbi.www.soap.eutils.esummary.ESummaryResult;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
@@ -16,10 +28,10 @@ public class GetOmimInformation {
 		try {
 			EUtilsServiceStub service = new EUtilsServiceStub();
 
-			EUtilsServiceStub.ESearchRequest req = new EUtilsServiceStub.ESearchRequest();
+			ESearchRequest req = new ESearchRequest();
 			req.setTerm("NP_064582.2");
 			req.setDb("gene");
-			EUtilsServiceStub.ESearchResult res = service.run_eSearch(req);
+			ESearchResult res = service.run_eSearch(req);
 			// results output
 			int N = res.getIdList().getId().length;
 			String ids = "";
@@ -34,13 +46,13 @@ public class GetOmimInformation {
 			System.out.println();
 
 			EFetchGeneServiceStub fetchGen = new EFetchGeneServiceStub();
-			EFetchGeneServiceStub.EFetchRequest fetchGenReq = new EFetchGeneServiceStub.EFetchRequest();
+			EFetchRequest fetchGenReq = new EFetchRequest();
 			fetchGenReq.setId(ids);
-			EFetchGeneServiceStub.EFetchResult fetchGenRes = fetchGen
+			EFetchResult fetchGenRes = fetchGen
 					.run_eFetch(fetchGenReq);
 			for (int i = 0; i < fetchGenRes.getEntrezgeneSet()
 					.getEntrezgeneSetSequence().length; i++) {
-				Entrezgene_type0 obj = fetchGenRes.getEntrezgeneSet()
+				gov.nih.nlm.ncbi.www.soap.eutils.efetch_gene.Entrezgene_type0 obj = fetchGenRes.getEntrezgeneSet()
 						.getEntrezgeneSetSequence()[i].getEntrezgene();
 				System.out.print("Official Full Name: ");
 				System.out.println(obj.getEntrezgene_gene().getGeneRef()
@@ -64,10 +76,10 @@ public class GetOmimInformation {
 		try {
 			EUtilsServiceStub service = new EUtilsServiceStub();
 
-			EUtilsServiceStub.ESearchRequest req = new EUtilsServiceStub.ESearchRequest();
+			ESearchRequest req = new ESearchRequest();
 			req.setTerm("NP_653088.1 AND \"missense\"[FXN_CLASS]");
 			req.setDb("snp");
-			EUtilsServiceStub.ESearchResult res = service.run_eSearch(req);
+			ESearchResult res = service.run_eSearch(req);
 			// results output
 			int N = res.getIdList().getId().length;
 			String ids = "";
@@ -101,11 +113,11 @@ public class GetOmimInformation {
 			ExchangeSetDocument exchangeDoc;
 			exchangeDoc=ExchangeSetDocument.Factory.parse(method.getResponseBodyAsString());
 			System.out.println(exchangeDoc.getExchangeSet().getRsArray().length);
-			EUtilsServiceStub.ELinkRequest reqOmim = new EUtilsServiceStub.ELinkRequest();
+			ELinkRequest reqOmim = new ELinkRequest();
 			reqOmim.setDb("omim");
 			reqOmim.setDbfrom("snp");
 			reqOmim.setId(res.getIdList().getId());
-			EUtilsServiceStub.ELinkResult resOmim = service.run_eLink(reqOmim);
+			ELinkResult resOmim = service.run_eLink(reqOmim);
 
 			for (int i = 0; i < resOmim.getLinkSet().length; i++) {
 				System.out.print("Links from "
@@ -141,8 +153,8 @@ public class GetOmimInformation {
 			EUtilsServiceStub service = new EUtilsServiceStub();
 
 			// call NCBI EInfo utility
-			EUtilsServiceStub.EInfoRequest req = new EUtilsServiceStub.EInfoRequest();
-			EUtilsServiceStub.EInfoResult res = service.run_eInfo(req);
+			EInfoRequest req = new EInfoRequest();
+			EInfoResult res = service.run_eInfo(req);
 			// results output
 			for (int i = 0; i < res.getDbList().getDbName().length; i++) {
 				System.out.println(res.getDbList().getDbName()[i]);
@@ -158,9 +170,9 @@ public class GetOmimInformation {
 		try {
 			EUtilsServiceStub service = new EUtilsServiceStub();
 			// call NCBI eGQuery utility
-			EUtilsServiceStub.EGqueryRequest req = new EUtilsServiceStub.EGqueryRequest();
+			EGqueryRequest req = new EGqueryRequest();
 			req.setTerm("mouse");
-			EUtilsServiceStub.Result res = service.run_eGquery(req);
+			Result res = service.run_eGquery(req);
 			// results output
 			System.out.println("Search term: " + res.getTerm());
 			System.out.println("Results: ");
@@ -182,10 +194,10 @@ public class GetOmimInformation {
 		try {
 			EUtilsServiceStub service = new EUtilsServiceStub();
 			// call NCBI ESummary utility
-			EUtilsServiceStub.ESummaryRequest req = new EUtilsServiceStub.ESummaryRequest();
+			ESummaryRequest req = new ESummaryRequest();
 			req.setDb("nucleotide");
 			req.setId("28864546,28800981");
-			EUtilsServiceStub.ESummaryResult res = service.run_eSummary(req);
+			ESummaryResult res = service.run_eSummary(req);
 			// results output
 			for (int i = 0; i < res.getDocSum().length; i++) {
 				System.out.println("ID: " + res.getDocSum()[i].getId());
@@ -207,11 +219,11 @@ public class GetOmimInformation {
 		try {
 			EUtilsServiceStub service = new EUtilsServiceStub();
 			// call NCBI ELink utility
-			EUtilsServiceStub.ELinkRequest req = new EUtilsServiceStub.ELinkRequest();
+			ELinkRequest req = new ELinkRequest();
 			req.setDb("protein");
 			req.setDbfrom("nuccore");
 			req.setId(new String[] { "48819,7140345" });
-			EUtilsServiceStub.ELinkResult res = service.run_eLink(req);
+			ELinkResult res = service.run_eLink(req);
 			// results output
 			for (int i = 0; i < res.getLinkSet().length; i++) {
 				System.out.print("Links from "
@@ -247,10 +259,10 @@ public class GetOmimInformation {
 		try {
 			EUtilsServiceStub service = new EUtilsServiceStub();
 			// call NCBI ESpell utility
-			EUtilsServiceStub.ESpellRequest req = new EUtilsServiceStub.ESpellRequest();
+			ESpellRequest req = new ESpellRequest();
 			req.setDb("pubmed");
 			req.setTerm("mouss");
-			EUtilsServiceStub.ESpellResult res = service.run_eSpell(req);
+			ESpellResult res = service.run_eSpell(req);
 			// results output
 			System.out.println("Misspelled word: " + res.getQuery());
 			System.out.println("Corrected word: " + res.getCorrectedQuery());
@@ -259,85 +271,84 @@ public class GetOmimInformation {
 		}
 	}
 
-	@Test
-	public void testFlow() {
-		String[] ids = { "" };
-		String fetchIds = "";
-		// STEP #1: search in PubMed for "cat"
-		//
-
-		System.out.println("testFlow");
-		try {
-			EUtilsServiceStub service = new EUtilsServiceStub();
-			// call NCBI ESearch utility
-			EUtilsServiceStub.ESearchRequest req = new EUtilsServiceStub.ESearchRequest();
-			req.setDb("pubmed");
-			req.setTerm("cat+AND+pubmed_nuccore[sb]");
-			req.setSort("PublicationDate");
-			req.setRetMax("5");
-			EUtilsServiceStub.ESearchResult res = service.run_eSearch(req);
-			// results output
-			int N = res.getIdList().getId().length;
-			ids[0] = "";
-			for (int i = 0; i < N; i++) {
-				if (i > 0)
-					ids[0] += ",";
-				ids[0] += res.getIdList().getId()[i];
-			}
-			System.out.println("Search in PubMed for \"cat\" returned "
-					+ res.getCount() + " hits");
-			System.out.println("Search links in nuccore for the first " + N
-					+ " UIDs: " + ids[0]);
-			System.out.println();
-		} catch (Exception e) {
-			System.out.println(e.toString());
-		}
-		// STEP #2: get links in nucleotide database (nuccore)
-		//
-		try {
-			EUtilsServiceStub service = new EUtilsServiceStub();
-			// call NCBI ELink utility
-			EUtilsServiceStub.ELinkRequest req = new EUtilsServiceStub.ELinkRequest();
-			req.setDb("nuccore");
-			req.setDbfrom("pubmed");
-			req.setId(ids);
-			EUtilsServiceStub.ELinkResult res = service.run_eLink(req);
-			for (int i = 0; i < res.getLinkSet()[0].getLinkSetDb()[0].getLink().length; i++) {
-				if (i > 0)
-					fetchIds += ",";
-				fetchIds += res.getLinkSet()[0].getLinkSetDb()[0].getLink()[i]
-						.getId().getString();
-			}
-			System.out
-					.println("ELink returned the following UIDs from nuccore: "
-							+ fetchIds);
-			System.out.println();
-
-		} catch (Exception e) {
-			System.out.println(e.toString());
-		}
-		// STEP #3: fetch records from nuccore
-		//
-		try {
-			EFetchSequenceServiceStub service = new EFetchSequenceServiceStub();
-			// call NCBI EFetch utility
-			EFetchSequenceServiceStub.EFetchRequest req = new EFetchSequenceServiceStub.EFetchRequest();
-			req.setDb("nuccore");
-			req.setId(fetchIds);
-			EFetchSequenceServiceStub.EFetchResult res = service
-					.run_eFetch(req);
-			// results output
-			for (int i = 0; i < res.getGBSet().getGBSetSequence().length; i++) {
-				EFetchSequenceServiceStub.GBSeq_type0 obj = res.getGBSet()
-						.getGBSetSequence()[i].getGBSeq();
-				System.out.println("Organism: " + obj.getGBSeq_organism());
-				System.out.println("Locus: " + obj.getGBSeq_locus());
-				System.out.println("Definition: " + obj.getGBSeq_definition());
-				System.out
-						.println("------------------------------------------");
-			}
-		} catch (Exception e) {
-			System.out.println(e.toString());
-		}
-	}
+//	@Test
+//	public void testFlow() {
+//		String[] ids = { "" };
+//		String fetchIds = "";
+//		// STEP #1: search in PubMed for "cat"
+//		//
+//
+//		System.out.println("testFlow");
+//		try {
+//			EUtilsServiceStub service = new EUtilsServiceStub();
+//			// call NCBI ESearch utility
+//			ESearchRequest req = new ESearchRequest();
+//			req.setDb("pubmed");
+//			req.setTerm("cat+AND+pubmed_nuccore[sb]");
+//			req.setSort("PublicationDate");
+//			req.setRetMax("5");
+//			ESearchResult res = service.run_eSearch(req);
+//			// results output
+//			int N = res.getIdList().getId().length;
+//			ids[0] = "";
+//			for (int i = 0; i < N; i++) {
+//				if (i > 0)
+//					ids[0] += ",";
+//				ids[0] += res.getIdList().getId()[i];
+//			}
+//			System.out.println("Search in PubMed for \"cat\" returned "
+//					+ res.getCount() + " hits");
+//			System.out.println("Search links in nuccore for the first " + N
+//					+ " UIDs: " + ids[0]);
+//			System.out.println();
+//		} catch (Exception e) {
+//			System.out.println(e.toString());
+//		}
+//		// STEP #2: get links in nucleotide database (nuccore)
+//		//
+//		try {
+//			EUtilsServiceStub service = new EUtilsServiceStub();
+//			// call NCBI ELink utility
+//			ELinkRequest req = new ELinkRequest();
+//			req.setDb("nuccore");
+//			req.setDbfrom("pubmed");
+//			req.setId(ids);
+//			ELinkResult res = service.run_eLink(req);
+//			for (int i = 0; i < res.getLinkSet()[0].getLinkSetDb()[0].getLink().length; i++) {
+//				if (i > 0)
+//					fetchIds += ",";
+//				fetchIds += res.getLinkSet()[0].getLinkSetDb()[0].getLink()[i]
+//						.getId().getString();
+//			}
+//			System.out
+//					.println("ELink returned the following UIDs from nuccore: "
+//							+ fetchIds);
+//			System.out.println();
+//
+//		} catch (Exception e) {
+//			System.out.println(e.toString());
+//		}
+//		// STEP #3: fetch records from nuccore
+//		//
+//		try {
+//			EFetchSequenceServiceStub service = new EFetchSequenceServiceStub();
+//			// call NCBI EFetch utility
+//			EFetchRequest req = new EFetchRequest();
+//			req.setDb("nuccore");
+//			req.setId(fetchIds);
+//			EFetchResult res = service.run_eFetch(req);
+//			// results output
+//			for (int i = 0; i < res.getGBSet().getGBSetSequence().length; i++) {
+//				GBSeq_type0 obj = res.getGBSet()
+//						.getGBSetSequence()[i].getGBSeq();
+//				System.out.println("Organism: " + obj.getGBSeq_organism());
+//				System.out.println("Locus: " + obj.getGBSeq_locus());
+//				System.out.println("Definition: " + obj.getGBSeq_definition());
+//				System.out
+//						.println("------------------------------------------");
+//			}
+//		} catch (Exception e) {
+//			System.out.println(e.toString());
+//		}
+//	}
 }
