@@ -179,7 +179,7 @@ var Protein = function() {
 	var constants = {
 		lineLength : 115,
 		externalSnpGraphHeight: 3,
-		baseUrl : "/api/resources/"
+		baseUrl : "http://gemudb.com/api/"
 	};
 
 	function SearchViewModel() {
@@ -344,7 +344,7 @@ var Protein = function() {
 			var length = constants.lineLength;
 			self.mutationListResult(null);
 
-			$.when($.getJSON(constants.baseUrl + 'protein/mutations/' + id + '/' + offset + '/' + length))
+			$.when($.getJSON(constants.baseUrl + 'mutations/' + id + '/' + offset + '/' + length))
 			 .done(function (result) {
 		 		self.mutationListResult(result.mutationsPos);
 			 })
@@ -353,7 +353,7 @@ var Protein = function() {
 		}, 500);
 
 		self.updateAlphabet = _.debounce(function (alphabet) {
-			$.when($.getJSON(constants.baseUrl + "protein/prediction/" 
+			$.when($.getJSON(constants.baseUrl + "prediction/" 
 						 + self.protein + "/" + alphabet))
 			.done(function (proteinResult) {
 				proteinResult.refid = self.protein;
@@ -411,7 +411,7 @@ var Protein = function() {
 			this.get("#!/search/:protein", function(context) {
 				var protein = this.params["protein"];
 				
-				$.when($.post(constants.baseUrl + "protein/search", 
+				$.when($.post(constants.baseUrl + "search", 
 						{q: protein}, undefined, "json"))
 					.done(function(searchResult) {
 						context.redirect("#!", "show", searchResult.refid);
@@ -424,7 +424,7 @@ var Protein = function() {
 				if(self.currentReferenceId != reference) {
 					self.currentReferenceId = reference;
 
-					$.when($.getJSON(constants.baseUrl + "protein/prediction/" 
+					$.when($.getJSON(constants.baseUrl + "prediction/" 
 									 + reference))
 						.done(function (proteinResult) {
 							proteinResult.refid = reference;
@@ -434,12 +434,12 @@ var Protein = function() {
 
 						})
 						.fail(self.ajaxErrorHandler);
-					$.when($.getJSON(constants.baseUrl + "protein/detail/" 
+					$.when($.getJSON(constants.baseUrl + "detail/" 
 							 + reference))
 						.done(function (proteinDetail) {
 							
 					self.updateByProteinDetail(proteinDetail);
-					$.when($.getJSON(constants.baseUrl + "protein/externalsnp/" 
+					$.when($.getJSON(constants.baseUrl + "externalsnp/" 
 							 + reference))
 						.done(function (externalSnpContainer) {
 							
