@@ -1,6 +1,6 @@
 ;
 var initProteinMixin = (function(out) {
-	var overviewPlotOptions = function (xaxis_maxlength) { return {
+	out.overviewPlotOptions = function (xaxis_maxlength) { return {
 		legend : { show : false }, 
 		xaxis : { show : false, min : 0, max : xaxis_maxlength, minTickSize: 5, tickSize: 5 }, 
 		yaxis : { show : false, min : 0, max : 19, position : 'right', ticks : [0, 19] }, 
@@ -25,7 +25,7 @@ var initProteinMixin = (function(out) {
 			shadowSize : 1} 
 		}};
 
-	var detailPlotOptions = function () { return {
+	out.detailPlotOptions = function () { return {
 		legend : { show : false }, 
 		xaxis : { show : false, min : 0, max : 115, minTickSize: 5, tickSize: 5 }, 
 		yaxis : { show : false, min : 0, max : 19, position : 'right', ticks : [0, 19] }, 
@@ -323,11 +323,11 @@ var Protein = function() {
 			//var snp_graphdata     = hidden.createGraphDataFromExternalSnp(externalSnpContainer);
 			var snp_graphdata = [];
 			var normal_graphdata = normal_predict_graphdata.concat(snp_graphdata);
-			
-			hidden.addGraph($('#flot_overview'), normal_graphdata, overviewPlotOptions(normal.sequence.length));
+
+			hidden.addGraph($('#flot_overview'), normal_graphdata, hidden.overviewPlotOptions(normal.sequence.length));
 			
 			var scliced_graphdata = hidden.createGraphDataFromPredictionObject(scliced,types,self.currentState.threshold);
-			hidden.addGraph($('#flot_details'), scliced_graphdata, detailPlotOptions(), clickHandler);
+			hidden.addGraph($('#flot_details'), scliced_graphdata, hidden.detailPlotOptions(), clickHandler);
 			
 			self.updateUrl();
 		}
@@ -424,10 +424,14 @@ var Protein = function() {
 				if(self.currentReferenceId != reference) {
 					self.currentReferenceId = reference;
 
-					$.when($.getJSON(constants.baseUrl + "prediction/" 
-									 + reference))
-						.done(function (proteinResult) {
+					$.when(
+						$.getJSON(constants.baseUrl + reference + "/functionaleffect/SNAP"),
+						$.getJSON(constants.baseUrl + reference + "/functionaleffect/SIFT"))
+						.done(function (snapResult, siftResult) {
+							var proteinResult = {};
 							proteinResult.refid = reference;
+							proteinResult.predictions = [snapResult[0], siftResult[0]];
+							proteinResult.sequence = snapResult[0].sequence;
 							self.updateByProteinResult(proteinResult);
 							self.updateList();
 							hideSearch();
