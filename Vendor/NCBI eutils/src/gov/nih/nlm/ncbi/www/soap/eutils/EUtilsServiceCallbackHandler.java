@@ -49,7 +49,7 @@
             * override this method for handling normal response from run_eSearch operation
             */
            public void receiveResultrun_eSearch(
-                    gov.nih.nlm.ncbi.www.soap.eutils.EUtilsServiceStub.ESearchResult result
+                    gov.nih.nlm.ncbi.www.soap.eutils.esearch.ESearchResult result
                         ) {
            }
 
@@ -65,7 +65,7 @@
             * override this method for handling normal response from run_eLink operation
             */
            public void receiveResultrun_eLink(
-                    gov.nih.nlm.ncbi.www.soap.eutils.EUtilsServiceStub.ELinkResult result
+                    gov.nih.nlm.ncbi.www.soap.eutils.elink.ELinkResult result
                         ) {
            }
 
@@ -81,7 +81,7 @@
             * override this method for handling normal response from run_eInfo operation
             */
            public void receiveResultrun_eInfo(
-                    gov.nih.nlm.ncbi.www.soap.eutils.EUtilsServiceStub.EInfoResult result
+                    gov.nih.nlm.ncbi.www.soap.eutils.einfo.EInfoResult result
                         ) {
            }
 
@@ -97,7 +97,7 @@
             * override this method for handling normal response from run_eSpell operation
             */
            public void receiveResultrun_eSpell(
-                    gov.nih.nlm.ncbi.www.soap.eutils.EUtilsServiceStub.ESpellResult result
+                    gov.nih.nlm.ncbi.www.soap.eutils.espell.ESpellResult result
                         ) {
            }
 
@@ -113,7 +113,7 @@
             * override this method for handling normal response from run_eSummary operation
             */
            public void receiveResultrun_eSummary(
-                    gov.nih.nlm.ncbi.www.soap.eutils.EUtilsServiceStub.ESummaryResult result
+                    gov.nih.nlm.ncbi.www.soap.eutils.esummary.ESummaryResult result
                         ) {
            }
 
@@ -129,7 +129,7 @@
             * override this method for handling normal response from run_eGquery operation
             */
            public void receiveResultrun_eGquery(
-                    gov.nih.nlm.ncbi.www.soap.eutils.EUtilsServiceStub.Result result
+                    gov.nih.nlm.ncbi.www.soap.eutils.egquery.Result result
                         ) {
            }
 
@@ -145,7 +145,7 @@
             * override this method for handling normal response from run_ePost operation
             */
            public void receiveResultrun_ePost(
-                    gov.nih.nlm.ncbi.www.soap.eutils.EUtilsServiceStub.EPostResult result
+                    gov.nih.nlm.ncbi.www.soap.eutils.epost.EPostResult result
                         ) {
            }
 

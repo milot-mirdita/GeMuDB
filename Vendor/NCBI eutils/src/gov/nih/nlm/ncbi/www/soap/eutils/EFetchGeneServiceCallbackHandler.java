@@ -49,7 +49,7 @@
             * override this method for handling normal response from run_eFetch operation
             */
            public void receiveResultrun_eFetch(
-                    gov.nih.nlm.ncbi.www.soap.eutils.EFetchGeneServiceStub.EFetchResult result
+                    gov.nih.nlm.ncbi.www.soap.eutils.efetch_gene.EFetchResult result
                         ) {
            }
 
