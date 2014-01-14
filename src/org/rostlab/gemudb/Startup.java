@@ -1,6 +1,7 @@
 package org.rostlab.gemudb;
 
 import java.io.IOException;
+import java.net.URI;
 
 import javax.ws.rs.ext.RuntimeDelegate;
 
@@ -32,7 +33,7 @@ public class Startup {
 
 		HttpServer server;
 		try {
-			server = HttpServerFactory.create("http://localhost:8081/", rc);
+			server = HttpServerFactory.create(URI.create("http://localhost:9004/"), rc);
 			HttpContext httpcontext = server.createContext("/resources");
 			SnapDbApplication application = new SnapDbApplication(
 					(ServiceFacade) context.getBean("serviceFacade"));
