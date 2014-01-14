@@ -41,8 +41,8 @@ public class Startup {
 	        final String scheme = u.getScheme();
 	        final int port = (u.getPort() == -1) ? 80 : u.getPort();    
 	        server = (scheme.equalsIgnoreCase("http")) ? 
-	            HttpServer.create(new InetSocketAddress(InetAddress.getLocalHost(), port), 0) :
-	            HttpsServer.create(new InetSocketAddress(InetAddress.getLocalHost(), port), 0);
+	            HttpServer.create(new InetSocketAddress(InetAddress.getLoopbackAddress(), port), 0) :
+	            HttpsServer.create(new InetSocketAddress(InetAddress.getLoopbackAddress(), port), 0);
 
 	        server.setExecutor(Executors.newCachedThreadPool());
 	        server.createContext(u.getPath(), handler);        
