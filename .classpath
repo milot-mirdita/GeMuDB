@@ -8,14 +8,6 @@
 	</classpathentry>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="lib" path="lib/aopalliance-1.0.jar"/>
-	<classpathentry kind="lib" path="lib/biojava3-alignment-3.0.2.jar" sourcepath="lib/biojava3-alignment-3.0.2-sources.jar"/>
-	<classpathentry kind="lib" path="lib/biojava3-core-3.0.2.jar" sourcepath="lib/biojava3-core-3.0.2-sources.jar"/>
-	<classpathentry kind="lib" path="lib/biojava3-genome-3.0.2.jar"/>
-	<classpathentry kind="lib" path="lib/biojava3-structure-3.0.2.jar" sourcepath="lib/biojava3-structure-3.0.2-sources.jar"/>
-	<classpathentry kind="lib" path="lib/commons-codec-1.6.jar" sourcepath="lib/commons-codec-1.6-sources.jar"/>
-	<classpathentry kind="lib" path="lib/commons-dbcp-1.4.jar" sourcepath="lib/commons-dbcp-1.4-sources.jar"/>
-	<classpathentry kind="lib" path="lib/commons-logging-1.1.1.jar" sourcepath="lib/commons-logging-1.1.1-sources.jar"/>
-	<classpathentry kind="lib" path="lib/commons-pool-1.6.jar" sourcepath="lib/commons-pool-1.6-sources.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.16.jar"/>
 	<classpathentry kind="lib" path="lib/org.springframework.aop-3.1.1.RELEASE.jar"/>
 	<classpathentry kind="lib" path="lib/org.springframework.aop-sources-3.1.1.RELEASE.jar"/>
@@ -58,17 +50,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.13-bin.jar"/>
 	<classpathentry kind="lib" path="lib/asm-3.3.1.jar"/>
-	<classpathentry kind="lib" path="lib/jersey-core-1.12.jar"/>
-	<classpathentry kind="lib" path="lib/jersey-server-1.12.jar"/>
-	<classpathentry kind="lib" path="lib/http-20070405.jar"/>
-	<classpathentry kind="lib" path="lib/jersey-client-1.12.jar"/>
-	<classpathentry kind="lib" path="lib/jersey-json-1.12.jar"/>
-	<classpathentry kind="lib" path="lib/jersey-multipart-1.12.jar"/>
-	<classpathentry kind="lib" path="lib/commons-compress-1.3.jar" sourcepath="lib/commons-compress-1.3-sources.jar"/>
-	<classpathentry kind="lib" path="lib/commons-io-2.2.jar" sourcepath="lib/commons-io-2.2-sources.jar"/>
-	<classpathentry kind="lib" path="lib/commons-fileupload-1.2.jar"/>
-	<classpathentry kind="lib" path="lib/commons-httpclient-3.1.jar"/>
-	<classpathentry kind="lib" path="lib/jettison-1.0-RC2.jar"/>
 	<classpathentry kind="lib" path="lib/ncbiwebservice.jar"/>
 	<classpathentry kind="lib" path="lib/hibernate-commons-annotations-4.0.1.Final.jar"/>
 	<classpathentry kind="lib" path="lib/hibernate-core-4.1.7.Final.jar"/>
@@ -100,5 +81,17 @@
 	<classpathentry kind="lib" path="lib/axis2-transport-http-1.6.1.jar"/>
 	<classpathentry kind="lib" path="lib/axis2-transport-local-1.6.1.jar"/>
 	<classpathentry kind="lib" path="lib/axis2-xmlbeans-1.6.1.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-all-1.9.11.jar"/>
+	<classpathentry kind="lib" path="lib/jersey-bundle-1.17.1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-httpclient-3.1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-io-2.2.jar"/>
+	<classpathentry kind="lib" path="lib/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/biojava3-alignment-3.0.7.jar"/>
+	<classpathentry kind="lib" path="lib/biojava3-core-3.0.7.jar"/>
+	<classpathentry kind="lib" path="lib/biojava3-genome-3.0.7.jar"/>
+	<classpathentry kind="lib" path="lib/biojava3-structure-3.0.7.jar"/>
+	<classpathentry kind="lib" path="lib/commons-compress-1.3.jar"/>
+	<classpathentry kind="lib" path="lib/commons-dbcp-1.4.jar"/>
+	<classpathentry kind="lib" path="lib/commons-pool-1.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
