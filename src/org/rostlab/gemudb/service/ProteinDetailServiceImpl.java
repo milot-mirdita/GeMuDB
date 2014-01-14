@@ -8,13 +8,17 @@ import gov.nih.nlm.ncbi.snp.docsum.FxnSetDocument.FxnSet.FxnClass;
 import gov.nih.nlm.ncbi.snp.docsum.MapLocDocument.MapLoc;
 import gov.nih.nlm.ncbi.snp.docsum.RsDocument.Rs;
 import gov.nih.nlm.ncbi.www.soap.eutils.EFetchGeneServiceStub;
-import gov.nih.nlm.ncbi.www.soap.eutils.EFetchGeneServiceStub.Entrezgene_type0;
 import gov.nih.nlm.ncbi.www.soap.eutils.EFetchSequenceServiceStub;
 import gov.nih.nlm.ncbi.www.soap.eutils.EUtilsServiceStub;
-import gov.nih.nlm.ncbi.www.soap.eutils.EUtilsServiceStub.ELinkResult;
-import gov.nih.nlm.ncbi.www.soap.eutils.EUtilsServiceStub.LinkSetDbType;
-import gov.nih.nlm.ncbi.www.soap.eutils.EUtilsServiceStub.LinkSetType;
-import gov.nih.nlm.ncbi.www.soap.eutils.EUtilsServiceStub.LinkTypeE;
+import gov.nih.nlm.ncbi.www.soap.eutils.efetch_gene.EFetchRequest;
+import gov.nih.nlm.ncbi.www.soap.eutils.efetch_gene.EFetchResult;
+import gov.nih.nlm.ncbi.www.soap.eutils.elink.ELinkRequest;
+import gov.nih.nlm.ncbi.www.soap.eutils.elink.ELinkResult;
+import gov.nih.nlm.ncbi.www.soap.eutils.elink.LinkSetDbType;
+import gov.nih.nlm.ncbi.www.soap.eutils.elink.LinkSetType;
+import gov.nih.nlm.ncbi.www.soap.eutils.elink.LinkType;
+import gov.nih.nlm.ncbi.www.soap.eutils.esearch.ESearchRequest;
+import gov.nih.nlm.ncbi.www.soap.eutils.esearch.ESearchResult;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -58,13 +62,13 @@ public class ProteinDetailServiceImpl implements ProteinDetailService {
 			final String[] genids = queryDataBaseForTerm(seq.getRefId(), "gene");
 			// results output
 			EFetchGeneServiceStub fetchGen = new EFetchGeneServiceStub();
-			EFetchGeneServiceStub.EFetchRequest fetchGenReq = new EFetchGeneServiceStub.EFetchRequest();
+			EFetchRequest fetchGenReq = new EFetchRequest();
 			fetchGenReq.setId(genids[0]);
-			EFetchGeneServiceStub.EFetchResult fetchGenRes = fetchGen
+			EFetchResult fetchGenRes = fetchGen
 					.run_eFetch(fetchGenReq);
 			for (int i = 0; i < fetchGenRes.getEntrezgeneSet()
 					.getEntrezgeneSetSequence().length;) {
-				Entrezgene_type0 obj = fetchGenRes.getEntrezgeneSet()
+				gov.nih.nlm.ncbi.www.soap.eutils.efetch_gene.Entrezgene_type0 obj = fetchGenRes.getEntrezgeneSet()
 						.getEntrezgeneSetSequence()[i].getEntrezgene();
 				proteinDetail.setOfficialGenFullName(obj.getEntrezgene_gene()
 						.getGeneRef().getGeneRef_desc());
@@ -78,14 +82,14 @@ public class ProteinDetailServiceImpl implements ProteinDetailService {
 			final String[] proteinids = queryDataBaseForTerm(seq.getRefId(),
 					"protein");
 			EFetchSequenceServiceStub fetchSequence = new EFetchSequenceServiceStub();
-			EFetchSequenceServiceStub.EFetchRequest seqReq = new EFetchSequenceServiceStub.EFetchRequest();
+			gov.nih.nlm.ncbi.www.soap.eutils.efetch_seq.EFetchRequest seqReq = new gov.nih.nlm.ncbi.www.soap.eutils.efetch_seq.EFetchRequest();
 			seqReq.setId(proteinids[0]);
 			seqReq.setDb("protein");
-			EFetchSequenceServiceStub.EFetchResult seqRes = fetchSequence
+			gov.nih.nlm.ncbi.www.soap.eutils.efetch_seq.EFetchResult seqRes = fetchSequence
 					.run_eFetch(seqReq);
 			// results output
 			for (int i = 0; i < seqRes.getGBSet().getGBSetSequence().length;) {
-				EFetchSequenceServiceStub.GBSeq_type0 obj = seqRes.getGBSet()
+				gov.nih.nlm.ncbi.www.soap.eutils.efetch_seq.GBSeq_type0 obj = seqRes.getGBSet()
 						.getGBSetSequence()[i].getGBSeq();
 				proteinDetail.setOrganismName(obj.getGBSeq_organism());
 				proteinDetail.setSource(obj.getGBSeq_source());
@@ -104,10 +108,10 @@ public class ProteinDetailServiceImpl implements ProteinDetailService {
 		try {
 
 			EUtilsServiceStub service = new EUtilsServiceStub();
-			EUtilsServiceStub.ESearchRequest req = new EUtilsServiceStub.ESearchRequest();
+			ESearchRequest req = new ESearchRequest();
 			req.setTerm(term);
 			req.setDb(dbname);
-			EUtilsServiceStub.ESearchResult res = service.run_eSearch(req);
+			ESearchResult res = service.run_eSearch(req);
 			service.cleanup();
 			return res.getIdList().getId();
 		} catch (Exception e) {
@@ -164,8 +168,8 @@ public class ProteinDetailServiceImpl implements ProteinDetailService {
 				final String snpUrl = String.format(snpServiceUrl, ids);
 				Date nowDate = new Date();
 				Long nowTimeSec = nowDate.getTime() / 1000;
-				ExchangeSetDocument exchangeDoc=null;
-				while (nowTimeSec-startTimeSeconds  < 120) {
+				ExchangeSetDocument exchangeDoc = null;
+				while (nowTimeSec - startTimeSeconds < 120) {
 					method = new GetMethod(snpUrl);
 					int statusCode = client.executeMethod(method);
 
@@ -177,11 +181,12 @@ public class ProteinDetailServiceImpl implements ProteinDetailService {
 					// Read the response body.
 					exchangeDoc = ExchangeSetDocument.Factory.parse(method
 							.getResponseBodyAsString());
-					if(exchangeDoc!=null&&exchangeDoc.getExchangeSet()!=null &&
-					   exchangeDoc.getExchangeSet().getRsArray()!=null &&
-					   exchangeDoc.getExchangeSet().getRsArray().length!=0){
+					if (exchangeDoc != null
+							&& exchangeDoc.getExchangeSet() != null
+							&& exchangeDoc.getExchangeSet().getRsArray() != null
+							&& exchangeDoc.getExchangeSet().getRsArray().length != 0) {
 						break;
-					}else{
+					} else {
 						nowDate = new Date();
 						nowTimeSec = nowDate.getTime() / 1000;
 					}
@@ -191,11 +196,11 @@ public class ProteinDetailServiceImpl implements ProteinDetailService {
 				parseSnpResult(exchangeDoc, snpMap, refIdWithOutVersion);
 				// OMIIM
 				EUtilsServiceStub service = new EUtilsServiceStub();
-				EUtilsServiceStub.ELinkRequest reqOmim = new EUtilsServiceStub.ELinkRequest();
+				ELinkRequest reqOmim = new ELinkRequest();
 				reqOmim.setDb("omim");
 				reqOmim.setDbfrom("snp");
 				reqOmim.setId(id_array);
-				EUtilsServiceStub.ELinkResult resOmim = service
+				ELinkResult resOmim = service
 						.run_eLink(reqOmim);
 				parseOmimResult(resOmim, snpMap);
 				service.cleanup();
@@ -248,7 +253,7 @@ public class ProteinDetailServiceImpl implements ProteinDetailService {
 						if (omimlink.getLink() != null) {
 							for (int omimLinkId = 0; omimLinkId < omimlink
 									.getLink().length; omimLinkId++) {
-								LinkTypeE link = omimlink.getLink()[omimLinkId];
+								LinkType link = omimlink.getLink()[omimLinkId];
 								currentDetail.addOmimEntry(new OmimEntry(link
 										.getId().toString()));
 							}
