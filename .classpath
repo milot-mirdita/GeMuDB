@@ -103,5 +103,6 @@
 	<classpathentry kind="lib" path="lib/wsdl4j.jar"/>
 	<classpathentry kind="lib" path="lib/XmlSchema-1.4.7.jar"/>
 	<classpathentry kind="lib" path="lib/neethi-3.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/javax.mail.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
