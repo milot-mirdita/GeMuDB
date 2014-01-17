@@ -1,40 +1,75 @@
 <!doctype html>
 <html>
 <head>
-	<title>GeMuDB</title>
-	<link href='http://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
+	<title>Gene Mutation Database</title>
+
+	<link href="http://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet" type="text/css" />
 	<link rel="stylesheet" href="http://cdn1.gemudb.com/css/ui-lightness/jquery-ui-1.8.18.custom.css" />
-	<link rel="stylesheet" href="http://cdn1.gemudb.com/css/bootstrap.min.css" />
+
+	<link rel="stylesheet" href="css/bootstrap.min.css" />
 	<link rel="stylesheet" href="css/style.css" />
+
 	<link rel="icon" href="http://cdn2.gemudb.com/img/favicon.ico" type="image/x-icon" /> 
 </head>
 <body>
+	<div class="navbar navbar-inverse navbar-static-top">
+		<div class="navbar-inner">
+		<div class="container">
+			<a class="brand" href="#"><img src="img/rost_small.png" alt="Rostlab" /></a>
+			<div>
+				<ul class="nav">
+					<li><a href="#code">Code</a></li>
+					<li><a href="#api">API</a></li>
+					<li><a href="#database">Database</a></li>
+				</ul>
+			</div>
+			<form class="navbar-form pull-right">
+				<div class="search" data-bind="template: { name: 'search_template' }"></div>
+			</form>
+		</div>
+		</div>
+	</div>
+
 <div class="container">
+
 	<div class="row">
 		<div id="search_container" class="span8 offset2">
 			<div class="header">
 				GeMuDB
 			</div>
-			<div class="search" data-bind="template: { name: 'search_template' }"></div>
+			<form class="form-inline">
+				<div class="search" data-bind="template: { name: 'search_template' }"></div>
+			</form>
 		</div>
 	</div>
 
 	<div id="result_container">
+		<div class="result">
+			<div class="row">
+				<div id="protein_detail_container" class="span12">
+					<h2 class="protein_identifier" data-bind="text: protein()"></h2>
+					<div class="spinner" data-bind="visible : !proteinDetail()"></div>
+					<div data-bind="if : proteinDetail()">
+						<div data-bind="template: { name: 'protein_detail_template', data: proteinDetail }"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<div id="top_bar_container" class="row">
-			<div class="search span3" data-bind="template: { name: 'search_template' }"></div>
-			<div id="flot_overview_container" class="span9">
+			<div id="flot_overview_container" class="span12">
 				<div class="seeker" data-bind="drag: sequenceOffsetCallback">
 					<div class="detail">
 						<span class="left" data-bind="text: currentState.offset() + 1"></span>
 						<span class="right" data-bind="text: currentState.offset() + constants.lineLength + 1"></span>
 					</div>
 				</div>
-				<div id="flot_overview"  style="width:715px; height:40px"></div>
+				<div id="flot_overview"  style="width:930px; height:40px"></div>
 			</div>
 		</div>
 		
 		<div id="functional_effect_container" class="result">
-			<div class="row-fluid">
+			<div class="row">
 				<div id="active_types" class="btn-group span2" data-toggle="buttons-checkbox">
 					  <button class="btn btn-warning active"
 		data-bind="typeclick: 'SNAP'">SNAP2</button>
@@ -70,43 +105,33 @@
 					<div id="flot_details"  style="width:926px; height:60px;"></div>
 
 					<span class="sequence monospace" data-bind="text: slicedProtein.sequence()"></span>
-					
-					<div id="protein_detail_container" >
-						<div class="spinner" data-bind="visible : !proteinDetail()"></div>
-						<div data-bind="if : proteinDetail()">
-							<div data-bind="template: { name: 'protein_detail_template', data: proteinDetail }"></div>
-						</div>
-					</div>
 				</div>
 			</div>
 		</div>
 		
 		<div class="row">
-			<div id="functional_effect_list_container" class="result span12" style="height: 300px">
-				<h1>Predicted Mutations</h1>
-				<div class="spinner" data-bind="visible : !mutationListResult()">
+			<div id="functional_effect_list_container" class="result span12">
+				<h3>Predicted Mutations</h3>
+				<div data-bind="visible: !mutationListResult()" style="text-align:center; margin: 36px 0;">
+					Click on an entry above to show detailed results.
 				</div>
-				<ul class="positions" data-bind="visible : mutationListResult(), template: { name: 'prediction_list_entry_template', foreach: mutationListResult }, listclick: showDetailView"></ul>
-			</div>
-			<!--<div id="external_functional_effect_list_container" class="result span5" style="height: 300px" >
-				<h1>Verified Mutations</h1>
-				<div class="spinner" data-bind="visible : !externalMutationListResult()">
+				<div data-bind="if: mutationListResult()">
+					<ul class="positions" 
+						data-bind="	visible: mutationListResult(), 
+									template: { 
+								   		name: 'prediction_list_entry_template', 
+								   		data: mutationListResult 
+								   	}, 
+								   	listclick: showDetailView">
+					</ul>
 				</div>
+				<div>
+					<h3>Verified Mutations</h3>
+					<div class="spinner" data-bind="visible : !externalMutationListResult()">
+					</div>
 
-				<ul class="positions" data-bind="visible : externalMutationListResult(), template: { name: 'external_mutation_list_entry_template', foreach: externalMutationListResult }"></ul>
-			</div>-->
-		</div>
-	</div>
-</div>
-
-<div id="footer_container">
-	<div id="footer_content">
-		<div class="menu row-fluid">
-			<div class="span2">
-				<img src="img/rost_small.png" />
-			</div>
-			<div class="span10">
-				<span>Code</span> | <span>API</span> | <span>Database<span>
+					<ul class="positions" data-bind="visible : externalMutationListResult(), template: { name: 'external_mutation_list_entry_template', foreach: externalMutationListResult }"></ul>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -114,83 +139,84 @@
 
 <script type="text/html" id="protein_detail_template">
 <div class="row">
-<dl class="span6">
-	<dt>Organism Name: </dt>
-    <dd>${organismName}</dd>
- 
-    <dt>Definition: </dt>
-    <dd>${definition}</dd>
- 
-    <dt>Gene name: </dt>
-    <dd>${officialGenFullName}</dd>
-</dl>
-<dl class="span6"> 
-    <dt>Gene Symbol:</dt>
-    <dd>${officialGenSymbol}</dd>
+	<dl class="span6 dl-horizontal">
+		<dt>Organism Name</dt>
+	    <dd data-bind="text: organismName"></dd>
+	 
+	    <dt>Definition</dt>
+	    <dd data-bind="text: definition"></dd>
+	 
+	    <dt>Gene Name</dt>
+	    <dd data-bind="text: officialGenFullName"></dd>
+	</dl>
+	<dl class="span6 dl-horizontal"> 
+	    <dt>Gene Symbol</dt>
+	    <dd data-bind="text: officialGenSymbol"></dd>
 
-    <dt>Gene Location:</dt>
-    <dd>${genLocation}</dd>
+	    <dt>Gene Location</dt>
+	    <dd data-bind="text: genLocation"></dd>
 
-    <dt>Source:</dt>
-    <dd>${source}</dd>
-</dl>
+	    <dt>Source</dt>
+	    <dd data-bind="text: source"></dd>
+	</dl>
 </div>
 </script>
-<script type="text/html" id="search_template">
-	<form class="form-horizontal">
-		<input data-bind="popover: { placement: 'bottom'}" data-original-title="Search Instructions" data-content="You can search by accessor id or by entering a full sequence." value="${protein}" />
-		<button class="btn btn-primary" data-bind="click: searchProtein">Go</button> 
-	</form>
-</script>
-<script type="text/html" id="external_mutation_list_entry_template">
-	<li>
-		<span class="position">${position}</span>
-		<ul class="mutations" id="${'externalmutation' + position}">
-				<li class="section dropdown">
-					<span class="dropdown-toggle">
-						{{if externalMutations.source == "NCBI"}}
-							<a target="_blank" href="${'http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs=' + externalMutations.snpid}">${externalMutations.mutation}</a>
-						{{/if}}
-					</span>
-				</li>
 
-		</ul>
-	</li>
+<script type="text/html" id="search_template">
+	<div>
+		<input data-bind="value: protein, popover: { placement: 'bottom'}" data-original-title="Search Instructions" data-content="You can search by accessor identifier or by entering a full protein sequence." placeholder="NP_005378" type="text"  />
+		<button class="btn btn-primary" data-bind="click: searchProtein">Go</button>
+	</div>
+</script>
+
+<script type="text/html" id="external_mutation_list_entry_template">
+<li>
+	<span class="position" data-bind="text: (position|0)+1"></span>
+	<ul class="mutations" data-bind="attr: { id: 'externalmutation' + position}">
+			<li class="section dropdown">
+				<span class="dropdown-toggle" data-bind="if: externalMutations.source == 'NCBI'">
+					<a target="_blank" data-bind="text: externalMutations.mutation, attr: { href: 'http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs=' + externalMutations.snpid }"></a>
+				</span>
+			</li>
+
+	</ul>
+</li>
 </script>
 <script type="text/html" id="prediction_list_entry_template">
-	<li id="${'mutation' + position}">		
-
-		Position: <span class="position">${position}</span>
-		Wildtype: <span class="wildtype">${wildType}</span>
-		<ul class="mutations">
-			{{each(i, mutation) mutations}}
-			<li class="section dropdown {{if mutation.data[1].effect == 'true'}}sift{{/if}} {{if mutation.data[0].effect=='true'}}snap{{/if}}" id="${'menu' + position + mutation.aa}">
-				<span class="dropdown-toggle" data-toggle="dropdown" href="${'#menu' + position + mutation.aa}">${mutation.aa}</span>
-				<span class="dropdown-menu ${'index' + i}"></span>
-			</li>
-			{{/each}}
-		</ul>
-	</li>
+<li data-bind="attr: { id: 'mutation' + position}">		
+	Position: <span class="position" data-bind="text: position"></span>
+	Wildtype: <span class="wildtype"data-bind="text: wildType"></span>
+	<ul class="mutations" data-bind="foreach: mutations">
+		<li data-bind="
+			attr: { 
+				id: 'menu' + $parent.position + aa,
+				class: 'section dropdown ' + (data[1].effect == 'true' ? ' sift ' : '') + (data[0].effect == 'true' ? ' snap ' : '')
+			}">
+			<span class="dropdown-toggle" data-toggle="dropdown" data-bind="text: aa, attr: { href: '#menu' + $parent.position + aa }"></span>
+			<span class="dropdown-menu $index"></span>
+		</li>
+	</ul>
+</li>
 </script>
 <script type="text/html" id="snp_details">
-	<h1>Details</h1>
-	<dl>
+<h1>Details</h1>
+<dl>
 	<dt>SNAP2 Score</dt>
-	<dd>${SNAP.score}</dd>
+	<dd data-bind="text: SNAP.score"></dd>
+
 	<dt>Sift Score</dt>
-	<dd>${SIFT.score}</dd>
-	</dd>
+	<dd data-bind="text: SIFT.score"></dd>
+</dd>
 </script>
-<script src="http://cdn1.gemudb.com/js/jquery-1.7.2.min.js"></script>
-<script src="http://cdn2.gemudb.com/js/jquery.flot.min.js"></script>
+
+<script src="js/jquery-1.7.2.min.js"></script>
+<script src="js/jquery.flot.min.js"></script>
 <script src="http://cdn3.gemudb.com/js/jquery.event.drag-2.0.min.js"></script>
-<script src="http://cdn1.gemudb.com/js/jquery.scrollTo-1.4.2-min.js"></script>
 <script src="http://cdn2.gemudb.com/js/jquery-ui-1.8.18.custom.min.js"></script>
-<script src="http://cdn3.gemudb.com/js/underscore-min.js"></script>
-<script src="js/jquery.tmpl.js"></script>
-<script src="http://cdn1.gemudb.com/js/knockout-2.1.0.js"></script>
-<script src="http://cdn2.gemudb.com/js/sammy-latest.min.js"></script>
-<script src="http://cdn3.gemudb.com/js/bootstrap.min.js"></script>
-<script src="http://cdn1.gemudb.com/js/app.js"></script>
+<script src="js/underscore-min.js"></script>
+<script src="js/knockout-3.0.0.js"></script>
+<script src="js/sammy-latest.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>

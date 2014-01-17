@@ -1,27 +1,12 @@
 html, body {
 	height: 100%;
 }
-h1 {
-	font-size: 16px;
-}
-
-h2 {
-	font-size: 14px;
-}
-
-.container {
-	min-height: 100%;
-	height: auto !important;
-	height: 100%;
-	margin: 0 auto -50px;
-}
 
 #flot_overview_container {
 	position: relative;
 	background-color: #333;
-	height: 42px;
-	margin-top: 3px;
-	margin-left: 2px;
+	padding: 5px;
+	box-sizing: border-box;
 }
 
 #flot_overview_container .seeker {
@@ -72,32 +57,36 @@ h2 {
 	cursor: pointer;
 }
 
-#functional_effect_list_container, 
-#external_functional_effect_list_container{
-	height: 300px;
-	overflow: auto;
-	overflow-x:hidden;
-	border-top:0;
-	-moz-box-sizing:border-box;
+#active_alphabet .btn {
+padding: 4px 10px;
 }
 
-#external_functional_effect_list_container {
-	margin-left:0;
-	width: 400px;
-	border-left:0;
+.navbar a.brand {
+	display:inline-block;
+	height: 20px;
+}
+
+.navbar a.brand img {
+	padding:0; margin:0;
+	height: 25px;
+	margin-top: -3px;
 }
 
 .spinner {
 	background:url(spinner.gif) no-repeat;
-	width:128px;
-	height: 128px;
-	margin: 0 auto;
+	width: 32px;
+	height: 32px;
+	margin: 16px auto;
+}
+
+#protein_detail_container .spinner {
+	margin: 32px auto 52px auto;
 }
 
 #search_container {
 	display: block;
 	position: absolute;
-	top: 40%;
+	top: 50%;
 }
 
 #search_container .header {
@@ -122,8 +111,6 @@ h2 {
 }
 
 #top_bar_container {
-	margin: 5px 0 0 0;
-	background-color: #333;
 	height: 47px;
 }
 
@@ -134,7 +121,7 @@ h2 {
 .result {
 	background-color: #eaeaea;
 	border: 1px solid #ccc;
-	padding: 7px;
+	padding: 5px;
 	box-sizing: border-box;
 }
 
@@ -189,9 +176,10 @@ h2 {
 .positions > li {
 	position: relative;
 	margin-bottom: 10px;
-	/* width: 507px; */
 	padding: 7px;
-	margin-left: -12px
+	margin-left: -12px;
+	float: left;
+	margin-right: 2px;
 }
 
 .positions li ul {
@@ -283,7 +271,6 @@ h2 {
 	height:47px;
 	display: inline-block;
 	background-color: white;
-	border-bottom-right-radius: 15px;
 	margin-left:0;
 }
 
@@ -346,4 +333,10 @@ h2 {
 }
 .ui-slider-handle:hover {
 	text-decoration: none;
+}
+
+.protein_identifier {
+	margin: 0;
+	line-height: 1em;
+	margin-top: 15px;
 }

@@ -1,12 +1,38 @@
 ;
 var initProteinMixin = (function(out) {
+	var constants = {
+		externalSnpGraphHeight: 19,
+		lineLength: 115
+	};
+
 	out.overviewPlotOptions = function (xaxis_maxlength) { return {
-		legend : { show : false }, 
-		xaxis : { show : false, min : 0, max : xaxis_maxlength, minTickSize: 5, tickSize: 5 }, 
-		yaxis : { show : false, min : 0, max : 19, position : 'right', ticks : [0, 19] }, 
-		grid : { borderWidth : 1, borderColor : '#555', clickable : true }, 
+		legend : { 
+			show : false
+		}, 
+		xaxis : { 
+			show : false, 
+			min : 0, 
+			max : xaxis_maxlength, 
+			minTickSize: 5, 
+			tickSize: 5
+		}, 
+		yaxis : { 
+			show : false, 
+			min : 0,
+			max : 19,
+			position : 'right',
+			ticks : [ 0, 19 ]
+		}, 
+		grid : { 
+			borderWidth : 1, 
+			borderColor : '#555',
+			clickable : true
+		}, 
 		series : { 
-			lines : { show : false, steps : false}, 
+			lines : { 
+				show : false,
+				steps : false
+			}, 
 			bars : { 
 				show : true, 
 				steps : true, 
@@ -22,26 +48,64 @@ var initProteinMixin = (function(out) {
       				] 
       			} 
       		}, 
-			shadowSize : 1} 
-		}};
+			shadowSize : 1
+		} 
+	}};
 
 	out.detailPlotOptions = function () { return {
-		legend : { show : false }, 
-		xaxis : { show : false, min : 0, max : 115, minTickSize: 5, tickSize: 5 }, 
-		yaxis : { show : false, min : 0, max : 19, position : 'right', ticks : [0, 19] }, 
-		grid : { borderWidth : 1, borderColor : '#ccc', clickable : true }, 
-		series : { 
-			lines : { show : false, steps : false}, 
-			bars : { show : true, steps : true, lineWidth: 1,
-    		 fill: true,
-      		fillColor: { colors: [ { opacity: 0.0 }, { opacity: 1 } ] } }, 
-			shadowSize : 1} 
-		}};
+		legend : {
+			show : false
+		},
+		xaxis : {
+			show : false,
+			min : 0,
+			max : 115,
+			minTickSize : 5,
+			tickSize : 5
+		},
+		yaxis : {
+			show : false,
+			min : 0,
+			max : 19,
+			position : 'right',
+			ticks : [ 0, 19 ]
+		},
+		grid : {
+			borderWidth : 1,
+			borderColor : '#ccc',
+			clickable : true
+		},
+		series : {
+			lines : {
+				show : false,
+				steps : false
+			},
+			bars : {
+				show : true,
+				steps : true,
+				lineWidth : 1,
+				fill : true,
+				fillColor : {
+					colors : [
+						{
+							opacity:0.0
+						},
+						{
+							opacity:1
+						}
+					]
+				}
+			},
+			shadowSize : 1
+		}
+	}};
 	
 	out.subProtein = function(data, offset, lineLength) {
-		if(!data) return null;
+		if(!data) {
+			return null;
+		}
 	
-		var lineLength = lineLength || 115;
+		var lineLength = lineLength || constants.lineLength;
 		var predictions = [];
 
 		$.each(data.predictions, function(index, prediction) {
@@ -52,11 +116,12 @@ var initProteinMixin = (function(out) {
 			});
 		});
 				
-		return { refid : data.refid, 
+		return { 
+			refid : data.refid, 
 			sequence : data.sequence.slice(offset, offset + lineLength),
 			predictions : predictions
 		};
-	}
+	};
 	
 	var probsToData = function (probs) {
 		var data = []; 
@@ -68,7 +133,8 @@ var initProteinMixin = (function(out) {
 			counter++;
 		}
 		return data;
-	}
+	};
+
 	var filterData = function (probs, threshold) {
 		for(var i = 0; i < probs.length; i++) { 
 			if ( probs[i] != "-") { 
@@ -80,24 +146,33 @@ var initProteinMixin = (function(out) {
 	};
 	
 	out.createGraphDataFromPredictionObject = function(data,types,threshold){
-	  var graphdata = [];
-          for(var i in data.predictions) {
-             var index = _.indexOf(types, data.predictions[i].type);
-             if(index != -1) {
-                var graphData = probsToData(data.predictions[index].conservation);
-                graphData = filterData(graphData, threshold);
-                graphdata.push(graphData);
-             } else {
-                graphdata.push([]);
-             }
-          }
-	  return graphdata;
+		var graphdata = [];
+		data.predictions.sort(function(a, b) {
+			if (a.type > b.type)
+				return -1;
+			if (a.type < b.type)
+				return 1;
+			return 0;
+		});
+		for(var i in data.predictions) {
+			var index = _.indexOf(types, data.predictions[i].type);
+			if(index != -1) {
+				var graphData = probsToData(data.predictions[index].conservation);
+				graphData = filterData(graphData, threshold);
+				graphdata.push(graphData);
+			} else {
+				graphdata.push([]);
+			}
+		}
+		return graphdata;
 	};
 	
-	out.createGraphDataFromExternalSnp = function(data){
+	out.createGraphDataFromExternalSnp = function(data, offset){
+		var offset = offset || 0;
 		var graphdata = [];
-		for(var mutpos in data.externalMutationPos) {
-			graphdata.push([mutpos.position,constants.externalSnpGraphHeight]);
+		for(var mutpos in data) {
+			if(data.hasOwnProperty(mutpos) && data[mutpos].position - offset >= 0)
+				graphdata.push([data[mutpos].position - offset, constants.externalSnpGraphHeight]);
 		}
 		return graphdata;
 	};
@@ -105,13 +180,12 @@ var initProteinMixin = (function(out) {
 	out.addGraph = function(target, data, options, callback) {
 		var fill = fill || false;
 
-
 		options.yaxis.max = $("#active_alphabet .active").size();
 		$("#slider").slider("option", "max", $("#active_alphabet .active").size() - 1);
 
 		var plot = $.plot(target, data, options);
-		
-		if(target == "#flot_details") {
+
+		if(target.attr('id') === "flot_details") {
 			$(target).bind("plotclick", function (event, pos, item) {
 				if (item && callback) {
 					callback(item);
@@ -166,8 +240,6 @@ var initStateMixin = (function(out) {
 	}
 });
 
-
-
 var Protein = function() {
 	this.refid = ko.observable("");
 	this.sequence = ko.observable("");
@@ -178,7 +250,6 @@ var Protein = function() {
 	"use strict";
 	var constants = {
 		lineLength : 115,
-		externalSnpGraphHeight: 3,
 		baseUrl : "http://gemudb.com/api/"
 	};
 
@@ -197,23 +268,28 @@ var Protein = function() {
 			console.log(error);
 		};
 
-		self.protein = 'NP_005378';
-		self.proteinDetail=ko.observable();
-		self.currentState = {
-			threshold : 0,
-			offset : ko.observable(0),
-			types : [
-				'SNAP'
-			],
-			alphabet : '',
-			detail : {
-				index : null,
-				mutation : null
-			},
-			protein : null
-		};
-		
-		
+		self.protein = ko.observable('NP_005378');
+
+		self.proteinDetail = ko.observable();
+
+		function defaultState() {
+			return {
+				threshold : 0,
+				offset : ko.observable(0),
+				types : [
+					'SNAP'
+				],
+				alphabet : '',
+				detail : {
+					index : null,
+					mutation : null
+				},
+				protein : null
+			};
+		}
+
+		self.currentState = defaultState();
+				
 		/**
 		 * @arg length of detail graph
 		 */
@@ -226,6 +302,8 @@ var Protein = function() {
 		 * @arg 
 		 */
 		self.snpDetails = ko.observable();
+
+		self.slicedProtein = new Protein();
 		
 	
 		self.showDetailView = function(element, index, mutation) {
@@ -235,13 +313,9 @@ var Protein = function() {
 
 			var data = null;
 
-			for(var i in snps) {
-				if(snps[i].position == index) {
-					for(var j in snps[i].mutations) {
-						if(snps[i].mutations[j].aa == mutation) {
-							data = snps[i].mutations[j].data;
-						}
-					}
+			for(var i in snps.mutations) {
+				if(snps.mutations[i].aa == mutation) {
+					data = snps.mutations[i].data;
 				}
 			}
 
@@ -253,131 +327,114 @@ var Protein = function() {
 				var dropdown = $(detailElement).parent().find('.dropdown-menu');
 				ko.applyBindingsToNode(dropdown[0], 
 					{ template: { name: 'snp_details', data: result } });
-				
-				// setTimeout(function() {
-				// 	$('#functional_effect_list_container').scrollTo(dropdown.attr('href'),
-				// 	{ duration: 500, margin : true });
-				// }, 100);
 			}
 		}
 
 		self.searchProtein = function() {
-			location.hash = "!/search/" + self.protein;
+			location.hash = "!/search/" + self.protein();
 		};
 
 		var showSearch = function() {
 			$("#search_container").show();
 			$("#result_container").hide();
+			$(".navbar-form").hide();
 			$(window).resize();
 		};
 
 		var hideSearch = function() {
 			$("#search_container").hide();
 			$("#result_container").show();
+			$(".navbar-form").show();
 			$(window).resize();
 		};
 
-		self.slicedProtein = new Protein();
 		self.updateByProteinResult = function(proteinResult) {
 			var offset = self.currentState.offset();
 			var types = self.currentState.types;
 			
 			self.currentState.protein = proteinResult;
 
-			var slicedProtein = hidden.subProtein(proteinResult, offset, constants.lineLength);
-			
-			self.slicedProtein.refid(slicedProtein.refid);
-			self.slicedProtein.sequence(slicedProtein.sequence);
-			self.slicedProtein.predictions(slicedProtein.predictions);
-
-			self.updateGraphs(proteinResult, slicedProtein, types);
-			self.updateUrl();
+			self.updateGraphs(proteinResult, offset, types);
 		};
 		
 		
 		self.updateByProteinDetail = function(proteinDetail) {
 			self.proteinDetail(proteinDetail);
-			self.updateUrl();
 			hideSearch();
 		};
 		
 		self.updateByExternalSnpContainer = function(externalSnpContainer) {
 			self.externalMutationListResult(externalSnpContainer.externalMutationPosition)
-			self.updateUrl();
+			self.updateGraphs(self.currentState.protein, self.currentState.offset(), self.currentState.types);
 		};
-
-		self.updateGraphs = function(normal, scliced, types) {
+		
+		self.updateGraphs = function(normal, offset, types) {
 			var clickHandler = function (item) {
 				var index = self.currentState.offset() + item.dataIndex + 1;
-				$(".mutations").parent().removeClass('active');
-				$("#mutation" + index).parent().addClass('active');
+				var id = self.currentState.protein.refid;
 
-				$('#functional_effect_list_container').scrollTo("#mutation" + index, 
-					{ duration: 500, margin : true });
-
+				$.when($.getJSON(constants.baseUrl + id + '/functionaleffect/detail/ALL/'+ index))
+					.done(function (result) {
+			 			self.mutationListResult(result);
+					})
+					.fail(self.ajaxErrorHandler);
 			};
 
 			$("#slider").slider("option", "max", $("#active_alphabet .active").size() - 1);
 			
-			var normal_predict_graphdata  = hidden.createGraphDataFromPredictionObject(normal,types,self.currentState.threshold);
-			//var snp_graphdata     = hidden.createGraphDataFromExternalSnp(externalSnpContainer);
-			var snp_graphdata = [];
-			var normal_graphdata = normal_predict_graphdata.concat(snp_graphdata);
+			var proteinData  = hidden.createGraphDataFromPredictionObject(normal, types, self.currentState.threshold);
+			var sliced       = hidden.subProtein(normal, offset, constants.lineLength);
+			
+			self.slicedProtein.refid(sliced.refid);
+			self.slicedProtein.sequence(sliced.sequence);
+			self.slicedProtein.predictions(sliced.predictions);
 
-			hidden.addGraph($('#flot_overview'), normal_graphdata, hidden.overviewPlotOptions(normal.sequence.length));
+			var slicedData   = hidden.createGraphDataFromPredictionObject(sliced, types, self.currentState.threshold);
+
+			var snpData      = hidden.createGraphDataFromExternalSnp(self.externalMutationListResult());
+			var slicedSnpData = hidden.createGraphDataFromExternalSnp(self.externalMutationListResult(), offset);
 			
-			var scliced_graphdata = hidden.createGraphDataFromPredictionObject(scliced,types,self.currentState.threshold);
-			hidden.addGraph($('#flot_details'), scliced_graphdata, hidden.detailPlotOptions(), clickHandler);
+			var snpPlot = [{
+				color: '#ff0000', 
+				data : snpData
+			}];
+
+			var slicedSnpPlot = [{
+				color: '#ff0000', 
+				data : slicedSnpData
+			}];
+
+			var proteinPlot = snpPlot.concat(proteinData);
+			var slicedPlot = slicedSnpPlot.concat(slicedData);
 			
-			self.updateUrl();
+			hidden.addGraph($('#flot_overview'), proteinPlot, hidden.overviewPlotOptions(normal.sequence.length));
+			hidden.addGraph($('#flot_details'), slicedPlot, hidden.detailPlotOptions(), clickHandler);
 		}
 
 		self.updateTypes = function() {
-			var slicedProtein = hidden.subProtein(self.currentState.protein, self.currentState.offset(), constants.lineLength);
-			self.updateGraphs(self.currentState.protein, slicedProtein, self.currentState.types);
-			self.updateUrl();
+			self.updateGraphs(self.currentState.protein, self.currentState.offset(), self.currentState.types);
 		};
 
-		self.updateList = _.debounce(function () {
-			var id = self.currentState.protein.refid;
-			var offset = ((self.currentState.offset() - 0) + 1);
-			var length = constants.lineLength;
-			self.mutationListResult(null);
-
-			$.when($.getJSON(constants.baseUrl + 'mutations/' + id + '/' + offset + '/' + length))
-			 .done(function (result) {
-		 		self.mutationListResult(result.mutationsPos);
-			 })
-			 .fail(self.ajaxErrorHandler);
-			 self.updateUrl();
-		}, 500);
-
 		self.updateAlphabet = _.debounce(function (alphabet) {
-			$.when($.getJSON(constants.baseUrl + "prediction/" 
-						 + self.protein + "/" + alphabet))
-			.done(function (proteinResult) {
-				proteinResult.refid = self.protein;
+			$.when(
+				$.getJSON(constants.baseUrl + self.protein() + "/functionaleffect/" + alphabet + "/SNAP"),
+				$.getJSON(constants.baseUrl + self.protein() + "/functionaleffect/" + alphabet + "/SIFT"))
+			.done(function (snapResult, siftResult) {
+				var proteinResult = {};
+				proteinResult.refid = self.protein();
+				proteinResult.predictions = [snapResult[0], siftResult[0]];
+				proteinResult.sequence = snapResult[0].sequence;
 				self.updateByProteinResult(proteinResult);
 			})
 			.fail(self.ajaxErrorHandler);
-			self.updateUrl();
 		}, 500);
 
 		self.sequenceOffsetCallback = _.throttle(function (value) {
 			self.currentState.offset(value);
-			var slicedProtein = hidden.subProtein(self.currentState.protein, value, constants.lineLength);
-			self.slicedProtein.refid(slicedProtein.refid);
-			self.slicedProtein.sequence(slicedProtein.sequence);
-			self.slicedProtein.predictions(slicedProtein.predictions);
-			self.updateGraphs(self.currentState.protein, slicedProtein, self.currentState.types);
-			self.updateList();
-			self.updateUrl();
+			self.updateGraphs(self.currentState.protein, value, self.currentState.types);
 		}, 32);
 
-		self.updateUrl = function() {
-			//debugger;
-			//location.hash = hidden.serializeState(self.currentState);
-		};
+		self.currentReferenceId = "";
 
 		$(document).ready(function() {
 			$('#functional_effect_list_container').on('click', '.dropdown-menu', function(event) {
@@ -397,17 +454,9 @@ var Protein = function() {
 				}
 			});
 			$('.ui-slider-handle', '#slider').text(0);
-
-			$(window).resize(function () {
-				(_.debounce(function() {
-					$('#functional_effect_list_container, #external_functional_effect_list_container').height($('#footer_content').offset().top - ($('#functional_effect_container').offset().top + $('#functional_effect_container').height()) - 30);
-				}, 64))();
-			});
 		});
 
 		Sammy(function() {
-			this.initialized = false;
-
 			this.get("#!/search/:protein", function(context) {
 				var protein = this.params["protein"];
 				
@@ -423,6 +472,15 @@ var Protein = function() {
 				var reference = this.params["refid"];
 				if(self.currentReferenceId != reference) {
 					self.currentReferenceId = reference;
+					self.currentState = defaultState();
+
+					self.proteinDetail(null);
+					self.slicedProtein.refid(null);
+					self.slicedProtein.sequence(null);
+					self.slicedProtein.predictions([]);
+					self.mutationListResult(null);
+					self.externalMutationListResult(null);
+					self.snpDetails(null);
 
 					$.when(
 						$.getJSON(constants.baseUrl + reference + "/functionaleffect/SNAP"),
@@ -433,30 +491,31 @@ var Protein = function() {
 							proteinResult.predictions = [snapResult[0], siftResult[0]];
 							proteinResult.sequence = snapResult[0].sequence;
 							self.updateByProteinResult(proteinResult);
-							self.updateList();
 							hideSearch();
 
 						})
 						.fail(self.ajaxErrorHandler);
-					$.when($.getJSON(constants.baseUrl + "detail/" 
-							 + reference))
+
+					$.when($.getJSON(constants.baseUrl + "detail/" + reference))
 						.done(function (proteinDetail) {
-							
-					self.updateByProteinDetail(proteinDetail);
-					$.when($.getJSON(constants.baseUrl + "externalsnp/" 
-							 + reference))
+							self.updateByProteinDetail(proteinDetail); 
+						})
+					 	.fail(self.ajaxErrorHandler);	
+
+					 $.when($.getJSON(constants.baseUrl + "externalsnp/" + reference))
 						.done(function (externalSnpContainer) {
-							
-					self.updateByExternalSnpContainer(externalSnpContainer);
-					})
-					 .fail(self.ajaxErrorHandler);
-					})
-					 .fail(self.ajaxErrorHandler);					
-					
+
+							self.updateByExternalSnpContainer(externalSnpContainer);
+						})
+					 	.fail(self.ajaxErrorHandler);	
 				}
 			});
 			
 			this.get("", function() {
+				showSearch();
+			});
+
+			this.get("#", function() {
 				showSearch();
 			});
 		}).run();
@@ -530,7 +589,8 @@ var Protein = function() {
 		init: function(element, valueAccessor, allBindingsAccessor, viewModel) {
 			$(element).on("click", ".mutations li", function(event) {
 				// Hack, dont want to add data binding to each element
-				var index = $(event.target).parent().parent().parent().find('.position').text();
+				var index = $(event.target).closest('.positions').find('.position').text();
+				debugger;
 				var mutation = $(event.target).text();
 				var callback = valueAccessor();
 				callback(event.target, index, mutation);
@@ -581,6 +641,7 @@ var Protein = function() {
 		}
 	};
 
+	// https://github.com/knockout/knockout/wiki/Bindings---class
 	ko.bindingHandlers['class'] = {
     'update': function(element, valueAccessor) {
         if (element['__ko__previousClassValue__']) {
@@ -592,6 +653,6 @@ var Protein = function() {
     }
 };
 	
-	return ko.applyBindings(new SearchViewModel());
+return ko.applyBindings(new SearchViewModel());
 })();
 
