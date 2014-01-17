@@ -184,8 +184,7 @@ public class FunctionalEffectServiceImpl implements FunctionalEffectService {
 			currentMutationPos.setWildType(wildTypeAA.toString());
 			for (int aaindex = 0; aaindex < 21; aaindex++) {
 				Character currAa = AminoLookup.reversLookup(aaindex);
-				if (currAa.charValue() == 'X'
-						|| currAa.charValue() == wildTypeAA.charValue())
+				if (currAa.charValue() == 'X')
 					continue;
 				MutationData mutData = null;
 				if ((mutData = aa_data_map.get(currAa)) == null) {
