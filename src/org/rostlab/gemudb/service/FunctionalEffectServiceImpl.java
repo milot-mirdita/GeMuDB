@@ -141,8 +141,17 @@ public class FunctionalEffectServiceImpl implements FunctionalEffectService {
 		final Sequence sequence = sequenceDao.selectByRefId(refId);
 		if (sequence == null)
 			return null;
-		final List<Mutation> mutationList = mutationDao.selectByIdAndLimit(
-				sequence.getId(), pos, 1, type.getCode());
+		
+		final List<Mutation> mutationList;
+		if(type.equals(MutationType.ALL)) {
+			mutationList = mutationDao.selectByIdAndLimit(
+					sequence.getId(), pos, 1);
+		}
+		else {
+			mutationList = mutationDao.selectByIdAndLimit(
+					sequence.getId(), pos, 1, type.getCode());
+		}
+		
 		final String sequenceString = sequence.getSequence();
 		final MutationPosContainer mutationPosContainer = new MutationPosContainer(
 				1); // only one
