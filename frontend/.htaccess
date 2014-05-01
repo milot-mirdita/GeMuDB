@@ -1,0 +1,35 @@
+AddType application/font-woff .woff
+
+<ifModule mod_expires.c>
+	ExpiresActive On
+	ExpiresDefault A300
+	 
+	# Expires after 1 month
+	ExpiresByType image/gif "access 1 year"
+	ExpiresByType image/png "access 1 year"
+	ExpiresByType image/jpg "access 1 year"
+	ExpiresByType image/x-icon "access 1 year"
+	ExpiresByType application/pdf "access 1 year"
+	ExpiresByType application/javascript "access 1 year"
+	ExpiresByType application/x-javascript "access 1 year"
+	ExpiresByType text/plain "access 1 year"
+	ExpiresByType text/css "access 1 year"
+	ExpiresByType application/font-woff "access 1 year"
+</ifModule>
+
+<FilesMatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|js|css|swf|woff)$">
+	Header set Cache-Control "public"
+</FilesMatch>
+
+<ifModule mod_deflate.c>
+<ifModule mod_filter.c>
+	SetOutputFilter DEFLATE
+	AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml application/x-javascript application/x-httpd-php
+	BrowserMatch ^Mozilla/4 gzip-only-text/html
+	BrowserMatch ^Mozilla/4\.0[678] no-gzip
+	BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+	BrowserMatch \bMSI[E] !no-gzip !gzip-only-text/html
+	SetEnvIfNoCase Request_URI \.(?:gif|jpe?g|png)$ no-gzip
+	Header append Vary User-Agent env=!dont-vary
+</ifModule>
+</ifModule>

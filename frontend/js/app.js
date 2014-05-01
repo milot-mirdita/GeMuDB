@@ -1,10 +1,11 @@
 ;
-var initProteinMixin = (function(out) {
-	var constants = {
-		externalSnpGraphHeight: 19,
-		lineLength: 115
-	};
+var constants = {
+	externalSnpGraphHeight: 19,
+	lineLength: 90,
+	baseUrl : "http://gemudb.com/api/"
+};
 
+var initProteinMixin = (function(out) {
 	out.overviewPlotOptions = function (xaxis_maxlength) { return {
 		legend : { 
 			show : false
@@ -25,7 +26,7 @@ var initProteinMixin = (function(out) {
 		}, 
 		grid : { 
 			borderWidth : 1, 
-			borderColor : '#555',
+			borderColor : '#aaa',
 			clickable : true
 		}, 
 		series : { 
@@ -57,22 +58,21 @@ var initProteinMixin = (function(out) {
 			show : false
 		},
 		xaxis : {
-			show : false,
+			show : true,
 			min : 0,
-			max : 115,
-			minTickSize : 5,
-			tickSize : 5
+			max : constants.lineLength,
+			tickLength: 0
 		},
 		yaxis : {
 			show : false,
 			min : 0,
 			max : 19,
 			position : 'right',
-			ticks : [ 0, 19 ]
+			ticks : [ 0, 19 ],
 		},
 		grid : {
 			borderWidth : 1,
-			borderColor : '#ccc',
+			borderColor : '#aaa',
 			clickable : true
 		},
 		series : {
@@ -155,8 +155,8 @@ var initProteinMixin = (function(out) {
 			return 0;
 		});
 		for(var i in data.predictions) {
-			var index = _.indexOf(types, data.predictions[i].type);
-			if(index != -1) {
+			var index = $.inArray(data.predictions[i].type, types);
+			if(index !== -1) {
 				var graphData = probsToData(data.predictions[index].conservation);
 				graphData = filterData(graphData, threshold);
 				graphdata.push(graphData);
@@ -179,15 +179,16 @@ var initProteinMixin = (function(out) {
 	
 	out.addGraph = function(target, data, options, callback) {
 		var fill = fill || false;
-
 		options.yaxis.max = $("#active_alphabet .active").size();
 		$("#slider").slider("option", "max", $("#active_alphabet .active").size() - 1);
 
 		var plot = $.plot(target, data, options);
+		setTimeout(function() { $('#flot_container').addClass('rendered') }, 200);
 
-		if(target.attr('id') === "flot_details") {
+		if(callback) {
 			$(target).bind("plotclick", function (event, pos, item) {
-				if (item && callback) {
+				if (item) {
+					console.log(item);
 					callback(item);
 				}
 			});
@@ -248,10 +249,6 @@ var Protein = function() {
 
 (function() {
 	"use strict";
-	var constants = {
-		lineLength : 115,
-		baseUrl : "http://gemudb.com/api/"
-	};
 
 	function SearchViewModel() {
 		// private
@@ -370,7 +367,7 @@ var Protein = function() {
 		
 		self.updateGraphs = function(normal, offset, types) {
 			var clickHandler = function (item) {
-				var index = self.currentState.offset() + item.dataIndex + 1;
+				var index = self.currentState.offset() + item.datapoint[0] + 1;
 				var id = self.currentState.protein.refid;
 
 				$.when($.getJSON(constants.baseUrl + id + '/functionaleffect/detail/ALL/'+ index))
@@ -406,9 +403,16 @@ var Protein = function() {
 
 			var proteinPlot = snpPlot.concat(proteinData);
 			var slicedPlot = slicedSnpPlot.concat(slicedData);
+
+			var detailOptions = hidden.detailPlotOptions();
+			detailOptions.xaxis.ticks = self.slicedProtein.sequence().split("").map(
+				function(val, i) { 
+					return [i + 0.5, val];
+				}
+			);
 			
 			hidden.addGraph($('#flot_overview'), proteinPlot, hidden.overviewPlotOptions(normal.sequence.length));
-			hidden.addGraph($('#flot_details'), slicedPlot, hidden.detailPlotOptions(), clickHandler);
+			hidden.addGraph($('#flot_details'), slicedPlot, detailOptions, clickHandler);
 		}
 
 		self.updateTypes = function() {
@@ -549,10 +553,9 @@ var Protein = function() {
 				var minOffset = marginLeft; 
 				var maxOffset = plotWidth - seekerWidth - marginRight;
 				
-				$(element).drag(function(event, dd ){
+				$(element).drag(function(event, dd){
 					var offset = hidden.clamp(dd.offsetX, minOffset, maxOffset);
 					$(element).css('left', offset);
-					// valueAccessor() is the callback to be called with an parameter
 					valueAccessor()(Math.floor((offset-2) * sequenceLength / (plotWidth-8)));	
 				},{ relative:true });
 			
@@ -590,7 +593,6 @@ var Protein = function() {
 			$(element).on("click", ".mutations li", function(event) {
 				// Hack, dont want to add data binding to each element
 				var index = $(event.target).closest('.positions').find('.position').text();
-				debugger;
 				var mutation = $(event.target).text();
 				var callback = valueAccessor();
 				callback(event.target, index, mutation);

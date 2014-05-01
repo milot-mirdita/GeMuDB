@@ -1,136 +1,240 @@
 <!doctype html>
 <html>
 <head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 	<title>Gene Mutation Database</title>
 
-	<link href="http://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet" type="text/css" />
-	<link rel="stylesheet" href="http://cdn1.gemudb.com/css/ui-lightness/jquery-ui-1.8.18.custom.css" />
+	<link rel="shortcut icon" href="img/favicon.ico"> 
 
-	<link rel="stylesheet" href="css/bootstrap.min.css" />
-	<link rel="stylesheet" href="css/style.css" />
+	<link rel="stylesheet" href="css/ui-lightness/jquery-ui-1.8.18.custom.css">
 
-	<link rel="icon" href="http://cdn2.gemudb.com/img/favicon.ico" type="image/x-icon" /> 
+	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-	<div class="navbar navbar-inverse navbar-static-top">
-		<div class="navbar-inner">
-		<div class="container">
-			<a class="brand" href="#"><img src="img/rost_small.png" alt="Rostlab" /></a>
-			<div>
-				<ul class="nav">
-					<li><a href="#code">Code</a></li>
-					<li><a href="#api">API</a></li>
-					<li><a href="#database">Database</a></li>
-				</ul>
-			</div>
-			<form class="navbar-form pull-right">
-				<div class="search" data-bind="template: { name: 'search_template' }"></div>
-			</form>
+<div class="navbar navbar-default navbar-static-top" role="navigation">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="#">
+				<img src="img/rost_small.png" width="108px" height="15px" alt="Rostlab">
+			</a>
 		</div>
+		<div class="navbar-collapse collapse" role="navigation">
+			<ul class="nav navbar-nav">
+				<li><a href="#code">Code</a></li>
+				<li><a href="#api">API</a></li>
+				<li><a href="#database">Database</a></li>
+			</ul>
+
+			<form class="nav navbar-form navbar-right">
+				<div class="search"
+					data-bind="template: {
+						name: 'search_template'
+					}">
+				</div>
+			</form>
+
 		</div>
 	</div>
+</div>
 
 <div class="container">
-
 	<div class="row">
-		<div id="search_container" class="span8 offset2">
+		<div id="search_container" class="text-center col-xs-12">
 			<div class="header">
 				GeMuDB
 			</div>
 			<form class="form-inline">
-				<div class="search" data-bind="template: { name: 'search_template' }"></div>
+				<div class="search"
+					data-bind="template: {
+						name: 'search_template'
+					}">
+				</div>
 			</form>
 		</div>
 	</div>
 
 	<div id="result_container">
-		<div class="result">
-			<div class="row">
-				<div id="protein_detail_container" class="span12">
-					<h2 class="protein_identifier" data-bind="text: protein()"></h2>
-					<div class="spinner" data-bind="visible : !proteinDetail()"></div>
-					<div data-bind="if : proteinDetail()">
-						<div data-bind="template: { name: 'protein_detail_template', data: proteinDetail }"></div>
+		<div class="row">
+			<div id="protein_detail_container" class="col-xs-12">
+				<div class="row">
+				<h2 class="protein_identifier col-xs-2"
+					data-bind="text: protein()">
+				</h2>
+				<div class="spinner"
+					data-bind="visible : !proteinDetail()">
+				</div>
+				<div class="col-xs-10"
+					data-bind="if : proteinDetail()">
+					<div
+						data-bind="template: {
+							name: 'protein_detail_template',
+							data: proteinDetail
+						}">
+					</div>
+				</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-xs-12 col-md-8">
+				<div id="active_alphabet" class="btn-group btn-group-justified"
+					data-toggle="buttons-checkbox"
+					data-bind="alphabetclick: updateAlphabet">
+					<div class="btn-group">
+						<button class="btn btn-default active a">A</button>
+					</div>
+					<div class="btn-group">
+						<button class="btn btn-default active c">C</button>
+					</div>
+					<div class="btn-group">
+						<button class="btn btn-default active d">D</button>
+					</div>
+					<div class="btn-group">
+						<button class="btn btn-default active e">E</button>
+					</div>
+					<div class="btn-group">
+						<button class="btn btn-default active f">F</button>
+					</div>
+					<div class="btn-group">
+						<button class="btn btn-default active g">G</button>
+					</div>
+					<div class="btn-group">
+						<button class="btn btn-default active h">H</button>
+					</div>
+					<div class="btn-group">
+						<button class="btn btn-default active i">I</button>
+					</div>
+					<div class="btn-group">
+						<button class="btn btn-default active k">K</button>
+					</div>
+					<div class="btn-group">
+						<button class="btn btn-default active l">L</button>
+					</div>
+					<div class="btn-group">
+						<button class="btn btn-default active m">M</button>
+					</div>
+					<div class="btn-group">
+						<button class="btn btn-default active n">N</button>
+					</div>
+					<div class="btn-group">
+						<button class="btn btn-default active p">P</button>
+					</div>
+					<div class="btn-group">
+						<button class="btn btn-default active q">Q</button>
+					</div>
+					<div class="btn-group">
+						<button class="btn btn-default active r">R</button>
+					</div>
+					<div class="btn-group">
+						<button class="btn btn-default active s">S</button>
+					</div>
+					<div class="btn-group">
+						<button class="btn btn-default active t">T</button>
+					</div>
+					<div class="btn-group">
+						<button class="btn btn-default active v">V</button>
+					</div>
+					<div class="btn-group">
+						<button class="btn btn-default active w">W</button>
+					</div>
+					<div class="btn-group">
+						<button class="btn btn-default active y">Y</button>
+					</div>
+				</div>
+			</div>
+			<div class="visible-xs visible-sm">
+				<br><br>
+			</div>
+			<div class="col-xs-6 col-md-2">
+				<div id="slider"></div>
+			</div>
+			<div class="col-xs-6 col-md-2">
+				<div id="active_types" class="btn-group btn-group-justified"
+					data-toggle="buttons-checkbox">
+					<div class="btn-group">
+						<button class="btn btn-warning active"
+							data-bind="typeclick: 'SNAP'">
+							SNAP2
+						</button>
+					</div>
+					<div class="btn-group">
+						<button class="btn btn-info"
+							data-bind="typeclick: 'SIFT'">
+							SIFT
+						</button>
 					</div>
 				</div>
 			</div>
 		</div>
 
-		<div id="top_bar_container" class="row">
-			<div id="flot_overview_container" class="span12">
+		<div class="visible-xs visible-sm">
+			<br>
+		</div>
+
+		<div class="row">
+		<div id="flot_container" class="col-xs-12">
+			<div id="flot_overview_container">
 				<div class="seeker" data-bind="drag: sequenceOffsetCallback">
 					<div class="detail">
-						<span class="left" data-bind="text: currentState.offset() + 1"></span>
-						<span class="right" data-bind="text: currentState.offset() + constants.lineLength + 1"></span>
+						<span class="left"
+							data-bind="text: currentState.offset() + 1">
+						</span>
+						<span class="right"
+							data-bind="text: currentState.offset() + constants.lineLength + 1">
+						</span>
 					</div>
 				</div>
-				<div id="flot_overview"  style="width:930px; height:40px"></div>
+				<div id="flot_overview"  style="min-width:970px; width:100%; height:40px"></div>
+			</div>
+
+			<div id="flot_details_container">
+				<div id="flot_details"  style="min-width:970px; width:100%; height:80px;"></div>
 			</div>
 		</div>
-		
-		<div id="functional_effect_container" class="result">
-			<div class="row">
-				<div id="active_types" class="btn-group span2" data-toggle="buttons-checkbox">
-					  <button class="btn btn-warning active"
-		data-bind="typeclick: 'SNAP'">SNAP2</button>
-					  <button class="btn btn-info"
-		data-bind="typeclick: 'SIFT'">SIFT</button>
-				</div>
-				<div id="active_alphabet" class="btn-group span8" data-toggle="buttons-checkbox" data-bind="alphabetclick: updateAlphabet">
-			  		<button class="btn active a">A</button>
-			  		<button class="btn active c">C</button>
-			  		<button class="btn active d">D</button>
-			  		<button class="btn active e">E</button>
-			  		<button class="btn active f">F</button>
-			  		<button class="btn active g">G</button>
-			  		<button class="btn active h">H</button>
-			  		<button class="btn active i">I</button>
-			  		<button class="btn active k">K</button>
-			  		<button class="btn active l">L</button>
-			  		<button class="btn active m">M</button>
-			  		<button class="btn active n">N</button>
-			  		<button class="btn active p">P</button>
-			  		<button class="btn active q">Q</button>
-			  		<button class="btn active r">R</button>
-			  		<button class="btn active s">S</button>
-			  		<button class="btn active t">T</button>
-			  		<button class="btn active v">V</button>
-			  		<button class="btn active w">W</button>
-			  		<button class="btn active y">Y</button>
-				</div>
-				<div id="slider" class="span2"></div>
-			</div>
-			<div class="row">
-				<div class="span12">
-					<div id="flot_details"  style="width:926px; height:60px;"></div>
-
-					<span class="sequence monospace" data-bind="text: slicedProtein.sequence()"></span>
-				</div>
-			</div>
 		</div>
 		
 		<div class="row">
-			<div id="functional_effect_list_container" class="result span12">
-				<h3>Predicted Mutations</h3>
-				<div data-bind="visible: !mutationListResult()" style="text-align:center; margin: 36px 0;">
-					Click on an entry above to show detailed results.
+			<div id="functional_effect_list_container">
+				<div class="col-xs-12">
+					<h3>Predicted Mutations</h3>
+					<div class="intro"
+						data-bind="visible: !mutationListResult()">
+						Click on an entry above to show detailed prediction results.
+					</div>
+					<div data-bind="if: mutationListResult()">
+						<ul class="positions" 
+							data-bind="	visible: mutationListResult(), 
+										template: { 
+											name: 'prediction_list_entry_template', 
+											data: mutationListResult 
+										}, 
+										listclick: showDetailView">
+						</ul>
+					</div>
 				</div>
-				<div data-bind="if: mutationListResult()">
-					<ul class="positions" 
-						data-bind="	visible: mutationListResult(), 
-									template: { 
-								   		name: 'prediction_list_entry_template', 
-								   		data: mutationListResult 
-								   	}, 
-								   	listclick: showDetailView">
-					</ul>
-				</div>
-				<div>
+				<div class="col-xs-12">
 					<h3>Verified Mutations</h3>
-					<div class="spinner" data-bind="visible : !externalMutationListResult()">
+					<div class="spinner" 
+						data-bind="visible : !externalMutationListResult()">
 					</div>
 
-					<ul class="positions" data-bind="visible : externalMutationListResult(), template: { name: 'external_mutation_list_entry_template', foreach: externalMutationListResult }"></ul>
+					<ul class="positions"
+						data-bind="visible : externalMutationListResult(), 
+							template: {
+								name: 'external_mutation_list_entry_template', 
+								foreach: externalMutationListResult
+							}">
+					</ul>
 				</div>
 			</div>
 		</div>
@@ -138,66 +242,86 @@
 </div>
 
 <script type="text/html" id="protein_detail_template">
-<div class="row">
-	<dl class="span6 dl-horizontal">
-		<dt>Organism Name</dt>
-	    <dd data-bind="text: organismName"></dd>
-	 
-	    <dt>Definition</dt>
-	    <dd data-bind="text: definition"></dd>
-	 
-	    <dt>Gene Name</dt>
-	    <dd data-bind="text: officialGenFullName"></dd>
-	</dl>
-	<dl class="span6 dl-horizontal"> 
-	    <dt>Gene Symbol</dt>
-	    <dd data-bind="text: officialGenSymbol"></dd>
+<dl class="col-xs-12 col-sm-6 dl-horizontal">
+	<dt>Organism Name</dt>
+	<dd data-bind="text: organismName"></dd>
+ 
+	<dt>Definition</dt>
+	<dd data-bind="text: definition"></dd>
+ 
+	<dt>Gene Name</dt>
+	<dd data-bind="text: officialGenFullName"></dd>
+</dl>
+<dl class="col-xs-12 col-sm-6 dl-horizontal"> 
+	<dt>Gene Symbol</dt>
+	<dd data-bind="text: officialGenSymbol"></dd>
 
-	    <dt>Gene Location</dt>
-	    <dd data-bind="text: genLocation"></dd>
+	<dt>Gene Location</dt>
+	<dd data-bind="text: genLocation"></dd>
 
-	    <dt>Source</dt>
-	    <dd data-bind="text: source"></dd>
-	</dl>
-</div>
+	<dt>Source</dt>
+	<dd data-bind="text: source"></dd>
+</dl>
 </script>
 
 <script type="text/html" id="search_template">
-	<div>
-		<input data-bind="value: protein, popover: { placement: 'bottom'}" data-original-title="Search Instructions" data-content="You can search by accessor identifier or by entering a full protein sequence." placeholder="NP_005378" type="text"  />
-		<button class="btn btn-primary" data-bind="click: searchProtein">Go</button>
+	<div class="input-group">    
+		<input placeholder="NP_005378" type="text" class="form-control"
+			data-bind="value: protein, popover: { placement: 'bottom'}" 
+			data-original-title="Search Instructions" 
+			data-content="You can search by accessor identifier or by entering a full protein sequence.">
+		<span class="input-group-btn">
+			<button class="btn btn-primary" data-bind="click: searchProtein"><span class="glyphicon glyphicon-search"></span> Search</button>
+		</span>
 	</div>
 </script>
 
 <script type="text/html" id="external_mutation_list_entry_template">
 <li>
-	<span class="position" data-bind="text: (position|0)+1"></span>
+	<div class="li-header">
+		<span class="position" data-bind="text: (position|0)+1"></span>
+	</div>
 	<ul class="mutations" data-bind="attr: { id: 'externalmutation' + position}">
-			<li class="section dropdown">
-				<span class="dropdown-toggle" data-bind="if: externalMutations.source == 'NCBI'">
-					<a target="_blank" data-bind="text: externalMutations.mutation, attr: { href: 'http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs=' + externalMutations.snpid }"></a>
+			<li class="section btn">
+				<span data-bind="if: externalMutations.source == 'NCBI'">
+					<a target="_blank" class="dropdown-toggle"
+						data-bind="text: externalMutations.mutation, 
+							attr: { 
+								href: 
+								'http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs='
+									+ externalMutations.snpid 
+							}">
+					</a>
 				</span>
 			</li>
-
 	</ul>
 </li>
 </script>
+
 <script type="text/html" id="prediction_list_entry_template">
 <li data-bind="attr: { id: 'mutation' + position}">		
-	Position: <span class="position" data-bind="text: position"></span>
-	Wildtype: <span class="wildtype"data-bind="text: wildType"></span>
+	<div class="li-header">
+		Position: <span class="position" data-bind="text: position"></span>
+		Wildtype: <span class="wildtype"data-bind="text: wildType"></span>
+	</div>
 	<ul class="mutations" data-bind="foreach: mutations">
 		<li data-bind="
 			attr: { 
 				id: 'menu' + $parent.position + aa,
-				class: 'section dropdown ' + (data[1].effect == 'true' ? ' sift ' : '') + (data[0].effect == 'true' ? ' snap ' : '')
+				class: 'btn section dropdown ' 
+					+ (data[1].effect == 'true' ? ' sift ' : '') 
+					+ (data[0].effect == 'true' ? ' snap ' : '')
 			}">
-			<span class="dropdown-toggle" data-toggle="dropdown" data-bind="text: aa, attr: { href: '#menu' + $parent.position + aa }"></span>
+			<span class="dropdown-toggle" 
+				data-toggle="dropdown" 
+				data-bind="text: aa, attr: { href: '#menu' + $parent.position + aa }">
+			</span>
 			<span class="dropdown-menu $index"></span>
 		</li>
 	</ul>
 </li>
 </script>
+
 <script type="text/html" id="snp_details">
 <h1>Details</h1>
 <dl>
@@ -209,14 +333,10 @@
 </dd>
 </script>
 
-<script src="js/jquery-1.7.2.min.js"></script>
-<script src="js/jquery.flot.min.js"></script>
-<script src="http://cdn3.gemudb.com/js/jquery.event.drag-2.0.min.js"></script>
+<script src="js/GeMuDB.min.js"></script>
+
 <script src="http://cdn2.gemudb.com/js/jquery-ui-1.8.18.custom.min.js"></script>
-<script src="js/underscore-min.js"></script>
-<script src="js/knockout-3.0.0.js"></script>
-<script src="js/sammy-latest.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
+
 <script src="js/app.js"></script>
 </body>
 </html>
