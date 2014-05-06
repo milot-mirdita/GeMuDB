@@ -1,0 +1,892 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Gene Mutation Database - About</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="shortcut icon" href="favicon.ico"> 
+
+	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/fonts.css">
+	<link rel="stylesheet" href="css/style.css">
+
+	<style>
+		body { padding-top: 70px; }
+	</style>
+</head>
+
+<body>
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="http://rostlab.org">
+				<img src="img/rost_small.png" width="108px" height="14px" alt="Rostlab">
+			</a>
+		</div>
+		<div class="navbar-collapse collapse" role="navigation">
+			<ul class="nav navbar-nav">
+				<li><a href="./#">Gene Mutation Database</a></li>
+				<li><a href="#code">Code</a></li>
+				<li><a href="#database">Database</a></li>
+				<li><a href="#api">API</a></li>
+			</ul>
+
+			<ul class="nav navbar-nav navbar-right">
+				<li><a href="#about">About</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div id="content" class="container">
+<div class="row">
+	<div class="col-xs-12">
+		<h2 id="code">Source Code</h2>
+		<p>
+			The source code for this project is available at <a href="#">Github</a> and is licensed under the BSD 2-clause license.
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-xs-12">
+		<h2 id="database">Database</h2>
+		<p>
+			The database containing the <strong>28,921,147 &times; 19</strong> mutations for the human RefSeq sequences is also availabe.
+		</p>	
+		<p>
+			The compressed MySQL Database can be obtained here: <a href="#" rel="nofollow">GemuDB Database.zip (575 mb)</a>.
+		</p>
+
+		<h3>Import Instructions</h3>
+		<p>
+			The database can be imported as follows:
+		</p>
+		<pre>unzip "GemuDB Database.zip"
+mysql -u&lt;user&gt; -p&lt;password&gt; &lt;database&gt; &lt; "GemuDB Database.sql"</pre>
+
+		<p>
+			Make sure to replace the entries inside of brackets with your MySQL server information.
+		</p>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-xs-12">
+<h2 id="api">API Documentation</h2>
+<h3 id="basepath-http-gemudb-com-api">BasePath: <a href="http://gemudb.com/api">http://gemudb.com/api</a></h3>
+<h3 id="api-version-v1">Api Version: v1</h3>
+<h3 id="resources">Resources</h3>
+<h4 id="-v1">/v1</h4>
+<h5 id="overview">Overview</h5>
+<h5 id="-v1-id-functionaleffect-detail-type-pos-"><code>/v1/{id}/functionaleffect/detail/{type}/{pos}</code></h5>
+<h6 id="getmutationlist">getMutationList</h6>
+<p><strong>GET</strong> <code>/v1/{id}/functionaleffect/detail/{type}/{pos}</code></p>
+<p>Get the details of functional effect prediction
+Returned effects are filtered by position and function effect prediction type.</p>
+<h6 id="-url"># URL</h6>
+<pre><code>http://gemudb.com/api/v1/<span class="hljs-list">{id}</span>/functionaleffect/detail/<span class="hljs-list">{type}</span>/<span class="hljs-list">{pos}</span>
+</code></pre><h6 id="-parameters"># Parameters</h6>
+<ul>
+<li><p>path</p>
+  <table border="1">
+      <tbody><tr>
+          <th>Parameter</th>
+          <th>Required</th>
+          <th>Description</th>
+          <th>Data Type</th>
+      </tr>
+      <tr>
+          <th>id</th>
+          <td>true</td>
+          <td>The canonical RefSeq protein accession.</td>
+          <td>string</td>
+      </tr>
+      <tr>
+          <th>pos</th>
+          <td>true</td>
+          <td>The position in the protein that should be returned.</td>
+          <td>int</td>
+      </tr>
+      <tr>
+          <th>type</th>
+          <td>true</td>
+          <td>A comma seperated string containing all functional effect prediction types that should be returned.</td>
+          <td>string</td>
+      </tr>
+  </tbody></table>
+
+</li>
+</ul>
+<h6 id="-response"># Response</h6>
+<p><a href="#MutationPosContainer">MutationPosContainer</a></p>
+<h6 id="-errors"># Errors</h6>
+<table border="1">
+    <tbody><tr>
+        <th>Status Code</th>
+        <th>Reason</th>
+    </tr>
+        <tr>
+            <td>404</td>
+            <td>MutationPos not found.</td>
+        </tr>
+        <tr>
+            <td>200</td>
+            <td>MutationPos</td>
+        </tr>
+</tbody></table>
+
+
+<hr>
+<h5 id="-v1-id-functionaleffect-detail-alphabet-type-pos-"><code>/v1/{id}/functionaleffect/detail/{alphabet}/{type}/{pos}</code></h5>
+<h6 id="getmutationlist">getMutationList</h6>
+<p><strong>GET</strong> <code>/v1/{id}/functionaleffect/detail/{alphabet}/{type}/{pos}</code></p>
+<p>Get the details of functional effect prediction
+Returned effects are filtered by position, alphabet of amino acid one letter codes and function effect prediction type.</p>
+<h6 id="-url"># URL</h6>
+<pre><code>http://gemudb.com/api/v1/<span class="hljs-list">{id}</span>/functionaleffect/detail/<span class="hljs-list">{alphabet}</span>/<span class="hljs-list">{type}</span>/<span class="hljs-list">{pos}</span>
+</code></pre><h6 id="-parameters"># Parameters</h6>
+<ul>
+<li><p>path</p>
+  <table border="1">
+      <tbody><tr>
+          <th>Parameter</th>
+          <th>Required</th>
+          <th>Description</th>
+          <th>Data Type</th>
+      </tr>
+      <tr>
+          <th>id</th>
+          <td>true</td>
+          <td>The canonical RefSeq protein accession.</td>
+          <td>string</td>
+      </tr>
+      <tr>
+          <th>pos</th>
+          <td>true</td>
+          <td>The position in the protein that should be returned.</td>
+          <td>int</td>
+      </tr>
+      <tr>
+          <th>type</th>
+          <td>true</td>
+          <td>A comma seperated string containing all functional effect prediction types that should be returned.</td>
+          <td>string</td>
+      </tr>
+      <tr>
+          <th>alphabet</th>
+          <td>true</td>
+          <td>A string containing the one letter codes of all aminoacids that should return functional effect predictions.</td>
+          <td>string</td>
+      </tr>
+  </tbody></table>
+
+</li>
+</ul>
+<h6 id="-response"># Response</h6>
+<p><a href="#MutationPosContainer">MutationPosContainer</a></p>
+<h6 id="-errors"># Errors</h6>
+<table border="1">
+    <tbody><tr>
+        <th>Status Code</th>
+        <th>Reason</th>
+    </tr>
+        <tr>
+            <td>400</td>
+            <td>Parameter Error</td>
+        </tr>
+        <tr>
+            <td>404</td>
+            <td>MutationPos not found.</td>
+        </tr>
+        <tr>
+            <td>200</td>
+            <td>MutationPos</td>
+        </tr>
+</tbody></table>
+
+
+<hr>
+<h5 id="-v1-detail-id-"><code>/v1/detail/{id}</code></h5>
+<h6 id="getproteindetail">getProteinDetail</h6>
+<p><strong>GET</strong> <code>/v1/detail/{id}</code></p>
+<p>Get aggregated common details of a protein
+Protein details are fetched from the NCBI Entrez webservices.</p>
+<h6 id="-url"># URL</h6>
+<pre><code><span class="hljs-symbol">http:</span>/<span class="hljs-regexp">/gemudb.com/api</span><span class="hljs-regexp">/v1/detail</span><span class="hljs-regexp">/{id}</span>
+</code></pre><h6 id="-parameters"># Parameters</h6>
+<ul>
+<li><p>path</p>
+  <table border="1">
+      <tbody><tr>
+          <th>Parameter</th>
+          <th>Required</th>
+          <th>Description</th>
+          <th>Data Type</th>
+      </tr>
+      <tr>
+          <th>id</th>
+          <td>true</td>
+          <td>The canonical RefSeq protein accession.</td>
+          <td>string</td>
+      </tr>
+  </tbody></table>
+
+</li>
+</ul>
+<h6 id="-response"># Response</h6>
+<p><a href="#ProteinDetail">ProteinDetail</a></p>
+<h6 id="-errors"># Errors</h6>
+<table border="1">
+    <tbody><tr>
+        <th>Status Code</th>
+        <th>Reason</th>
+    </tr>
+        <tr>
+            <td>400</td>
+            <td>Parameter Error</td>
+        </tr>
+        <tr>
+            <td>200</td>
+            <td>ProteinDetail</td>
+        </tr>
+</tbody></table>
+
+
+<hr>
+<h5 id="-v1-externalsnp-id-"><code>/v1/externalsnp/{id}</code></h5>
+<h6 id="getproteinsnpdetail">getProteinSnpDetail</h6>
+<p><strong>GET</strong> <code>/v1/externalsnp/{id}</code></p>
+<p>Get verified mutations
+Protein verified mutations are fetched from the NCBI dbSNP webservice.</p>
+<h6 id="-url"># URL</h6>
+<pre><code><span class="hljs-symbol">http:</span>/<span class="hljs-regexp">/gemudb.com/api</span><span class="hljs-regexp">/v1/externalsnp</span><span class="hljs-regexp">/{id}</span>
+</code></pre><h6 id="-parameters"># Parameters</h6>
+<ul>
+<li><p>path</p>
+  <table border="1">
+      <tbody><tr>
+          <th>Parameter</th>
+          <th>Required</th>
+          <th>Description</th>
+          <th>Data Type</th>
+      </tr>
+      <tr>
+          <th>id</th>
+          <td>true</td>
+          <td>The canonical RefSeq protein accession.</td>
+          <td>string</td>
+      </tr>
+  </tbody></table>
+
+</li>
+</ul>
+<h6 id="-response"># Response</h6>
+<p><a href="#ExternalMutationContainer">ExternalMutationContainer</a></p>
+<h6 id="-errors"># Errors</h6>
+<table border="1">
+    <tbody><tr>
+        <th>Status Code</th>
+        <th>Reason</th>
+    </tr>
+        <tr>
+            <td>400</td>
+            <td>Parameter Error</td>
+        </tr>
+        <tr>
+            <td>404</td>
+            <td>ExternalMutationContainer not found.</td>
+        </tr>
+        <tr>
+            <td>200</td>
+            <td>ExternalMutationContainer</td>
+        </tr>
+</tbody></table>
+
+
+<hr>
+<h5 id="-v1-id-functionaleffect-alphabet-type-"><code>/v1/{id}/functionaleffect/{alphabet}/{type}</code></h5>
+<h6 id="getfunctionaleffectprediction">getFunctionalEffectPrediction</h6>
+<p><strong>GET</strong> <code>/v1/{id}/functionaleffect/{alphabet}/{type}</code></p>
+<p>Get the predicted functional effects of a protein
+Filters by alphabet of amino acid one letter codes.</p>
+<h6 id="-url"># URL</h6>
+<pre><code>http://gemudb.com/api/v1/<span class="hljs-list">{id}</span>/functionaleffect/<span class="hljs-list">{alphabet}</span>/<span class="hljs-list">{type}</span>
+</code></pre><h6 id="-parameters"># Parameters</h6>
+<ul>
+<li><p>path</p>
+  <table border="1">
+      <tbody><tr>
+          <th>Parameter</th>
+          <th>Required</th>
+          <th>Description</th>
+          <th>Data Type</th>
+      </tr>
+      <tr>
+          <th>id</th>
+          <td>true</td>
+          <td>The canonical RefSeq protein accession.</td>
+          <td>string</td>
+      </tr>
+      <tr>
+          <th>type</th>
+          <td>true</td>
+          <td>A comma seperated string containing all functional effect prediction types that should be returned.</td>
+          <td>string</td>
+      </tr>
+      <tr>
+          <th>alphabet</th>
+          <td>true</td>
+          <td>A string containing the one letter codes of all aminoacids that should return functional effect predictions.</td>
+          <td>string</td>
+      </tr>
+  </tbody></table>
+
+</li>
+</ul>
+<h6 id="-response"># Response</h6>
+<p><a href="#FunctionalEffectPrediction">FunctionalEffectPrediction</a></p>
+<h6 id="-errors"># Errors</h6>
+<table border="1">
+    <tbody><tr>
+        <th>Status Code</th>
+        <th>Reason</th>
+    </tr>
+        <tr>
+            <td>400</td>
+            <td>Parameter Error</td>
+        </tr>
+        <tr>
+            <td>200</td>
+            <td>FunctionalEffectPrediction</td>
+        </tr>
+</tbody></table>
+
+
+<hr>
+<h5 id="-v1-id-functionaleffect-type-"><code>/v1/{id}/functionaleffect/{type}</code></h5>
+<h6 id="getfunctionaleffectprediction">getFunctionalEffectPrediction</h6>
+<p><strong>GET</strong> <code>/v1/{id}/functionaleffect/{type}</code></p>
+<p>Get the predicted functional effects of a protein
+Filters by functional effect prediction types.</p>
+<h6 id="-url"># URL</h6>
+<pre><code><span class="hljs-symbol">http:</span>/<span class="hljs-regexp">/gemudb.com/api</span><span class="hljs-regexp">/v1/</span>{id}/functionaleffect/{type}
+</code></pre><h6 id="-parameters"># Parameters</h6>
+<ul>
+<li><p>path</p>
+  <table border="1">
+      <tbody><tr>
+          <th>Parameter</th>
+          <th>Required</th>
+          <th>Description</th>
+          <th>Data Type</th>
+      </tr>
+      <tr>
+          <th>id</th>
+          <td>true</td>
+          <td>The canonical RefSeq protein accession.</td>
+          <td>string</td>
+      </tr>
+      <tr>
+          <th>type</th>
+          <td>true</td>
+          <td>A comma seperated string containing all functional effect prediction types that should be returned.</td>
+          <td>string</td>
+      </tr>
+  </tbody></table>
+
+</li>
+</ul>
+<h6 id="-response"># Response</h6>
+<p><a href="#FunctionalEffectPrediction">FunctionalEffectPrediction</a></p>
+<h6 id="-errors"># Errors</h6>
+<table border="1">
+    <tbody><tr>
+        <th>Status Code</th>
+        <th>Reason</th>
+    </tr>
+        <tr>
+            <td>400</td>
+            <td>Parameter Error</td>
+        </tr>
+        <tr>
+            <td>200</td>
+            <td>FunctionalEffectPrediction</td>
+        </tr>
+</tbody></table>
+
+
+<hr>
+<h5 id="-v1-search-"><code>/v1/search</code></h5>
+<h6 id="searchprotein">searchProtein</h6>
+<p><strong>POST</strong> <code>/v1/search</code></p>
+<p>Search protein by query
+Search method that can either fetch a response directly or use the PICR webservice to map any accessions to the canonical RefSeq accession.</p>
+<h6 id="-url"># URL</h6>
+<pre><code><span class="hljs-symbol">http:</span>/<span class="hljs-regexp">/gemudb.com/api</span><span class="hljs-regexp">/v1/search</span>
+</code></pre><h6 id="-parameters"># Parameters</h6>
+<ul>
+<li><p>form</p>
+  <table border="1">
+      <tbody><tr>
+          <th>Parameter</th>
+          <th>Required</th>
+          <th>Description</th>
+          <th>Data Type</th>
+      </tr>
+      <tr>
+          <th>q</th>
+          <td>true</td>
+          <td>The query to search by. Query can be a protein accession or amino acid sequence.</td>
+          <td>string</td>
+      </tr>
+  </tbody></table>
+
+</li>
+</ul>
+<h6 id="-response"># Response</h6>
+<p><a href="#Proteinid">Proteinid</a></p>
+<h6 id="-errors"># Errors</h6>
+<table border="1">
+    <tbody><tr>
+        <th>Status Code</th>
+        <th>Reason</th>
+    </tr>
+        <tr>
+            <td>404</td>
+            <td>Protein not found.</td>
+        </tr>
+        <tr>
+            <td>200</td>
+            <td>ProteinId</td>
+        </tr>
+</tbody></table>
+
+
+<hr>
+<h3 id="data-types">Data Types</h3>
+<h3 id="-a-name-externalmutationcontainer-externalmutationcontainer-a-"><a name="ExternalMutationContainer">ExternalMutationContainer</a></h3>
+<table border="1">
+    <tbody><tr>
+        <th>type</th>
+        <th>required</th>
+        <th>access</th>
+        <th>description</th>
+        <th>notes</th>
+    </tr>
+        <tr>
+            <td><a href="#ExternalMutationPos">Array[ExternalMutationPos]</a></td>
+            <td>optional</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+</tbody></table>
+
+
+
+<h3 id="-a-name-externalmutationdetail-externalmutationdetail-a-"><a name="ExternalMutationDetail">ExternalMutationDetail</a></h3>
+<table border="1">
+    <tbody><tr>
+        <th>type</th>
+        <th>required</th>
+        <th>access</th>
+        <th>description</th>
+        <th>notes</th>
+    </tr>
+        <tr>
+            <td>boolean</td>
+            <td>optional</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>string</td>
+            <td>optional</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>boolean</td>
+            <td>optional</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>int</td>
+            <td>optional</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>string</td>
+            <td>optional</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>int</td>
+            <td>optional</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>boolean</td>
+            <td>optional</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td><a href="#OmimEntry">Array[OmimEntry]</a></td>
+            <td>optional</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+</tbody></table>
+
+
+
+<h3 id="-a-name-externalmutationpos-externalmutationpos-a-"><a name="ExternalMutationPos">ExternalMutationPos</a></h3>
+<table border="1">
+    <tbody><tr>
+        <th>type</th>
+        <th>required</th>
+        <th>access</th>
+        <th>description</th>
+        <th>notes</th>
+    </tr>
+        <tr>
+            <td>int</td>
+            <td>optional</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td><a href="#ExternalMutationDetail">Array[ExternalMutationDetail]</a></td>
+            <td>optional</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+</tbody></table>
+
+
+
+<h3 id="-a-name-functionaleffectprediction-functionaleffectprediction-a-"><a name="FunctionalEffectPrediction">FunctionalEffectPrediction</a></h3>
+<table border="1">
+    <tbody><tr>
+        <th>type</th>
+        <th>required</th>
+        <th>access</th>
+        <th>description</th>
+        <th>notes</th>
+    </tr>
+        <tr>
+            <td>string</td>
+            <td>optional</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td><a href="#MutationType">MutationType</a></td>
+            <td>optional</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>string</td>
+            <td>optional</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>string</td>
+            <td>optional</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+</tbody></table>
+
+
+
+<h3 id="-a-name-mutationdata-mutationdata-a-"><a name="MutationData">MutationData</a></h3>
+<table border="1">
+    <tbody><tr>
+        <th>type</th>
+        <th>required</th>
+        <th>access</th>
+        <th>description</th>
+        <th>notes</th>
+    </tr>
+        <tr>
+            <td><a href="#MutationPredictionData">Array[MutationPredictionData]</a></td>
+            <td>optional</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>string</td>
+            <td>optional</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+</tbody></table>
+
+
+
+<h3 id="-a-name-mutationpos-mutationpos-a-"><a name="MutationPos">MutationPos</a></h3>
+<table border="1">
+    <tbody><tr>
+        <th>type</th>
+        <th>required</th>
+        <th>access</th>
+        <th>description</th>
+        <th>notes</th>
+    </tr>
+        <tr>
+            <td><a href="#MutationData">Array[MutationData]</a></td>
+            <td>optional</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>string</td>
+            <td>optional</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>int</td>
+            <td>optional</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+</tbody></table>
+
+
+
+<h3 id="-a-name-mutationposcontainer-mutationposcontainer-a-"><a name="MutationPosContainer">MutationPosContainer</a></h3>
+<table border="1">
+    <tbody><tr>
+        <th>type</th>
+        <th>required</th>
+        <th>access</th>
+        <th>description</th>
+        <th>notes</th>
+    </tr>
+        <tr>
+            <td><a href="#MutationPos">Array[MutationPos]</a></td>
+            <td>optional</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+</tbody></table>
+
+
+
+<h3 id="-a-name-mutationpredictiondata-mutationpredictiondata-a-"><a name="MutationPredictionData">MutationPredictionData</a></h3>
+<table border="1">
+    <tbody><tr>
+        <th>type</th>
+        <th>required</th>
+        <th>access</th>
+        <th>description</th>
+        <th>notes</th>
+    </tr>
+        <tr>
+            <td>string</td>
+            <td>optional</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>boolean</td>
+            <td>optional</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>int</td>
+            <td>optional</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+</tbody></table>
+
+
+
+<h3 id="-a-name-omimentry-omimentry-a-"><a name="OmimEntry">OmimEntry</a></h3>
+<table border="1">
+    <tbody><tr>
+        <th>type</th>
+        <th>required</th>
+        <th>access</th>
+        <th>description</th>
+        <th>notes</th>
+    </tr>
+        <tr>
+            <td>string</td>
+            <td>optional</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+</tbody></table>
+
+
+
+<h3 id="-a-name-proteindetail-proteindetail-a-"><a name="ProteinDetail">ProteinDetail</a></h3>
+<table border="1">
+    <tbody><tr>
+        <th>type</th>
+        <th>required</th>
+        <th>access</th>
+        <th>description</th>
+        <th>notes</th>
+    </tr>
+        <tr>
+            <td>string</td>
+            <td>optional</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>string</td>
+            <td>optional</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>string</td>
+            <td>optional</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>string</td>
+            <td>optional</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>string</td>
+            <td>optional</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>string</td>
+            <td>optional</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+</tbody></table>
+
+
+
+<h3 id="-a-name-proteinid-proteinid-a-"><a name="Proteinid">Proteinid</a></h3>
+<table border="1">
+    <tbody><tr>
+        <th>type</th>
+        <th>required</th>
+        <th>access</th>
+        <th>description</th>
+        <th>notes</th>
+    </tr>
+        <tr>
+            <td>string</td>
+            <td>optional</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+</tbody></table>
+
+
+</div>
+
+</div>
+
+<div class="row">
+	<div class="col-xs-12">
+		<h2 id="about">Imprint</h2>
+		<h3>Milot Mirdita <small>Herausgeber und inhaltlich Verantwortlicher</small></h3>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-xs-12 col-sm-3" style="position:relative;">
+		<span style="font-size:1.5em; position:absolute; top:-6px;">✆</span> 
+		<span style="padding-left: 20px;">0176/49556270</span>
+	</div>
+
+	<div class="col-xs-12 col-sm-3" style="position:relative">
+		<span style="font-size:1.5em; position:absolute; top:-7px;">✉</span> 
+		<span style="padding-left: 20px;unicode-bidi:bidi-override; direction: rtl;">ed.atidrim@tolim</span>
+	</div>
+		
+	<div class="col-xs-12"><br></div>
+</div>
+
+<div class="row">
+	<div class="col-xs-12 col-sm-6">
+		Schutzrechtsverletzung: Falls Sie vermuten, dass von dieser Website aus eines Ihrer Schutzrechte verletzt wird, teilen Sie das bitte umgehend per E-Mail mit, damit entsprechende Abhilfe geschaffen werden kann.
+		<div class="visible-xs"><br></div>
+	</div>
+
+	<div class="col-xs-12 col-sm-6">
+		Eine Gewähr für die Vollständigkeit und Richtigkeit aller Beiträge, auch in auditiver oder audiovisueller Form, kann nicht übernommen werden.
+	</div>
+</div>
+
+<div style="margin-bottom: 1200px;">
+</div>
+
+</div>
+
+<script src="bower_components/jquery/jquery.min.js"></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script>
+$(function() {
+	$("body").scrollspy({
+		target: '.navbar-collapse'
+	});
+});
+</script>
+</body>
+</html>

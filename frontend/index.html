@@ -6,11 +6,11 @@
 
 	<title>Gene Mutation Database</title>
 
-	<link rel="shortcut icon" href="img/favicon.ico"> 
-
-	<link rel="stylesheet" href="css/ui-lightness/jquery-ui-1.8.18.custom.css">
+	<link rel="shortcut icon" href="favicon.ico"> 
 
 	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="bower_components/seiyria-bootstrap-slider/dist/css/bootstrap-slider.css">
+
 	<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -23,18 +23,19 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="#">
-				<img src="img/rost_small.png" width="108px" height="15px" alt="Rostlab">
+			<a class="navbar-brand" href="http://rostlab.org">
+				<img src="img/rost_small.png" width="108px" height="14px" alt="Rostlab">
 			</a>
 		</div>
 		<div class="navbar-collapse collapse" role="navigation">
 			<ul class="nav navbar-nav">
-				<li><a href="#code">Code</a></li>
-				<li><a href="#api">API</a></li>
-				<li><a href="#database">Database</a></li>
+				<li><a href="./">Gene Mutation Database</a></li>
+				<li><a href="about.html#code">Code</a></li>
+				<li><a href="about.html#api">API</a></li>
+				<li><a href="about.html#database">Database</a></li>
 			</ul>
 
-			<form class="nav navbar-form navbar-right">
+			<form class="nav navbar-form navbar-right" data-bind="visible: protein()">
 				<div class="search"
 					data-bind="template: {
 						name: 'search_template'
@@ -42,12 +43,16 @@
 				</div>
 			</form>
 
+			<ul class="nav navbar-nav navbar-right">
+				<li><a href="about.html#about">About</a></li>
+			</ul>
+
 		</div>
 	</div>
 </div>
 
 <div class="container">
-	<div class="row">
+	<div class="row" data-bind="visible: !protein()">
 		<div id="search_container" class="text-center col-xs-12">
 			<div class="header">
 				GeMuDB
@@ -62,17 +67,16 @@
 		</div>
 	</div>
 
-	<div id="result_container">
+	<div id="result_container" data-bind="visible: protein()">
 		<div class="row">
-			<div id="protein_detail_container" class="col-xs-12">
+			<div id="protein_detail_container"
+				 class="col-xs-12"
+				 data-bind=" css : { spinner : !proteinDetail() } ">
 				<div class="row">
-				<h2 class="protein_identifier col-xs-2"
+				<h2 class="protein_identifier col-xs-12 col-sm-2"
 					data-bind="text: protein()">
 				</h2>
-				<div class="spinner"
-					data-bind="visible : !proteinDetail()">
-				</div>
-				<div class="col-xs-10"
+				<div class="col-xs-12 col-sm-10 details"
 					data-bind="if : proteinDetail()">
 					<div
 						data-bind="template: {
@@ -88,67 +92,15 @@
 		<div class="row">
 			<div class="col-xs-12 col-md-8">
 				<div id="active_alphabet" class="btn-group btn-group-justified"
-					data-toggle="buttons-checkbox"
-					data-bind="alphabetclick: updateAlphabet">
+					data-bind="foreach: { data : self.constants.alphabet, as: 'char' }">
 					<div class="btn-group">
-						<button class="btn btn-default active a">A</button>
-					</div>
-					<div class="btn-group">
-						<button class="btn btn-default active c">C</button>
-					</div>
-					<div class="btn-group">
-						<button class="btn btn-default active d">D</button>
-					</div>
-					<div class="btn-group">
-						<button class="btn btn-default active e">E</button>
-					</div>
-					<div class="btn-group">
-						<button class="btn btn-default active f">F</button>
-					</div>
-					<div class="btn-group">
-						<button class="btn btn-default active g">G</button>
-					</div>
-					<div class="btn-group">
-						<button class="btn btn-default active h">H</button>
-					</div>
-					<div class="btn-group">
-						<button class="btn btn-default active i">I</button>
-					</div>
-					<div class="btn-group">
-						<button class="btn btn-default active k">K</button>
-					</div>
-					<div class="btn-group">
-						<button class="btn btn-default active l">L</button>
-					</div>
-					<div class="btn-group">
-						<button class="btn btn-default active m">M</button>
-					</div>
-					<div class="btn-group">
-						<button class="btn btn-default active n">N</button>
-					</div>
-					<div class="btn-group">
-						<button class="btn btn-default active p">P</button>
-					</div>
-					<div class="btn-group">
-						<button class="btn btn-default active q">Q</button>
-					</div>
-					<div class="btn-group">
-						<button class="btn btn-default active r">R</button>
-					</div>
-					<div class="btn-group">
-						<button class="btn btn-default active s">S</button>
-					</div>
-					<div class="btn-group">
-						<button class="btn btn-default active t">T</button>
-					</div>
-					<div class="btn-group">
-						<button class="btn btn-default active v">V</button>
-					</div>
-					<div class="btn-group">
-						<button class="btn btn-default active w">W</button>
-					</div>
-					<div class="btn-group">
-						<button class="btn btn-default active y">Y</button>
+						<button data-bind="
+							click: $root.toggleAlphabet,
+							text: char,
+							attr : {
+								class: 'btn btn-default active ' + char
+							}">
+						</button>
 					</div>
 				</div>
 			</div>
@@ -163,13 +115,13 @@
 					data-toggle="buttons-checkbox">
 					<div class="btn-group">
 						<button class="btn btn-warning active"
-							data-bind="typeclick: 'SNAP'">
+							data-bind="click: function() { toggleType('SNAP') }">
 							SNAP2
 						</button>
 					</div>
 					<div class="btn-group">
 						<button class="btn btn-info"
-							data-bind="typeclick: 'SIFT'">
+							data-bind="click: function() { toggleType('SIFT') }">
 							SIFT
 						</button>
 					</div>
@@ -184,7 +136,7 @@
 		<div class="row">
 		<div id="flot_container" class="col-xs-12">
 			<div id="flot_overview_container">
-				<div class="seeker" data-bind="drag: sequenceOffsetCallback">
+				<div class="seeker">
 					<div class="detail">
 						<span class="left"
 							data-bind="text: currentState.offset() + 1">
@@ -217,22 +169,20 @@
 										template: { 
 											name: 'prediction_list_entry_template', 
 											data: mutationListResult 
-										}, 
-										listclick: showDetailView">
+										}">
 						</ul>
 					</div>
 				</div>
 				<div class="col-xs-12">
 					<h3>Verified Mutations</h3>
-					<div class="spinner" 
-						data-bind="visible : !externalMutationListResult()">
-					</div>
-
 					<ul class="positions"
-						data-bind="visible : externalMutationListResult(), 
+						data-bind="
 							template: {
 								name: 'external_mutation_list_entry_template', 
 								foreach: externalMutationListResult
+							},
+							css: { 
+								spinner: !externalMutationListResult()
 							}">
 					</ul>
 				</div>
@@ -265,36 +215,36 @@
 </script>
 
 <script type="text/html" id="search_template">
-	<div class="input-group">    
-		<input placeholder="NP_005378" type="text" class="form-control"
-			data-bind="value: protein, popover: { placement: 'bottom'}" 
+	<div class="input-group search-widget">    
+		<input placeholder="Identifier or Sequence" type="text" class="q form-control"
+			data-bind="popover: { placement: 'bottom'}" 
 			data-original-title="Search Instructions" 
-			data-content="You can search by accessor identifier or by entering a full protein sequence.">
+			data-content="You can search by protein accession or by entering a full protein sequence.">
 		<span class="input-group-btn">
-			<button class="btn btn-primary" data-bind="click: searchProtein"><span class="glyphicon glyphicon-search"></span> Search</button>
+			<button class="btn btn-primary" data-loading-text="Searching..." data-bind="click: searchProtein"><span class="glyphicon glyphicon-search"></span> Search</button>
 		</span>
 	</div>
 </script>
 
 <script type="text/html" id="external_mutation_list_entry_template">
-<li>
+<li class="list">
 	<div class="li-header">
 		<span class="position" data-bind="text: (position|0)+1"></span>
 	</div>
-	<ul class="mutations" data-bind="attr: { id: 'externalmutation' + position}">
-			<li class="section btn">
-				<span data-bind="if: externalMutations.source == 'NCBI'">
-					<a target="_blank" class="dropdown-toggle"
-						data-bind="text: externalMutations.mutation, 
-							attr: { 
-								href: 
-								'http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs='
-									+ externalMutations.snpid 
-							}">
-					</a>
-				</span>
-			</li>
-	</ul>
+	<div class="mutations" data-bind="attr: { id: 'externalmutation' + position}">
+		<div class="section btn">
+			<span data-bind="if: externalMutations.source == 'NCBI'">
+				<a target="_blank" class="dropdown-toggle"
+					data-bind="text: externalMutations.mutation, 
+						attr: { 
+							href: 
+							'http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs='
+								+ externalMutations.snpid 
+						}">
+				</a>
+			</span>
+		</div>
+	</div>
 </li>
 </script>
 
@@ -304,21 +254,25 @@
 		Position: <span class="position" data-bind="text: position"></span>
 		Wildtype: <span class="wildtype"data-bind="text: wildType"></span>
 	</div>
-	<ul class="mutations" data-bind="foreach: mutations">
-		<li data-bind="
+	<div class="mutations" data-bind="foreach: mutations">
+		<div data-bind="
+		click: $root.showDetailView,
 			attr: { 
 				id: 'menu' + $parent.position + aa,
 				class: 'btn section dropdown ' 
 					+ (data[1].effect == 'true' ? ' sift ' : '') 
 					+ (data[0].effect == 'true' ? ' snap ' : '')
 			}">
+
 			<span class="dropdown-toggle" 
 				data-toggle="dropdown" 
-				data-bind="text: aa, attr: { href: '#menu' + $parent.position + aa }">
+				data-bind="text: aa,
+					attr: { href: '#menu' + $parent.position + aa }
+			">
 			</span>
-			<span class="dropdown-menu $index"></span>
-		</li>
-	</ul>
+			<span class="dropdown-menu"></span>
+		</div>
+	</div>
 </li>
 </script>
 
@@ -335,8 +289,10 @@
 
 <script src="js/GeMuDB.min.js"></script>
 
-<script src="http://cdn2.gemudb.com/js/jquery-ui-1.8.18.custom.min.js"></script>
+<script src="bower_components/seiyria-bootstrap-slider/dist/bootstrap-slider.min.js"></script>
 
+<script src="js/options.js"></script>
+<script src="js/knockout-bindings.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>
