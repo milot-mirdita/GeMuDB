@@ -124,5 +124,6 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/swagger-maven-plugin-2.0.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
