@@ -1,5 +1,8 @@
 package org.rostlab.gemudb.facade;
 
+import java.util.List;
+
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -25,9 +28,12 @@ import org.rostlab.gemudb.service.model.ProteinId;
 import com.sun.jersey.api.NotFoundException;
 import com.sun.jersey.spi.resource.Singleton;
 
+import com.wordnik.swagger.annotations.*;
+
 @Provider
 @Singleton
 @Path("/v1")
+@Api(value = "v1", description="Gene Mutation Database")
 @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 public class ServiceFacadeImpl implements ServiceFacade {
 	private FunctionalEffectService functionalEffectService;
@@ -38,9 +44,28 @@ public class ServiceFacadeImpl implements ServiceFacade {
 	@Override
 	@GET
 	@Path("/{id}/functionaleffect/{type}")
+	@ApiOperation(value = "Get the predicted functional effects of a protein", notes = "Filters by functional effect prediction types.", response = FunctionalEffectPrediction.class)
+	@ApiResponses(value = {
+	  @ApiResponse(code = 400, message = "Parameter Error"),
+	  @ApiResponse(code = 200, message = "FunctionalEffectPrediction") 
+	})
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public FunctionalEffectPrediction getFunctionalEffectPrediction(
-			@PathParam("id") String id, @PathParam("type") String type) {
+			final
+			@PathParam("id")
+			@ApiParam(
+					value = "The canonical RefSeq protein accession.", 
+					required = true
+			)
+			String id,
+			final
+			@PathParam("type")
+			@ApiParam(
+					value = "A comma seperated string containing all functional effect prediction types that should be returned.",
+					allowableValues = "SIFT,SNAP",
+					required = true
+			)
+			String type) {
 		System.out.println("Call getFunctionalEffectPredcition: " + id);
 		FunctionalEffectPrediction fp = functionalEffectService
 				.getFunctionalEffectPrediction(id, MutationType.valueOf(type));
@@ -54,15 +79,41 @@ public class ServiceFacadeImpl implements ServiceFacade {
 	@Override
 	@GET
 	@Path("/{id}/functionaleffect/{alphabet}/{type}")
+	@ApiOperation(value = "Get the predicted functional effects of a protein", notes = "Filters by alphabet of amino acid one letter codes.", response = FunctionalEffectPrediction.class)
+	@ApiResponses(value = {
+	  @ApiResponse(code = 400, message = "Parameter Error"),
+	  @ApiResponse(code = 200, message = "FunctionalEffectPrediction") 
+	})
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public FunctionalEffectPrediction getFunctionalEffectPrediction(
-			@PathParam("id") String id, @PathParam("type") String type,
-			@PathParam("alphabet") String alphabet) {
+			final 
+			@PathParam("id") 
+			@ApiParam(
+					value = "The canonical RefSeq protein accession.", 
+					required = true
+			)
+			String id,
+			final
+			@PathParam("type")
+			@ApiParam(
+					value = "A comma seperated string containing all functional effect prediction types that should be returned.",
+					allowableValues = "SIFT,SNAP",
+					required = true
+			)
+			String type,
+			final 
+			@PathParam("alphabet")
+			@ApiParam(
+					value = "A string containing the one letter codes of all aminoacids that should return functional effect predictions.", 
+					required = true
+			)
+			String alphabet) {
+		final String uppercase = alphabet.toUpperCase();
 		System.out.println("Call getFunctionalEffectPredcition: " + id
-				+ " alphabet: " + alphabet);
-		alphabet = alphabet.toUpperCase();
-		for (int i = 0; i < alphabet.length(); i++) {
-			if (AMINOALPHABET.contains(String.valueOf(alphabet.charAt(i))) == false) {
+				+ " alphabet: " + uppercase);
+		
+		for (int i = 0; i < uppercase.length(); i++) {
+			if (AMINOALPHABET.contains(String.valueOf(uppercase.charAt(i))) == false) {
 				throw new BadRequestException();
 			}
 		}
@@ -80,9 +131,21 @@ public class ServiceFacadeImpl implements ServiceFacade {
 	@Override
 	@POST
 	@Path("/search")
+	@ApiOperation(value = "Search protein by query", notes = "Search method that can either fetch a response directly or use the PICR webservice to map any accessions to the canonical RefSeq accession.", response = ProteinId.class)
+	@ApiResponses(value = {
+	  @ApiResponse(code = 404, message = "Protein not found."),
+	  @ApiResponse(code = 200, message = "ProteinId") 
+	})
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	public ProteinId searchProtein(@FormParam("q") String searchString) {
+	public ProteinId searchProtein(
+			final 
+			@ApiParam(
+					value = "The query to search by. Query can be a protein accession or amino acid sequence.", 
+					required = true
+			)
+			@FormParam("q") 
+			String searchString) {
 		System.out.println("Search protein: " + searchString);
 		ProteinId retId = searchProteinService.searchProtein(searchString);
 		if (retId.getRefId() == null)
@@ -94,44 +157,128 @@ public class ServiceFacadeImpl implements ServiceFacade {
 	@Override
 	@GET
 	@Path("/{id}/functionaleffect/detail/{type}/{pos}")
+	@ApiOperation(value = "Get the details of functional effect prediction", notes = "Returned effects are filtered by position and function effect prediction type.", response = MutationPosContainer.class)
+	@ApiResponses(value = {
+	  @ApiResponse(code = 404, message = "MutationPos not found."),
+	  @ApiResponse(code = 200, message = "MutationPos") 
+	})
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	public MutationPos getMutationList(@PathParam("id") String id,
-			@PathParam("pos") Integer pos, @PathParam("type") String type) {
+	public MutationPos getMutationList(
+			final
+			@PathParam("id")
+			@ApiParam(
+					value = "The canonical RefSeq protein accession.", 
+					required = true
+			)
+			String id,
+			@ApiParam(
+					value = "The position in the protein that should be returned.", 
+					required = true
+			)
+			final
+			@PathParam("pos")
+			Integer pos,
+			final
+			@PathParam("type")
+			@ApiParam(
+					value = "A comma seperated string containing all functional effect prediction types that should be returned.",
+					allowableValues = "SIFT,SNAP",
+					required = true
+			)
+			String type) {
 		System.out.println("Call getMutationList: " + id);
-		System.out.println(functionalEffectService);
 		MutationPosContainer posContainer = functionalEffectService
 				.getFunctionalEffect(id, pos, MutationType.valueOf(type));
-		final MutationPos retPos = posContainer.getMutationsPos().get(0);
-		return retPos;
+		
+		final List<MutationPos> retPos = posContainer.getMutationsPos();
+		if (retPos.size() == 0) {
+			throw new NotFoundException();
+		} else {
+			return retPos.get(0);
+		}
 	}
 
 	@Override
 	@GET
 	@Path("/{id}/functionaleffect/detail/{alphabet}/{type}/{pos}")
+	@ApiOperation(value = "Get the details of functional effect prediction", notes = "Returned effects are filtered by position, alphabet of amino acid one letter codes and function effect prediction type.", response = MutationPosContainer.class)
+	@ApiResponses(value = {
+	  @ApiResponse(code = 400, message = "Parameter Error"),
+	  @ApiResponse(code = 404, message = "MutationPos not found."),
+	  @ApiResponse(code = 200, message = "MutationPos") 
+	})
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	public MutationPos getMutationList(@PathParam("id") String id,
-			@PathParam("pos") Integer pos, @PathParam("type") String type,
-			@PathParam("alphabet") String alphabet) {
+	public MutationPos getMutationList(
+			final
+			@PathParam("id")
+			@ApiParam(
+					value = "The canonical RefSeq protein accession.", 
+					required = true
+			)
+			String id,
+			final
+			@PathParam("pos")
+			@ApiParam(
+					value = "The position in the protein that should be returned.", 
+					required = true
+			)
+			Integer pos,
+			final
+			@PathParam("type")
+			@ApiParam(
+					value = "A comma seperated string containing all functional effect prediction types that should be returned.",
+					allowableValues = "SIFT,SNAP",
+					required = true
+			)
+			String type,
+			final
+			@PathParam("alphabet")
+			@ApiParam(
+					value = "A string containing the one letter codes of all aminoacids that should return functional effect predictions.", 
+					required = true
+			)
+			String alphabet) {
+		final String uppercase = alphabet.toUpperCase();
 		System.out.println("Call getFunctionalEffectPredcition: " + id
-				+ " alphabet: " + alphabet);
-		alphabet = alphabet.toUpperCase();
-		for (int i = 0; i < alphabet.length(); i++) {
-			if (AMINOALPHABET.contains(String.valueOf(alphabet.charAt(i))) == false) {
+				+ " alphabet: " + uppercase);
+		for (int i = 0; i < uppercase.length(); i++) {
+			if (AMINOALPHABET.contains(String.valueOf(uppercase.charAt(i))) == false) {
 				throw new BadRequestException();
 			}
 		}
 		MutationPosContainer posContainer = functionalEffectService
 				.getFunctionalEffect(id, pos, MutationType.valueOf(type),
 						alphabet);
-		final MutationPos retPos = posContainer.getMutationsPos().get(0);
-		return retPos;
+		
+		final List<MutationPos> retPos = posContainer.getMutationsPos();
+		if (retPos.size() == 0) {
+			throw new NotFoundException();
+		} else {
+			return retPos.get(0);
+		}
 	}
 
 	@Override
 	@GET
 	@Path("/detail/{id}")
+	@ApiOperation(
+		value = "Get aggregated common details of a protein", 
+		notes = "Protein details are fetched from the NCBI Entrez webservices.", 
+		response = ProteinDetail.class
+	)
+	@ApiResponses(value = {
+	  @ApiResponse(code = 400, message = "Parameter Error"),
+	  @ApiResponse(code = 200, message = "ProteinDetail") 
+	})
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	public ProteinDetail getProteinDetail(@PathParam("id") String refid) {
+	public ProteinDetail getProteinDetail(
+			final
+			@PathParam("id")
+			@ApiParam(
+					value = "The canonical RefSeq protein accession.", 
+					required = true
+			)
+			String refid) {
 		System.out.println("Call getProteinDetail: " + refid);
 		ProteinDetail pd = proteinDetailService.getProteinDetail(refid);
 		if (pd == null) {
@@ -144,9 +291,25 @@ public class ServiceFacadeImpl implements ServiceFacade {
 	@Override
 	@GET
 	@Path("/externalsnp/{id}")
+	@ApiOperation(
+			value = "Get verified mutations", 
+			notes = "Protein verified mutations are fetched from the NCBI dbSNP webservice.", 
+			response = ExternalMutationContainer.class
+		)
+		@ApiResponses(value = {
+		  @ApiResponse(code = 400, message = "Parameter Error"),
+		  @ApiResponse(code = 404, message = "ExternalMutationContainer not found."),
+		  @ApiResponse(code = 200, message = "ExternalMutationContainer") 
+		})
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public ExternalMutationContainer getProteinSnpDetail(
-			@PathParam("id") String refid) {
+			final
+			@PathParam("id")
+			@ApiParam(
+					value = "The canonical RefSeq protein accession.", 
+					required = true
+			)
+			String refid) {
 		System.out.println("Call getProteinSnpDetail: " + refid);
 
 		ExternalMutationContainer nsdc = proteinDetailService
