@@ -1,6 +1,7 @@
 package org.rostlab.gemudb.service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,11 +28,12 @@ public class SearchProteinServiceImpl implements SearchProteinService {
 	@Override
 	public ProteinId searchProtein(String searchString) {
 		searchString = BlankRemover.trim(searchString);
-		Pattern pattern = Pattern.compile("^[A-Z]{19}.*");
+		Pattern pattern = Pattern.compile("^(A|R|N|D|C|E|Q|G|H|I|L|K|M|F|P|S|T|X|Y|V|X)+$", Pattern.CASE_INSENSITIVE);
 		Matcher matcher = pattern.matcher(searchString);
-		java.util.List<UPEntry> entries;
+		
+		List<UPEntry> entries;		
 		if (matcher.matches()) { // AA
-			searchString = "> SEQ \n" + searchString;
+			searchString = "> SEQ \n" + searchString.toUpperCase();
 			entries = client.performSequenceMapping(searchString,
 					databases.toArray());
 
@@ -43,6 +45,7 @@ public class SearchProteinServiceImpl implements SearchProteinService {
 					databases.toArray());
 
 		}
+		
 		if (entries != null && entries.size() > 0) {
 			for (UPEntry entry : entries) {
 				for (CrossReference xref : entry.getIdenticalCrossReferences()) {
