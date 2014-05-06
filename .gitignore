@@ -6,3 +6,4 @@ data/
 testoutput/
 build/
 input/
+/target
