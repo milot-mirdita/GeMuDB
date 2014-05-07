@@ -83,7 +83,3 @@ _.debounce = function(func, wait, immediate) {
 function clamp (value, min, max) {
 	return Math.min(Math.max(value, min), max);
 }
-
-function ajaxErrorHandler (error) {
-	console.log(error);
-}

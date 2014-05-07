@@ -2,7 +2,6 @@ var constants = {
 	externalSnpGraphHeight: 19,
 	lineLength: 90,
 	baseUrl : "http://gemudb.com/api/",
-	//baseUrl : "http://localhost:9004/resources/v1/",
 	alphabet : [
 		'A',
 		'R',
@@ -46,9 +45,9 @@ function OverviewPlotOptions() {
 			ticks : [ 0, 19 ]
 		}, 
 		grid : { 
-			borderWidth : 1, 
+			borderWidth : 0, 
 			borderColor : '#aaa',
-			clickable : true
+			clickable : false
 		}, 
 		series : { 
 			lines : { 
@@ -83,6 +82,10 @@ function DetailPlotOptions() {
 			min : 0,
 			max : constants.lineLength,
 			tickLength: 0,
+			color: '#333',
+			font: {
+				family: "Open Sans, sans-serif",
+			}
 		},
 		yaxis : {
 			show : false,
@@ -92,7 +95,7 @@ function DetailPlotOptions() {
 			ticks : [ 0, 19 ],
 		},
 		grid : {
-			borderWidth : 1,
+			borderWidth : 0,
 			borderColor : '#aaa',
 			clickable : true
 		},
@@ -121,19 +124,28 @@ function DetailPlotOptions() {
 }
 
 function DefaultState() {
-	return {
-		threshold : 0,
-		offset : ko.observable(0),
-		types : [
+	this.offset = ko.observable();
+
+	this.reset();
+	
+	return this;
+}
+
+DefaultState.prototype.reset = function() {
+	this.offset(0);
+
+	this.threshold = 0;
+	this.types = [
 			'SNAP'
-		],
-		alphabet : constants.alphabet.slice(0),
-		detail : {
+		];
+		
+	this.alphabet = constants.alphabet.slice(0);
+	this.detail = {
 			index : null,
 			mutation : null
-		},
-		protein : null
-	};
+		};
+	
+	this.protein = null;
 }
 
 function Sequence(sequence) {

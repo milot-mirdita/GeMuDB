@@ -13,6 +13,16 @@
 		self.mutationListResult = ko.observable();
 		self.externalMutationListResult = ko.observable();
 
+		self.ajaxErrorHandler = function (error) {
+			toastr.error('Please check your internet connection or try again later.', 'Resource could not be loaded!')
+			console.log(error);
+		}
+
+		self.searchErrorHandler = function (error) {
+			toastr.info('Please try a different query.', 'No matching Protein was found!')
+			console.log(error);
+		}
+
 		self.searchProtein = function(data, event) {
 			var protein = $(event.target).closest('.search-widget').find('.q').val();
 			if(protein) {
@@ -52,23 +62,25 @@
 			self.updateGraphs(true);
 		}, 100);
 
+		var $seeker = $('#flot_overview_container .seeker');
+
 		function setupSeeker () {
 			var sequenceLength = self.currentState.protein.sequence.toString().length;
-			var marginLeft = 10;
-			var marginRight = 10;
-			var plotWidth = overviewPlot.width();
+			var marginLeft = 5;
+			var marginRight = 5;
+			var plotWidth = $('#flot_overview').outerWidth();
 			var seekerWidth = plotWidth / sequenceLength * constants.lineLength;
 			 
-			$('#flot_overview_container .seeker').width(seekerWidth);
+			$seeker.width(seekerWidth);
 			
 			var minOffset = marginLeft; 
-			var maxOffset = plotWidth - seekerWidth + marginRight;
+			var maxOffset = plotWidth - $seeker.outerWidth() - marginRight;
 			
-			$('.seeker').drag(function(event, dd){
+			$seeker.drag(function(event, dd){
 				var offset = clamp(dd.offsetX, minOffset, maxOffset);
-				$('.seeker').css('left', offset);
-				var val = Math.floor((offset-2) * sequenceLength / (plotWidth-8));
-				
+				$seeker.css('left', offset);
+				var val = Math.floor(offset * sequenceLength / (plotWidth-8));
+				console.log(val);
 				self.currentState.offset(val);
 				sequenceOffsetCallback(val);
 			},{ relative:true });
@@ -187,7 +199,7 @@
 			var currentReferenceId = "";
 
 			function reset() {
-				self.currentState = new DefaultState();
+				self.currentState.reset();
 				currentReferenceId = "";
 
 				self.protein(null);
@@ -208,7 +220,7 @@
 					.done(function(searchResult) {
 						context.redirect("#!", "show", searchResult.refid);
 					})
-					.fail(self.ajaxErrorHandler);
+					.fail(self.searchErrorHandler);
 			});
 
 			this.get("#!/show/:refid", function() {
@@ -245,7 +257,26 @@
 
 					$.getJSON(constants.baseUrl + "externalsnp/" + reference)
 						.done(function (externalSnpContainer) {
-							self.externalMutationListResult(externalSnpContainer.externalMutationPosition)
+							var external = [];
+							// hack jackson + jersey are quite stupid
+							for (var i = 0; i < externalSnpContainer.externalMutationPosition.length; i++) {
+								var externalMutations = externalSnpContainer.externalMutationPosition[i].externalMutations;
+								
+								if(externalMutations instanceof Array) {
+									for (var j = 0; j < externalMutations.length; j++) {
+										external.push({
+											externalMutations : externalMutations[j],
+											position : externalSnpContainer.externalMutationPosition[i].position
+										});	
+									}
+								} else {
+									external.push({
+										externalMutations : externalMutations,
+										position : externalSnpContainer.externalMutationPosition[i].position
+									});
+								}
+							}
+							self.externalMutationListResult(external)
 							self.updateGraphs();
 						})
 					 	.fail(self.ajaxErrorHandler);	

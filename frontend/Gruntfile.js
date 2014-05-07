@@ -15,6 +15,8 @@ module.exports = function (grunt) {
                 files: { 
                     'css/<%= pkg.name %>.min.css' : [
                         'bower_components/bootstrap/dist/css/bootstrap.min.css', 
+                        'bower_components/seiyria-bootstrap-slider/dist/css/bootstrap-slider.css',
+                        'bower_components/toastr/toastr.css',
                         'css/style.css'
                     ]
                 }
@@ -29,8 +31,12 @@ module.exports = function (grunt) {
                     'bower_components/knockout/build/output/knockout-latest.js',
                     'bower_components/sammy/lib/min/sammy-latest.min.js',
                     'bower_components/bootstrap/dist/js/bootstrap.min.js',
+                    'bower_components/seiyria-bootstrap-slider/dist/bootstrap-slider.min.js',
                     'js/jquery.event.drag-2.2.js',
-                    'js/dependencies.js'
+                    'bower_components/toastr/toastr.js',
+                    'js/dependencies.js',
+                    'js/knockout-bindings.js',
+                    'js/options.js'
                     ],
                 dest: 'js/<%= pkg.name %>.min.js'
             },

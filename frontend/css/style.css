@@ -16,16 +16,31 @@ body {
 
 #flot_details_container, #flot_overview_container {
 	padding: 5px 0;
+	position: relative;
+}
+
+#flot_overview_container {
+border-top: 1px solid #eee;
+border-left: 1px solid #eee;
+border-right: 1px solid #eee;
+}
+
+#flot_details_container {
+border-bottom: 1px solid #eee;
+border-left: 1px solid #eee;
+border-right: 1px solid #eee;
 }
 
 #flot_overview_container .seeker {
 	position: absolute;
+	left: 5px;
 	height: 39px;
 	width: 200px;
 	border: 1px solid orange;
 	background-color: rgba(255, 128, 0, 0.15);
 	z-index: 10;
 	cursor: e-resize;
+	box-sizing: border-box;
 }
 
 #flot_overview_container .seeker .detail {
@@ -229,6 +244,10 @@ body {
 	vertical-align: baseline;
 }
 
+.navbar-form {
+	padding-right: 0;
+}
+
 .navbar-form .input-group {
 	width: 300px;
 }
@@ -250,6 +269,7 @@ body {
 #flot_container {
 	opacity: 0;
 	transition: opacity 1s;
+	margin-top: 5px;
 }
 
 #flot_container.rendered {
@@ -270,4 +290,14 @@ h2[id] {
   padding-top: 90px;
   margin-top: -70px;
   display: inline-block; /* required for webkit browsers */
+}
+
+@-webkit-keyframes out-in
+{
+	0%   {opacity:0;}
+	100% {opacity:1;}
+}
+
+.fade-out-in {
+	-webkit-animation: out-in 0.5s;
 }
