@@ -19,7 +19,8 @@
 		}
 
 		self.searchErrorHandler = function (error) {
-			toastr.info('Please try a different query.', 'No matching Protein was found!')
+			toastr.info('Please try a different query.', 'No matching Protein was found!');
+			$('.search-widget button').button('reset');
 			console.log(error);
 		}
 
