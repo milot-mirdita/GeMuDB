@@ -72,7 +72,6 @@ public class GetOmimInformation {
 	@Test
 	public void testSnpToOmim() {
 		// http://www.biostars.org/post/show/5636/how-to-get-the-omim-id-for-a-dbsnp-entry/
-		final String url = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?dbfrom=snp&id=121965089&db=omim";
 		try {
 			EUtilsServiceStub service = new EUtilsServiceStub();
 

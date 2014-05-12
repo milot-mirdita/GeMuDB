@@ -2,7 +2,6 @@ package org.rostlab.gemudb.facade;
 
 import java.util.List;
 
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -22,13 +21,16 @@ import org.rostlab.gemudb.service.model.ExternalMutationContainer;
 import org.rostlab.gemudb.service.model.FunctionalEffectPrediction;
 import org.rostlab.gemudb.service.model.MutationPos;
 import org.rostlab.gemudb.service.model.MutationPosContainer;
+import org.rostlab.gemudb.service.model.NotFoundException;
 import org.rostlab.gemudb.service.model.ProteinDetail;
 import org.rostlab.gemudb.service.model.ProteinId;
 
-import com.sun.jersey.api.NotFoundException;
 import com.sun.jersey.spi.resource.Singleton;
-
-import com.wordnik.swagger.annotations.*;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
 
 @Provider
 @Singleton
@@ -192,7 +194,7 @@ public class ServiceFacadeImpl implements ServiceFacade {
 		
 		final List<MutationPos> retPos = posContainer.getMutationsPos();
 		if (retPos.size() == 0) {
-			throw new NotFoundException();
+			throw new NotFoundException("");
 		} else {
 			return retPos.get(0);
 		}
@@ -252,7 +254,7 @@ public class ServiceFacadeImpl implements ServiceFacade {
 		
 		final List<MutationPos> retPos = posContainer.getMutationsPos();
 		if (retPos.size() == 0) {
-			throw new NotFoundException();
+			throw new NotFoundException("");
 		} else {
 			return retPos.get(0);
 		}
@@ -318,7 +320,7 @@ public class ServiceFacadeImpl implements ServiceFacade {
 		if (nsdc == null) {
 			throw new BadRequestException();
 		} else if (nsdc.getExternalMutationPosition().size() == 0) {
-			throw new NotFoundException();
+			throw new NotFoundException("");
 		} else {
 			return nsdc;
 		}

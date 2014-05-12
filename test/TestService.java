@@ -27,8 +27,8 @@ public class TestService {
 //						.accept(MediaType.APPLICATION_XML).get(String.class));
 //		MultivaluedMap formData = new MultivaluedMapImpl();
 //		formData.add("q", "NP_005378");
-////
-//		String resp = service.path("protein").path("search")
+//
+//		String resp = service.path("search")
 //				.accept(MediaType.APPLICATION_JSON)
 //				.type(MediaType.APPLICATION_FORM_URLENCODED)
 //				.post(String.class, formData);
@@ -45,7 +45,7 @@ public class TestService {
 
 		
 		System.out
-				.println(service.path("v1").path("NP_005378").path("functionaleffect")
+				.println(service.path("NP_005378").path("functionaleffect")
 						.path("detail").path("SIFT").path("1").
 						accept(MediaType.APPLICATION_JSON).get(String.class));
 //
@@ -63,7 +63,7 @@ public class TestService {
 	}
 
 	private static URI getBaseURI() {
-		return UriBuilder.fromUri("http://localhost:8081/resources/").build();
+		return UriBuilder.fromUri("http://gemudb.com/api/").build();
 	}
 
 }
